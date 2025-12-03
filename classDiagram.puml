@@ -1,0 +1,69 @@
+@startuml
+'Validator
+interface IValidatorChain {
+	+isValid(line:str): bool
+	+setNextChain(chain: IValidatorChain)
+}
+abstract class ValidatorChain {
+	#regexPat: Regex
+	#nextChain: IValidatorChain
+	+isValid(line:str): bool
+}
+class CharacterStrategy {
+	-definedSpeakers: List<str>
+	-customRegex: Regex
+	'Map[file_url][hasChanged or lines in file]
+	+setDefinedSpeakers(fileMap: Map<str,Map<str,bool|List<str>>>)
+}
+class ItalicStrategy
+class ParenthesisStrategy
+class TextTagStrategy
+class BasicStrategy
+
+'File Descriptors
+class  FileReader <<Singleton>> {
+	+readLines(fileURL: str): List<str>
+	+walkFiles(rootDir:str): str
+}
+class  FileWriter <<Singleton>>{
+	+writeLines(fileURL: str)
+}
+class  FileDeleter <<Singleton>>{
+	+delete(fileURL: str)
+}
+
+'ThreadExecutors
+class  FileExecutor <<Singleton>>{
+	+getFileLines(reader:FileReader): Map<str,Map<str,bool|List<str>>>
+	+writeToFiles(writer:FileWriter,fileLines: Map<str,Map<str,bool|List<str>>>)
+}
+
+'Narrator
+class  NarratorHandler <<Singleton>>{
+	+remove(IValidatorChain,lines:Map<str,Map<str,bool|List<str>>>)
+	-cleanup(lines: Map<str,Map<str,bool|List<str>>>)
+	-correctIndentation(lines: Map<str,Map<str,bool|List<str>>>)
+	-cleanPause(lines: Map<str,Map<str,bool|List<str>>>)
+}
+class  ErrorFixer <<Singleton>>{
+	-destPat: Regex
+	-typePat: Regex
+	-lineNumPat: Regex
+	-getErrors(reader:FileReader): Map<str,List<Map<str,str|int>>>
+	-correctErrors(errors: Map<str,List<Map<str,str|int>>>,reader: FileReader,writer: FileWriter, deleter: FileDeleter)
+}
+
+'Argument Classes
+class CLIParser {
+    -parser: ArgumentParser
+    -setup()
+    -initParser()
+    -configureOpts()
+    +getArgs(commands:str)
+}
+class ArgChecker {
+    -parser: CLIParser
+    -validate()
+    +getArgs(): Namespace
+}
+@enduml

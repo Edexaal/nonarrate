@@ -1,2 +1,0 @@
-class ArgParse:
-    pass

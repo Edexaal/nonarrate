@@ -3,13 +3,33 @@
 Removes narration and thoughts from Ren'Py visual novel games.
 
 This is a Ren'Py tool for removing the narrator from visual novel games. It will also remove what characters are
-thinking about as well.
+thinking about.
 
 ## Goal
 
-The project was created with the idea that a story should be told by itself. Let the characters actions, the
-environment, and scenarios tell the story. Also, let the players draw their own conclusions based on what's happening in
-the story thus far.
+A story should unfold organically. The characters' actions, environment, and scenarios should carry the
+narrative, without the need of an inner voice or overt explanation. Players are encouraged to draw their own
+interpretations of the events unfolding in the story thus far.
+
+## Types of Narration
+
+There are 2 places to identify narration in Ren'Py:
+
+- _Character/Speaker_
+- _Dialogue_
+
+<details>
+    <summary>Ren'Py Narrator Example</summary>
+    <img src="./assets/content-box.png" alt="Ren'Pys dialogue box with a narrator speaker" width="1010" height="224">
+</details>
+
+### Character/Speaker
+
+| Type  | Script Example                       | Description |
+|:-----:|--------------------------------------|-------------|
+| Basic | `"Narrator" "I'm an awesome person"` | Includes    |
+
+### Dialogue
 
 ## Scripts
 

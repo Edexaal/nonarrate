@@ -9,12 +9,16 @@ abstract class ValidatorChain {
 	#nextChain: IValidatorChain
 	+isValid(line:str): bool
 }
-class CharacterStrategy {
+'Ex: "Narrator" "Player listen to me..."
+class BasicCharStrategy
+class CustomCharStrategy
+'Ex: narr "Player, please select this choice."
+class BasicCharObjStrategy {
 	-definedSpeakers: List<str>
-	-customRegex: Regex
 	'Map[file_url][hasChanged or lines in file]
 	+setDefinedSpeakers(fileMap: Map<str,Map<str,bool|List<str>>>)
 }
+class CustomCharObjStrategy
 class ItalicStrategy
 class ParenthesisStrategy
 class TextTagStrategy

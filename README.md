@@ -1,4 +1,4 @@
-# No Narrator - Ren'Py Mod
+# No Narrate - Ren'Py Mod
 
 Removes narration and thoughts from Ren'Py visual novel games.
 

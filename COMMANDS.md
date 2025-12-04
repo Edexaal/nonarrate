@@ -20,6 +20,7 @@ MyRenpyProject/
 ```
 
 **Notes:**
+
 If a *folder* is provided, No Narrate will operate on `.rpy` files located in subdirectories. If *errors.txt* file is
 provided, No Narrate will attempt to fix the errors mentioned in the file.
 
@@ -68,7 +69,7 @@ In Ren’Py, it’s recommended to define speakers in a [
 `Character()`](https://www.renpy.org/doc/html/dialogue.html#defining-character-objects) object. By default, No Narrate
 will remove all [[Command Arguments/Default Narrators]]. Use this option to disable this filter.
 
-***—custom-basic-char-obj***, ***—cbco*** `<character name>`
+***—custom-basic-char-obj***, ***—cbco*** `<speaker name>`
 
 Removes a speaker saved to a `Character` object.
 
@@ -87,12 +88,12 @@ python nonarrate --cbco Developer --cbco Conscience C:\mycoolgame\game
 
 ***—basic-char***
 
-Removes default narrators
+Removes default narrators **not** in a Character object
 
 This removes all [[Command Arguments/Default Narrators]] explicitly written alongside their dialogue. These types of
 narrators are **not** saved to a `Character` object.
 
-***—custom-basic-char***, ***—cbc*** `<character name>`
+***—custom-basic-char***, ***—cbc*** `<speaker name>`
 
 Removes a speaker
 
@@ -133,13 +134,13 @@ Developers tend to use italics to indicate what a person is thinking about. Use 
 
 ***—no-parenthesis-narr***
 
-Do **not** remove dialogue that is fully covered by 1 parenthesis
+Do **not** remove dialogue wrapped entirely in a parenthesis
 
 Parentheses are used to indicate thoughts. Sometimes, it’s used for narration. Use this option to allow this feature.
 
 ***—custom-tag***, ***—ct*** `<tag name>`
 
-Removes dialogue that fully uses a custom text tag
+Removes dialogue wrapped entirely a custom text tag
 
 Developers can create their own [custom text tags](https://www.renpy.org/doc/html/custom_text_tags.html), providing
 custom style properties to them. Use this option to remove dialogue completely surrounded by a custom text tag. *

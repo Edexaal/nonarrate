@@ -10,7 +10,9 @@ class TestCLIParser(unittest.TestCase):
 
     def test_positional(self):
         positional = fixture.get_args(self.parser,'game/')
-        self.assertEqual(positional.folder_or_file, pathlib.Path('game/'))
+        self.assertEqual(positional.folder_or_file, pathlib.Path('game/'),msg='Failed accepting a folder')
+        positional = fixture.get_args(self.parser,'errors.txt')
+        self.assertEqual(positional.folder_or_file, pathlib.Path('errors.txt'),msg='Failed accepting errors.txt file')
 
     def test_custom_tag_arg(self):
         args = fixture.get_args(self.parser,'game/ --custom-tag t --ct scan')

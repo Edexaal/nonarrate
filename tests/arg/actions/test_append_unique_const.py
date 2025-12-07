@@ -2,7 +2,7 @@ import unittest
 from lib.arg.cli_parser import CLIParser
 import tests.fixture as fixture
 
-class TestAppendUniqueConstAction(unittest.TestCase):
+class TestAppendUniqueConst(unittest.TestCase):
     def setUp(self):
         self.parser = CLIParser()
         self.option = '--basic-char'

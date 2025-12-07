@@ -21,8 +21,9 @@ MyRenpyProject/
 
 **Notes:**
 
-If a *folder* is provided, No Narrate will operate on `.rpy` files located in subdirectories. If *errors.txt* file is
-provided, No Narrate will attempt to fix the errors mentioned in the file.
+- If a `folder` is provided, No Narrate will operate on `.rpy` files located in subdirectories. 
+- If `errors.txt` file is provided, No Narrate will attempt to fix the errors mentioned in the file.
+- If `errors.txt` file is provided, **all options will be ignored!**
 
 **Examples:**
 
@@ -44,11 +45,19 @@ python nonarrate C:\mycoolgame\errors.txt
 
 ### General
 
-***—pauses***, ***-p***
+***—no-pauses***
 
-Replace a removed narration with a [￼
-`pause`￼ statement](https://www.renpy.org/doc/html/quickstart.html#pause-statement) . You will be able to see scenes
-that would have been skipped due to narration being removed.
+Do now show narrated scenes stripped of narration.
+
+By default, No Narrate replaces a narration with a
+ [￼`pause`￼ statement](https://www.renpy.org/doc/html/quickstart.html#pause-statement). 
+This allows you to see narrated scenes. To disable this feature, use this option.
+
+***-b, --backup***
+
+Creates a backup folder
+
+Backup the folder before removing narration from `.rpy` files.
 
 ### Filters
 

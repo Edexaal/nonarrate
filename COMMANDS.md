@@ -21,7 +21,7 @@ MyRenpyProject/
 
 **Notes:**
 
-- If a `folder` is provided, No Narrate will operate on `.rpy` files located in subdirectories. 
+- If a `folder` is provided, No Narrate will operate on `.rpy` files located in subdirectories.
 - If `errors.txt` file is provided, No Narrate will attempt to fix the errors mentioned in the file.
 - If `errors.txt` file is provided, **all options will be ignored!**
 
@@ -50,7 +50,7 @@ python nonarrate C:\mycoolgame\errors.txt
 Do now show narrated scenes stripped of narration.
 
 By default, No Narrate replaces a narration with a
- [￼`pause`￼ statement](https://www.renpy.org/doc/html/quickstart.html#pause-statement). 
+ [￼`pause`￼ statement](https://www.renpy.org/doc/html/quickstart.html#pause-statement).
 This allows you to see narrated scenes. To disable this feature, use this option.
 
 ***-b, --backup***
@@ -106,7 +106,7 @@ narrators are **not** saved to a `Character` object.
 
 Removes a speaker
 
-Removes a speaker explicitly written alongside their dialogue and**not** saved to a `Character` object. **Multiple uses
+Removes a speaker explicitly written alongside their dialogue and **not** saved to a `Character` object. **Multiple uses
 allowed!**
 
 **Example:**
@@ -157,7 +157,7 @@ custom style properties to them. Use this option to remove dialogue completely s
 
 **Example:**
 
-This removes dialogues wrapped with the custom text tags, `{t}` & `{fz=20}`, from the game:
+This removes dialogues wrapped with the custom text tags, `{t}`, `{t=<value>}`, `{fz}` & `{fz=<value>}`, from the game:
 
 ```
 python nonarrate --ct t --ct fz C:\mycoolgame\game

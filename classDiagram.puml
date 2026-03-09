@@ -1,13 +1,10 @@
 @startuml
 'Validator
-interface IValidatorChain {
-	+isValid(line:str): bool
-	+setNextChain(chain: IValidatorChain)
-}
-abstract class ValidatorChain {
+abstract class IValidatorChain {
+	#nextValidator: IValidatorChain
 	#regexPat: Regex
-	#nextChain: IValidatorChain
-	+isValid(line:str): bool
+	{abstract} +isValid(line:str): bool
+	+setNextValidator(chain: IValidatorChain)
 }
 'Ex: "Narrator" "Player listen to me..."
 class BasicCharStrategy
@@ -21,7 +18,10 @@ class BasicCharObjStrategy {
 class CustomCharObjStrategy
 class ItalicStrategy
 class ParenthesisStrategy
-class TextTagStrategy
+'Ex: "<i>What am I thinking! I can't do that... right?</i>" OR
+'Ex: "Player" "<i>What am I thinking! I can't do that... right?</i>"
+class CustomTextTagStrategy
+'Ex: "Marco jumps over the fence, scrapping his arm in the process"
 class BasicStrategy
 
 'File Descriptors
@@ -70,4 +70,17 @@ class ArgChecker {
     -validate()
     +getArgs(): Namespace
 }
+
+'Validator Relations
+IValidatorChain <|-- BasicStrategy
+IValidatorChain <|-- CustomTextTagStrategy
+IValidatorChain <|-- ParenthesisStrategy
+IValidatorChain <|-- ItalicStrategy
+IValidatorChain <|-- BasicCharStrategy
+BasicCharStrategy <|-- CustomCharStrategy
+BasicStrategy <|-- BasicCharObjStrategy
+BasicCharObjStrategy <|-- CustomCharObjStrategy
+
+'Argument Relations
+ArgChecker --> CLIParser : uses
 @enduml

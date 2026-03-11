@@ -17,18 +17,32 @@ class TestCharacter(unittest.TestCase):
             6: '"dev "Today I heard something new and unmemorable."',
             7: '"narrator" "Today I heard something new and unmemorable."',
             8: '"nichole thinking" "Today I heard something new and unmemorable."',
-            9: '"Leon\'s thoughts" "Today I heard something new and unmemorable."',
-            10: 'narrator" "Today I heard something new and unmemorable."',
-            11: '"narrator "Today I heard something new and unmemorable."',
-            12: 'narrator "Today I heard something new and unmemorable."',
+            9: '"Mira Thinking" "Today I heard something new and unmemorable."',
+            10: '"Leon\'s thoughts" "Today I heard something new and unmemorable."',
+            11: '"angela\'s Thoughts" "Today I heard something new and unmemorable."',
+            12: '"angela\'s Thought" "Today I heard something new and unmemorable."',
+            13: '"My Mind" "Today I heard something new and unmemorable."',
+            14: '"My mind" "Today I heard something new and unmemorable."',
+            15: '"Mymind" "Today I heard something new and unmemorable."',
+            16: '"MyMind" "Today I heard something new and unmemorable."',
+            17: 'narrator" "Today I heard something new and unmemorable."',
+            18: '"narrator "Today I heard something new and unmemorable."',
+            19: 'narrator "Today I heard something new and unmemorable."',
             # Custom basic
-            13: '"maya" "Today I heard something new and unmemorable."',
-            14: '"maya thinking" "Today I heard something new and unmemorable."',
-            15: '"maya thoughts" "Today I heard something new and unmemorable."',
-            16: 'maya" "Today I heard something new and unmemorable."',
-            17: '"maya "Today I heard something new and unmemorable."',
-            18: 'maya "Today I heard something new and unmemorable."',
-            19: '"maya cornstarke" "Today I heard something new and unmemorable."',
+            20: '"mayaa" "Today I heard something new and unmemorable."',
+            21: '"maya" "Today I heard something new and unmemorable."',
+            22: '"maya thinking" "Today I heard something new and unmemorable."',
+            23: '"maya Thinking" "Today I heard something new and unmemorable."',
+            24: '"maya thoughts" "Today I heard something new and unmemorable."',
+            25: '"maya Thoughts" "Today I heard something new and unmemorable."',
+            26: '"maya\'s mind" "Today I heard something new and unmemorable."',
+            27: '"maya\'s Mind" "Today I heard something new and unmemorable."',
+            28: 'maya" "Today I heard something new and unmemorable."',
+            29: '"maya "Today I heard something new and unmemorable."',
+            30: 'maya "Today I heard something new and unmemorable."',
+            31: '"maya cornstarke" "Today I heard something new and unmemorable."',
+            32: '"Maya" "Today I heard something new and unmemorable."',
+            33: '"Maya\'s Mind" "Today I heard something new and unmemorable."',
         }
 
     def validate_lines(self):
@@ -48,7 +62,10 @@ class TestCharacter(unittest.TestCase):
         self.validate_lines()
 
     def test_basic_char(self):
-        self.start(BasicCharacterStrategy(), [3, 7, 8, 9, 14, 15])
+        self.start(
+            BasicCharacterStrategy(),
+            [3, 7, 8, 9, 10, 11, 12, 13, 14, 22, 23, 24, 25, 26, 27, 33],
+        )
 
     def test_custom_char(self):
-        self.start(CharacterStrategy("maya"), [13, 14, 15, 19])
+        self.start(CharacterStrategy("maya"), [21, 22, 23, 24, 25, 26, 27, 31, 32, 33])

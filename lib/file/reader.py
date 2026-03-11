@@ -1,10 +1,11 @@
 import os
+from ..custom_types import FileInfo
 
 
 class Reader:
     """Read content from file(s)."""
 
-    def read_lines(self, file_url: str) -> dict[str, list[str]]:
+    def read_lines(self, file_url: str) -> FileInfo:
         """Retrieve lines from a file.
 
         Args:

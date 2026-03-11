@@ -1,15 +1,21 @@
 # Command Arguments
 
+## Usage Schema
+
+```bash
+nonarrate [folder of .rpy files OR errors.txt] [options]
+```
+
 ## Positional
 
-**(folder of .rpy OR *'errors.txt'* file)**
+**(folder of *.rpy* files OR *'errors.txt'* file)**
 
 **Accepts**:
 
 - The folder containing your `.rpy` files. **Recommend:** `game/` folder
 - The `errors.txt` file
 
-```
+```bash
 MyRenpyProject/
 ├── game/
 ├── renpy/
@@ -21,21 +27,21 @@ MyRenpyProject/
 
 **Notes:**
 
-- If a `folder` is provided, No Narrate will operate on `.rpy` files located in subdirectories.
-- If `errors.txt` file is provided, No Narrate will attempt to fix the errors mentioned in the file.
-- If `errors.txt` file is provided, **all options will be ignored!**
+- If a `folder` is provided, *nonarrate* will operate on `.rpy` files located in subdirectories.
+- If `errors.txt` file is provided, *nonarrate* will attempt to fix the errors mentioned in the file.
+- If `errors.txt` file is provided, **all options you provide will be ignored!**
 
 **Examples:**
 
 This removes narration from *mycoolgame*
 
-```
+```bash
 python nonarrate C:\mycoolgame\game
 ```
 
 This fixes the errors caused by the tool.
 
-```
+```bash
 python nonarrate C:\mycoolgame\errors.txt
 ```
 
@@ -47,11 +53,12 @@ python nonarrate C:\mycoolgame\errors.txt
 
 ***—no-pauses***
 
-Do now show narrated scenes stripped of narration.
+Do not show narrated scenes stripped of narration.
 
-By default, No Narrate replaces a narration with a
+By default, *nonarrate* replaces a narration with a
  [￼`pause`￼ statement](https://www.renpy.org/doc/html/quickstart.html#pause-statement).
-This allows you to see narrated scenes. To disable this feature, use this option.
+This allows you to see narrated scenes without their dialogue *(so just the image)*.
+To disable this feature, use this option.
 
 ***-b, --backup***
 
@@ -65,57 +72,56 @@ Backup the folder before removing narration from `.rpy` files.
 
 | Commands                         | Script Example                                             | Description                                                         |
 |----------------------------------|------------------------------------------------------------|---------------------------------------------------------------------|
-| —no-basic-char-obj               | n = Character(“Narrator”, …)                               | Narrator saved to character object.                                 |
-| —custom-basic-char-obj,<br>—cbco | d = Character(“Developer”, …)                              | Custom speaker, who acts like a narrator, saved to character object |
-| —basic-char                      | “Narrator” “It was a sunny day.”                           | Simple narrator speaker                                             |
-| —custom-basic-char,<br>—cbc      | “My Mind” “It would be a good idea to distract them first” | Speaker who acts like a narrator                                    |
+| no-basic-char-obj               | n = Character(“Narrator”, …)                               | Narrator saved to character object.                                 |
+| custom-char-obj,<br>cco | d = Character(“Developer”, …)                              | Custom speaker saved to character object |
+| basic-char                      | “Narrator” “It was a sunny day.”                           | [Default narrators](#default-narrators) wrapped in quotes. |
+| custom-char,<br>cc      | “My Mind” “It would be a good idea to distract them first” | Custom Speaker wrapped in quotes |
 
 ***—no-basic-char-obj***
 
-Do **not** remove default narrators saved to a `Character` object.
+```bash
+nonarrate mycoolgame\game --no-basic-char-obj 
+```
+
+Do **not** remove [default narrators](#default-narrators) saved to a `Character` object.
 
 In Ren’Py, it’s recommended to define speakers in a [
-`Character()`](https://www.renpy.org/doc/html/dialogue.html#defining-character-objects) object. By default, No Narrate
-will remove all [[Command Arguments/Default Narrators]]. Use this option to disable this filter.
+`Character()`](https://www.renpy.org/doc/html/dialogue.html#defining-character-objects) object. By default, *nonarrate*
+will remove all [default narrators](#default-narrators) saved to a character object. Use this option to disable this filter.
 
-***—custom-basic-char-obj***, ***—cbco*** `<speaker name>`
+***—custom-char-obj***, ***—cco*** `<speaker name>...`
 
-Removes a speaker saved to a `Character` object.
-
-This option completely removes the character/speaker from the game. **Multiple uses allowed!**
-
-Sometimes, the narrator takes on the form of a character in the game. Instead of being explicitly named *Narrator*, the
-narrator can introduce itself as *Emily*, *Dev* ,*The Chosen One*, or anything else…
-
-**Example:**
-
-This removes speakers, *Developer* & *Conscience*, from the game:
-
+```bash
+# Removes speakers: Wilson, Marisa, & Kyli Naya
+nonarrate mycoolgame\game --custom-char-obj Wilson Marisa "Kyli Naya"
 ```
-python nonarrate --cbco Developer --cbco Conscience C:\mycoolgame\game
-```
+
+Removes speaker(s) saved to a `Character` object.
+
+Sometimes, a narrator takes on the form of a character in game. Instead of being explicitly named *Narrator*, the
+narrator can introduce itself as *Emily*, *Dev*, *The Chosen One*, or anything else…
+
+**Side Note**: Each character name can be written as a **Regular Expression**. See [REGEX Examples](#regex-examples) for more info.
 
 ***—basic-char***
 
-Removes default narrators **not** in a Character object
+Removes [default narrators](#default-narrators) introduced in quotes.
 
-This removes all [[Command Arguments/Default Narrators]] explicitly written alongside their dialogue. These types of
-narrators are **not** saved to a `Character` object.
+This removes all [default narrators](#default-narrators) explicitly written alongside their dialogue. These types of
+narrators are **NOT** saved to a `Character` object.
 
-***—custom-basic-char***, ***—cbc*** `<speaker name>`
+***—custom-char***, ***—cc*** `<speaker name>...`
 
-Removes a speaker
-
-Removes a speaker explicitly written alongside their dialogue and **not** saved to a `Character` object. **Multiple uses
-allowed!**
-
-**Example:**
-
-This removes speakers, *Dev* & *DaGuy*, from the game:
-
+```bash
+# Removes speakers: Minie, Brock Lyn, & Carmi
+nonarrate mycoolgame\game --custom-char Minie "Brock Lyn" Carmi
 ```
-python nonarrate --cbc Dev --cbc DaGuy C:\mycoolgame\game
-```
+
+Removes a speaker introduced in quotes.
+
+Removes a speaker explicitly written alongside their dialogue and **NOT** saved to a `Character` object.
+
+**Side Note**: Each character name can be written as a **Regular Expression**. See [REGEX Examples](#regex-examples) for more info.
 
 - - -
 
@@ -126,13 +132,13 @@ python nonarrate --cbc Dev --cbc DaGuy C:\mycoolgame\game
 | —no-basic-narr       | “I’m the narrator of this game”                | Dialogues without a speaker                                                                                  |
 | —no-italic-narr      | mc “{i}Maybe there’s food left over.{/i}       | Italics. Thinking dialogue.                                                                                  |
 | —no-parenthesis-narr | mc “(It’s got to be here somewhere.)”          | `()`. Thinking/Narrator dialogue                                                                             |
-| —custom-tag, —ct     | mc “{fzs}This is a small bold font tag.{/fzs}” | [Custom text tag.](https://www.renpy.org/doc/html/custom_text_tags.html) Can be used for thoughts/narrative. |
+| —custom-tag, —ct     | mc “{fzs}A small bold font tag.{/fzs}” <br>mc "{fzs=10}My text is here{/fzs}"| [Custom text tag.](https://www.renpy.org/doc/html/custom_text_tags.html) Can be used for thoughts/narrative. |
 
 ***—no-basic-narr***
 
 Do **not** remove dialogues that do not have a speaker
 
-Dialogues without a speaker (blank) are a clear indication of narration. Use this option if you want to keep this form
+Dialogues without a speaker are a clear indication of narration. Use this option if you want to keep this form
 of narration.
 
 ***—no-italic-narr***
@@ -147,27 +153,38 @@ Do **not** remove dialogue wrapped entirely in a parenthesis
 
 Parentheses are used to indicate thoughts. Sometimes, it’s used for narration. Use this option to allow this feature.
 
-***—custom-tag***, ***—ct*** `<tag name>`
+***—custom-tag***, ***—ct*** `<tag name>...`
 
-Removes dialogue wrapped entirely a custom text tag
-
-Developers can create their own [custom text tags](https://www.renpy.org/doc/html/custom_text_tags.html), providing
-custom style properties to them. Use this option to remove dialogue completely surrounded by a custom text tag. *
-*Multiple uses allowed!**
-
-**Example:**
-
-This removes dialogues wrapped with the custom text tags, `{t}`, `{t=<value>}`, `{fz}` & `{fz=<value>}`, from the game:
-
+```bash
+# Removes dialogues fully wrapped in either a {t}, {fzs}, or {wys} tag
+nonarrate mycoolgame\game --custom-tag t fzs wys
 ```
-python nonarrate --ct t --ct fz C:\mycoolgame\game
-```
+
+Removes dialogue wrapped entirely in a custom text tag
+
+Developers can create their own [custom text tags](https://www.renpy.org/doc/html/custom_text_tags.html), adding
+custom style properties to them. Use this option to remove dialogue completely surrounded by a custom text tag.
 
 - - -
 
 ## Default Narrators
 
+This is a list of common narrator names.
+
 - thought
+- thoughts
 - thinking
-- my mind
+- mind
 - narrator
+
+## REGEX Examples
+
+*nonarrate* supports all regular expressions available in Python. See [Python REGEX Documentation](https://docs.python.org/3/library/re.html#regular-expression-syntax) for more info.
+
+```bash
+# Remove speakers: Wilson, Greyes, and Grayes character objects
+nonarrate --custom-char-obj Wilson "Gr[ea]yes"
+
+# Removes speakers: Temo, Temoes, Teemoes, & Teemo
+nonarrate --custom-char "Te{1,2}mo(es)?"
+```

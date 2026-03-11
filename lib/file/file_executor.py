@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from .reader import Reader
 from .writer import Writer
+from lib.custom_types import FileInfo
 
 
 class FileExecutor:
@@ -15,7 +16,7 @@ class FileExecutor:
     max_workers = (os.cpu_count() or 1) * 2 + 4
 
     @classmethod
-    def file_lines(cls, reader: Reader, root_dir: str) -> list[dict[str, list[str]]]:
+    def file_lines(cls, reader: Reader, root_dir: str) -> list[FileInfo]:
         files = reader.walk_files(root_dir)
         file_infos = None
         with ThreadPoolExecutor(cls.max_workers) as ex:
@@ -24,6 +25,6 @@ class FileExecutor:
         return file_infos
 
     @classmethod
-    def write_files(cls, writer: Writer, file_info: dict[str, list[str]]):
+    def write_files(cls, writer: Writer, file_info: FileInfo):
         with ThreadPoolExecutor(cls.max_workers) as ex:
             ex.map(writer.write_lines, list(file_info), list(file_info.values()))

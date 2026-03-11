@@ -1,0 +1,20 @@
+[project]
+name = "nonarrate"
+version = "0.1.0"
+requires-python = ">= 3.12"
+authors = [
+  {name = "Edexal"}
+]
+maintainers = [
+  {name = "Edexal"}
+]
+description = "Remove narration and thoughts from Ren'Py games."
+readme = "README.md"
+license = "Unlicense"
+license-files = ["UNLICENSE"]
+
+[project.scripts]
+nonarrate = "main:run"
+
+[tool.setuptools.packages.find]
+where = ["lib"]

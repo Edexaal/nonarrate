@@ -2,3 +2,5 @@
 *.iml
 Samples/
 __pycache__/
+build/
+.venv

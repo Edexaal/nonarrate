@@ -4,8 +4,10 @@ from concurrent.futures import ThreadPoolExecutor
 from .reader import Reader
 from .writer import Writer
 from lib.custom_types import FileInfo
+from typing import final
 
 
+@final
 class FileExecutor:
     """File operations handled by thread pool executors.
 

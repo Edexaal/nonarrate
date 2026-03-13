@@ -16,6 +16,6 @@ class CharacterStrategy(IValidatorChain):
         self, speaker_name, next_validator: "IValidatorChain | None" = None
     ) -> None:
         super().__init__(next_validator)
-        self._regexPat = re.compile(
+        self._validate_pat = re.compile(
             rf'".*\b(?:{speaker_name})\b.*"\s*"[^"]+"', re.IGNORECASE
         )

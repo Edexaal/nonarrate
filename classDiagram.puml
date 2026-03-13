@@ -2,7 +2,7 @@
 'Validator
 abstract class IValidatorChain {
 	#nextValidator: IValidatorChain
-	#regexPat: Regex
+	#validatePat: Regex
 	{abstract} +isValid(line:str): bool
 	+setNextValidator(chain: IValidatorChain)
 }
@@ -11,13 +11,16 @@ class CharacterStrategy
 class BasicCharacterStrategy
 
 class ObjectStrategy {
-	-definedSpeakers: List<str>
-	'Map[file_url][hasChanged or lines in file]
-	+setDefinedSpeakers(fileMap: Map<str,Map<str,bool|List<str>>>)
+	#speakerObjects: Set<str>
+  #objNamePat: Regex
+  #charItemPat: Regex
+  -initCharItem(char_item: str|list<str>|None)
+	+defineSpeakers(fileMap: List<Dictionary<str,List<str>>>)
 }
 'Ex: narr "Player, please select this choice."
 class BasicObjectStrategy
-class CustomObjectStrategy
+'Ex: define narr = Character(None)
+class ObjectNoneItemStrategy
 
 class ItalicStrategy
 class ParenthesisStrategy
@@ -85,8 +88,8 @@ IValidatorChain <|-- ItalicStrategy
 IValidatorChain <|-- ObjectStrategy
 IValidatorChain <|-- CharacterStrategy
 CharacterStrategy <|-- BasicCharacterStrategy
-ObjectStrategy <|-- CustomObjectStrategy
 ObjectStrategy <|-- BasicObjectStrategy
+ObjectStrategy <|-- ObjectNoneItemStrategy
 Reader <|-- RenpyReader
 
 'Argument Relations

@@ -1,12 +1,38 @@
 import unittest
 from ..fixture import get_dialogue_list
-from lib.validator.speaker import BasicCharacterStrategy, CharacterStrategy
+from lib.validator.speaker import (
+    ObjectNoneItemStrategy,
+    BasicCharacterStrategy,
+    CharacterStrategy,
+    ObjectStrategy,
+    BasicObjectStrategy,
+)
 from lib.validator.ivalidator_chain import IValidatorChain
 
 
 class TestCharacter(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.character_definitions = [
+            {
+                "file.rpy": [
+                    'define narr = Character("Narrator")',
+                    'default narr = Character("Narrator")',
+                    'define nik_mind = Character("Nik\'s Mind")',
+                    'default nik_mind = Character("Nik\'s Mind")',
+                    'define miyaki = Character("Miyaki Thoughts")',
+                    'default miyaki = Character("Miyaki Thoughts")',
+                    'define loval = Character("Loval Thought")',
+                    'default loval = Character("Loval Thought")',
+                    'default marco = Character("Marco Thinking")',
+                    'define marco = Character("Marco Thinking")',
+                    'define carsi = Character("Carsi", kind=base)',
+                    'default blanka = Character("Blanka", kind=base)',
+                    "define none = Character(None)",
+                    "default not_here = Character(None)",
+                ],
+            }
+        ]
         cls.dialogues = {
             0: '"Jim liked driving around town with his hazard lights on."',
             1: 'mc "Today I heard something new and unmemorable."',
@@ -43,6 +69,20 @@ class TestCharacter(unittest.TestCase):
             31: '"maya cornstarke" "Today I heard something new and unmemorable."',
             32: '"Maya" "Today I heard something new and unmemorable."',
             33: '"Maya\'s Mind" "Today I heard something new and unmemorable."',
+            # Custom Object
+            34: 'marco "And so the story would move forward."',
+            35: 'kelly "And so the story would move forward."',
+            36: 'Marco "And so the story would move forward."',
+            37: 'marc "And so the story would move forward."',
+            38: 'carsi "And so the story would move forward."',
+            39: 'blanka "And so the story would move forward."',
+            40: 'narr "And so the story would move forward."',
+            41: 'nik_mind "And so the story would move forward."',
+            42: 'miyai "And so the story would move forward."',
+            43: 'miyaki "And so the story would move forward."',
+            44: 'loval "And so the story would move forward."',
+            45: 'none "And so the story would move forward."',
+            46: 'not_here "And so the story would move forward."',
         }
 
     def validate_lines(self):
@@ -61,6 +101,10 @@ class TestCharacter(unittest.TestCase):
         self.valid_indexes = valid_indexes
         self.validate_lines()
 
+    def start_object(self, strategy: ObjectStrategy, valid_indexes: list[int]):
+        strategy.define_speakers(TestCharacter.character_definitions)
+        self.start(strategy, valid_indexes)
+
     def test_basic_char(self):
         self.start(
             BasicCharacterStrategy(),
@@ -69,3 +113,15 @@ class TestCharacter(unittest.TestCase):
 
     def test_custom_char(self):
         self.start(CharacterStrategy("maya"), [21, 22, 23, 24, 25, 26, 27, 31, 32, 33])
+
+    def test_object_char(self):
+        self.start_object(ObjectStrategy("Marco"), [34])
+
+    def test_object_char_item(self):
+        self.start_object(ObjectStrategy("base"), [38, 39])
+
+    def test_basic_object_char(self):
+        self.start_object(BasicObjectStrategy(), [34, 40, 41, 43, 44])
+
+    def test_object_none_char_item(self):
+        self.start_object(ObjectNoneItemStrategy(), [45, 46])

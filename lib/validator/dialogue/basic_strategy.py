@@ -14,4 +14,4 @@ class BasicStrategy(IValidatorChain):
 
     def __init__(self, next_validator: "IValidatorChain | None" = None) -> None:
         super().__init__(next_validator)
-        self._regexPat = re.compile(r'^"[^"]+"$')
+        self._validate_pat = re.compile(r'^"[^"]+"$')

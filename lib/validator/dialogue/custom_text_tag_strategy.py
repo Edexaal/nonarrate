@@ -17,6 +17,6 @@ class CustomTextTagStrategy(IValidatorChain):
         self, tag_name: str, next_validator: "IValidatorChain | None" = None
     ) -> None:
         super().__init__(next_validator)
-        self._regexPat = re.compile(
+        self._validate_pat = re.compile(
             rf'[^=]+"{{{tag_name}(?:=[^}}]+)?}}.+{{/?{tag_name}}}'
         )

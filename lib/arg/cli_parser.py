@@ -57,8 +57,8 @@ class CLIParser:
         self.__add_arg(
             "-b",
             "--backup",
-            action="store_true",
-            help="Backup the folder before using %(prog)s",
+            type=pathlib.Path,
+            help="Backup the folder at specified location before using %(prog)s",
         )
         no_filters: dict[str, str] = {
             FilterTag.NO_BASIC_NARR.value: "Do not remove dialogues that don't have a speaker",

@@ -1,8 +1,8 @@
-from ..ivalidator_chain import IValidatorChain
+from ..ivalidator_chain_solo import IValidatorChainSolo
 import re
 
 
-class BasicStrategy(IValidatorChain):
+class BasicStrategy(IValidatorChainSolo):
     """Validator that checks if a line is a default narrator.
 
     The validated line must have dialogue without a speaker being explicitly stated. In Renpy, by default,
@@ -12,6 +12,6 @@ class BasicStrategy(IValidatorChain):
         "Hey! I'm actually a narrator."
     """
 
-    def __init__(self, next_validator: "IValidatorChain | None" = None) -> None:
+    def __init__(self, next_validator: "IValidatorChainSolo | None" = None) -> None:
         super().__init__(next_validator)
         self._validate_pat = re.compile(r'^"[^"]+"$')

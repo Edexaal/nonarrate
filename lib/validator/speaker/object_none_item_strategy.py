@@ -6,7 +6,7 @@ from ..ivalidator_chain import IValidatorChain
 class ObjectNoneItemStrategy(ObjectStrategy):
     """Validator that validates a Character(None) object.
 
-    Speakers saved with, Character(None), are narrators as only the dialogue of the speaker will
+    Speakers saved with, Character(None) or Character(), are narrators, as only the dialogue of the speaker will
     be present.
     """
 
@@ -15,4 +15,5 @@ class ObjectNoneItemStrategy(ObjectStrategy):
         next_validator: "IValidatorChain | None" = None,
     ) -> None:
         super().__init__(None, next_validator)
-        self._char_item_pat = re.compile(r"Character\((?:name\s?=\s?)?None\)")
+        ObjectNoneItemStrategy._char_item_pats.append(re.compile(r"Character\((?:name\s?=\s?)?None\)"))
+        ObjectNoneItemStrategy._char_item_pats.append(re.compile(r"Character\(\)"))

@@ -13,9 +13,10 @@ class ObjectStrategy(IValidatorChain):
         define lily = Character("Lily")
     """
 
-    # TODO: Create a class attribute to hold all regex patterns.
-
-    # TODO: Make '_speaker_objects' static too.
+    __obj_name_pat = re.compile(r"^(?:define|default)\s+(\w+)")
+    _speaker_objects: set[str] = set()
+    _char_item_pats: list[re.Pattern] = list()
+    _validate_pat: re.Pattern
 
     def __init__(
         self,
@@ -23,19 +24,23 @@ class ObjectStrategy(IValidatorChain):
         next_validator: "IValidatorChain | None" = None,
     ) -> None:
         super().__init__(next_validator)
-        self._obj_name_pat = re.compile(r"^(?:define|default)\s+(\w+)")
-        self.__init_char_item(char_item)
-        self._speaker_objects = set()
+        self.__init_char_items(char_item)
 
-    def __init_char_item(self, char_item):
+    @classmethod
+    def __init_char_items(cls, char_item):
         if type(char_item) is list:
             char_item = "|".join(char_item)
         if char_item:
-            self._char_item_pat = re.compile(rf"Character\(.*\b(?:{char_item})\b[^)]*\)")
+            cls._char_item_pats.append(re.compile(rf"Character\(.*\b(?:{char_item})\b[^)]*\)"))
 
-    # TODO: Make this static.
-    # Verify against the new class attribute
-    def define_speakers(self, file_infos: list[FileInfo]):
+    @classmethod
+    def reset(cls):
+        """Reset class attributes and compiled regex."""
+        cls._char_item_pats[:] = []
+        cls._speaker_objects.clear()
+
+    @classmethod
+    def define_speakers(cls, file_infos: list[FileInfo]):
         """Gather object names of speakers saved to a Character() object.
 
         Any text inside the Character object's parenthesis can be used to target a specific
@@ -47,11 +52,18 @@ class ObjectStrategy(IValidatorChain):
         """
         for file_info in file_infos:
             for line in (line for lines in file_info.values() for line in lines):
-                if self._char_item_pat.search(line):
-                    speaker_matches = self._obj_name_pat.match(line) if self._obj_name_pat else None
+                if any(char_pat.search(line) for char_pat in cls._char_item_pats):
+                    speaker_matches = cls.__obj_name_pat.match(line) if cls.__obj_name_pat else None
                     speaker = speaker_matches.group(1) if speaker_matches else None
                     if speaker:
-                        self._speaker_objects.add(speaker)
-        if self._speaker_objects:
-            joined_speakers = "|".join(self._speaker_objects)
-            self._validate_pat = re.compile(rf"\b(?:{joined_speakers})\b.+")
+                        cls._speaker_objects.add(speaker)
+        if cls._speaker_objects:
+            joined_speakers = "|".join(cls._speaker_objects)
+            cls._validate_pat = re.compile(rf"\b(?:{joined_speakers})\b.+")
+
+    def is_valid(self, line: str) -> bool:
+        if self._validate_pat.match(line):
+            return True
+        elif self._next_validator:
+            return self._next_validator.is_valid(line)
+        return False

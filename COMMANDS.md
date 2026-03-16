@@ -60,11 +60,11 @@ By default, *nonarrate* replaces a narration with a
 This allows you to see narrated scenes without their dialogue *(so just the image)*.
 To disable this feature, use this option.
 
-***-b, --backup***
+***-b, --backup*** `<backup-path-directory>`
 
-Creates a backup folder
+Creates a backup folder at specified location.
 
-Backup the folder before removing narration from `.rpy` files.
+Backup the project before removing narration from `.rpy` files.
 
 ### Filters
 

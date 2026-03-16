@@ -2,20 +2,25 @@
 'Validator
 abstract class IValidatorChain {
 	#nextValidator: IValidatorChain
-	#validatePat: Regex
 	{abstract} +isValid(line:str): bool
 	+setNextValidator(chain: IValidatorChain)
+}
+abstract class IValidatorChainSolo {
+	#validatePat: Regex
+  +isValid(line:str): bool
 }
 'Ex: "Narrator" "Player listen to me..."
 class CharacterStrategy
 class BasicCharacterStrategy
 
 class ObjectStrategy {
-	#speakerObjects: Set<str>
-  #objNamePat: Regex
-  #charItemPat: Regex
-  -initCharItem(char_item: str|list<str>|None)
+	{static}#speakerObjects: Set<str>
+  {static}-objNamePat: Regex
+  {static}#charItemPats: List<Regex>
+  {static}#validatePat: Regex
+  {static}-initCharItem(char_item: str|list<str>|None)
 	+defineSpeakers(fileMap: List<Dictionary<str,List<str>>>)
+  +isValid(line:str): bool
 }
 'Ex: narr "Player, please select this choice."
 class BasicObjectStrategy
@@ -40,6 +45,8 @@ class RenpyReader {
 }
 class Writer {
 	+writeLines(fileURL: str,lines: List<str>)
+  +copyTree(srcDir:str,destDir:str)
+  +backupDir(arg:Namespace)
 }
 class Deleter {
 	+delete(fileURL: str)
@@ -95,12 +102,13 @@ enum FilterTag {
 }
 
 'Validator Relations
-IValidatorChain <|-- BasicStrategy
-IValidatorChain <|-- CustomTextTagStrategy
-IValidatorChain <|-- ParenthesisStrategy
-IValidatorChain <|-- ItalicStrategy
+IValidatorChain <|-- IValidatorChainSolo
+IValidatorChainSolo <|-- BasicStrategy
+IValidatorChainSolo <|-- CustomTextTagStrategy
+IValidatorChainSolo <|-- ParenthesisStrategy
+IValidatorChainSolo <|-- ItalicStrategy
 IValidatorChain <|-- ObjectStrategy
-IValidatorChain <|-- CharacterStrategy
+IValidatorChainSolo <|-- CharacterStrategy
 CharacterStrategy <|-- BasicCharacterStrategy
 ObjectStrategy <|-- BasicObjectStrategy
 ObjectStrategy <|-- ObjectNoneItemStrategy

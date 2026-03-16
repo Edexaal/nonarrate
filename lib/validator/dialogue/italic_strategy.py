@@ -1,8 +1,8 @@
 import re
-from ..ivalidator_chain import IValidatorChain
+from ..ivalidator_chain_solo import IValidatorChainSolo
 
 
-class ItalicStrategy(IValidatorChain):
+class ItalicStrategy(IValidatorChainSolo):
     """Validator that checks if entire dialogue line is italic.
 
     Dialogue with italic narration is surrounded entirely by a `{i}line{/i}` tag. This
@@ -12,6 +12,6 @@ class ItalicStrategy(IValidatorChain):
         mc "{i}Maybe there's food left over.{/i}"
     """
 
-    def __init__(self, next_validator: "IValidatorChain | None" = None) -> None:
+    def __init__(self, next_validator: "IValidatorChainSolo | None" = None) -> None:
         super().__init__(next_validator)
         self._validate_pat = re.compile(r"[^=]+\"{i}(?:(?!{/?i}).)+{/?i}\"")

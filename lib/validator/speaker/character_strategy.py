@@ -1,8 +1,10 @@
 import re
+
+from lib.validator.ivalidator_chain_solo import IValidatorChainSolo
 from ..ivalidator_chain import IValidatorChain
 
 
-class CharacterStrategy(IValidatorChain):
+class CharacterStrategy(IValidatorChainSolo):
     """The base validator for validating characters/speakers surrounded by quotation marks.
 
     Multiple speakers can be validated all at once by making sure each speaker is joined together using '|'
@@ -12,10 +14,6 @@ class CharacterStrategy(IValidatorChain):
         "dev" "Thank you for playing my Ren'Py game!"
     """
 
-    def __init__(
-        self, speaker_name, next_validator: "IValidatorChain | None" = None
-    ) -> None:
+    def __init__(self, speaker_name, next_validator: "IValidatorChain | None" = None) -> None:
         super().__init__(next_validator)
-        self._validate_pat = re.compile(
-            rf'".*\b(?:{speaker_name})\b.*"\s*"[^"]+"', re.IGNORECASE
-        )
+        self._validate_pat = re.compile(rf'".*\b(?:{speaker_name})\b.*"\s*"[^"]+"', re.IGNORECASE)

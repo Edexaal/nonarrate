@@ -1,5 +1,4 @@
-from abc import ABC
-import re
+from abc import ABC, abstractmethod
 
 
 class IValidatorChain(ABC):
@@ -7,8 +6,8 @@ class IValidatorChain(ABC):
 
     def __init__(self, next_validator: "IValidatorChain | None" = None) -> None:
         self._next_validator = next_validator
-        self._validate_pat: "re.Pattern | None" = None
 
+    @abstractmethod
     def is_valid(self, line: str) -> bool:
         """Validate the given line and forward it to the next chain of validators if applicable.
 
@@ -22,11 +21,7 @@ class IValidatorChain(ABC):
             True if line passes validations set by a validator in the chain; False if all
             validators cannot validate the line.
         """
-        if self._validate_pat and self._validate_pat.match(line):
-            return True
-        elif self._next_validator:
-            return self._next_validator.is_valid(line)
-        return False
+        pass
 
     @property
     def next_validator(self) -> "IValidatorChain | None":

@@ -85,10 +85,11 @@ class TestCharacter(unittest.TestCase):
             46: 'not_here "And so the story would move forward."',
         }
 
+    def setUp(self) -> None:
+        ObjectStrategy.reset()
+
     def validate_lines(self):
-        valid_lines, invalid_lines = get_dialogue_list(
-            self.valid_indexes, TestCharacter.dialogues
-        )
+        valid_lines, invalid_lines = get_dialogue_list(self.valid_indexes, TestCharacter.dialogues)
         for line in valid_lines:
             with self.subTest(line=line):
                 self.assertTrue(self.validator.is_valid(line), line)

@@ -17,6 +17,9 @@ class NarratorHandler:
     def __is_image_label(self, strip_line: str) -> bool:
         return strip_line.startswith("image ") and strip_line.endswith(":")
 
+    def __is_comment(self, strip_line: str) -> bool:
+        return strip_line.startswith("#")
+
     def remove(self, file_infos: list[FileInfo], args) -> list[FileInfo]:
         """Removes narration & thoughts from file content.
 
@@ -36,6 +39,8 @@ class NarratorHandler:
             prev_line_info = {"is_narr": False, "line": ""}
             for line in file_info.lines:
                 strip_line = line.strip()
+                if self.__is_comment(strip_line):
+                    continue
                 is_narrator = args.validator.is_valid(strip_line)
 
                 # An 'image <label_name>:' is in use.
@@ -62,14 +67,14 @@ class NarratorHandler:
                         # Replaces narration with pauses
                         cleaned_lines.append(f"{' ' * self.__get_indent_num(line)}pause")
 
-                        # Keeps the narrator during choice menu appearance
-                        if strip_line.startswith("menu:"):
-                            label_check["is_choice_menu"] = True
-                            if prev_line_info["is_narr"]:
-                                length = len(cleaned_lines)
-                                cleaned_lines.insert(length - 1, prev_line_info["line"])
-                        elif label_check["is_choice_menu"] and len(strip_line) != 0:
-                            label_check["is_choice_menu"] = False
+                    # Keeps the narrator during choice menu appearance
+                    if strip_line.startswith("menu:"):
+                        label_check["is_choice_menu"] = True
+                        if prev_line_info["is_narr"]:
+                            length = len(cleaned_lines)
+                            cleaned_lines.insert(length - 1, prev_line_info["line"])
+                    elif label_check["is_choice_menu"] and len(strip_line) != 0:
+                        label_check["is_choice_menu"] = False
                 else:
                     cleaned_lines.append(line)
 

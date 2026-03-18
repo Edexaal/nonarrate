@@ -66,6 +66,13 @@ Creates a backup folder at specified location.
 
 Backup the project before removing narration from `.rpy` files.
 
+**-e, --regex**
+
+Enable regular expressions when specifying filter values.
+
+For filters that allow for user input, all values are treated as a regular expression.
+See [REGEX Example](#regex-examples) for more info.
+
 ### Filters
 
 #### Character/Speaker
@@ -101,7 +108,7 @@ Removes speaker(s) saved to a `Character` object.
 Sometimes, a narrator takes on the form of a character in game. Instead of being explicitly named *Narrator*, the
 narrator can introduce itself as *Emily*, *Dev*, *The Chosen One*, or anything else…
 
-**Side Note**: Each character name can be written as a **Regular Expression**. See [REGEX Examples](#regex-examples) for more info.
+**Side Note:** This option can use **REGEX**. Use `--regex` to enable this feature.  See [REGEX Examples](#regex-examples) for examples.
 
 ***—no-basic-char***
 
@@ -121,7 +128,7 @@ Removes a speaker introduced in quotes.
 
 Removes a speaker explicitly written alongside their dialogue and **NOT** saved to a `Character` object.
 
-**Side Note**: Each character name can be written as a **Regular Expression**. See [REGEX Examples](#regex-examples) for more info.
+**Side Note:** This option can use **REGEX**. Use `--regex` to enable this feature.  See [REGEX Examples](#regex-examples) for examples.
 
 - - -
 
@@ -165,6 +172,8 @@ Removes dialogue wrapped entirely in a custom text tag
 Developers can create their own [custom text tags](https://www.renpy.org/doc/html/custom_text_tags.html), adding
 custom style properties to them. Use this option to remove dialogue completely surrounded by a custom text tag.
 
+**Side Note:** This option can use **REGEX**. Use `--regex` to enable this feature.  See [REGEX Examples](#regex-examples) for examples.
+
 - - -
 
 ## Default Narrators
@@ -187,4 +196,8 @@ nonarrate --custom-char-obj Wilson "Gr[ea]yes"
 
 # Removes speakers: Temo, Temoes, Teemoes, & Teemo
 nonarrate --custom-char "Te{1,2}mo(es)?"
+
+# Removes speakers: [mcname]
+# Use '\\' to escape special characters.
+nonarrate --custom-char-obj '\\[mcname\\]'
 ```

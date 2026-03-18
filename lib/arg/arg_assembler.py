@@ -1,3 +1,4 @@
+import re
 from argparse import Namespace
 from typing import final
 from lib.validator.dialogue import ParenthesisStrategy, ItalicStrategy, BasicStrategy, CustomTextTagStrategy
@@ -51,12 +52,40 @@ class ArgAssembler:
             for narr_type in args.narr_types:
                 current_validator.next_validator = cls.__validators[narr_type]()
                 current_validator = current_validator.next_validator
-        current_validator = cls.__narg_filter(current_validator, args.custom_tag, FilterTag.CUSTOM_TEXT_TAG.value)
-        current_validator = cls.__narg_filter(current_validator, args.custom_char, FilterTag.CUSTOM_CHAR.value)
-        current_validator = cls.__narg_filter(current_validator, args.custom_char_obj, FilterTag.CUSTOM_CHAR_OBJ.value)
+        current_validator = cls.__narg_filter(
+            current_validator, cls.__escape(args, args.custom_tag), FilterTag.CUSTOM_TEXT_TAG.value
+        )
+        current_validator = cls.__narg_filter(
+            current_validator, cls.__escape(args, args.custom_char), FilterTag.CUSTOM_CHAR.value
+        )
+        current_validator = cls.__narg_filter(
+            current_validator, cls.__escape(args, args.custom_char_obj), FilterTag.CUSTOM_CHAR_OBJ.value
+        )
+
+    @staticmethod
+    def __escape(args, arg_filter_val: list[str] | None) -> str | list[str] | None:
+        """Convert filter value into a literal expression if '--regex' is enabled."""
+        if not arg_filter_val:
+            return
+        if not args.regex:
+            for i in range(len(arg_filter_val)):
+                arg_filter_val[i] = re.escape(arg_filter_val[i])
+            return arg_filter_val
+        else:
+            return "|".join(arg_filter_val)
 
     @classmethod
-    def __narg_filter(cls, validator, arg_filter: list[str], filter_name: str):
-        if arg_filter:
-            validator.next_validator = cls.__validators[filter_name]("|".join(arg_filter))
-            return validator.next_validator
+    def __narg_filter(cls, validator, arg_filter: str | list[str] | None, filter_name: str):
+        if not arg_filter:
+            return validator
+        if type(arg_filter) is str:
+            # Regex is On
+            validator.next_validator = cls.__validators[filter_name](arg_filter)
+        else:
+            # Regex is Off
+            arg_filter_len = len(arg_filter)
+            for i in range(arg_filter_len):
+                validator.next_validator = cls.__validators[filter_name](arg_filter[i])
+                if i < arg_filter_len - 1:
+                    validator = validator.next_validator
+        return validator.next_validator

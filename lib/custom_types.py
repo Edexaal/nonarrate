@@ -1,6 +1,5 @@
 from enum import Enum
-
-type FileInfo = dict[str, list[str]]
+from dataclasses import dataclass
 
 
 class FilterTag(Enum):
@@ -12,3 +11,11 @@ class FilterTag(Enum):
     CUSTOM_TEXT_TAG = "--custom-tag"
     CUSTOM_CHAR = "--custom-char"
     CUSTOM_CHAR_OBJ = "--custom-char-obj"
+
+
+@dataclass
+class FileInfo:
+    """Class to hold file information."""
+
+    url: str
+    lines: list[str]

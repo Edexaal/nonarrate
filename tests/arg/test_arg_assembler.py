@@ -23,6 +23,16 @@ class TestArgAssembler(unittest.TestCase):
         arg_namespace = fixture.get_args(self._parser, args)
         self.eval_validator_chain(arg_namespace, correct_type_list)
 
+    def start_escape(self, args, correct_count: int):
+        arg_namespace = fixture.get_args(self._parser, args)
+        ArgAssembler.assemble(arg_namespace)
+        count = 0
+        validator = arg_namespace.validator
+        while validator:
+            count += 1
+            validator = validator.next_validator
+        self.assertEqual(count, correct_count, "Incorrect number of validators created.")
+
     def test_no_args(self):
         args = [
             "game/",
@@ -52,3 +62,38 @@ class TestArgAssembler(unittest.TestCase):
             "karla",
         ]
         self.start(args, {ObjectNoneItemStrategy, CustomTextTagStrategy, CharacterStrategy, ObjectStrategy})
+
+    def test_regex_chain(self):
+        args = [
+            "game/",
+            FilterTag.NO_BASIC_CHAR.value,
+            FilterTag.NO_ITALIC_NARR.value,
+            FilterTag.NO_PARENTHESIS_NARR.value,
+            FilterTag.NO_BASIC_CHAR_OBJ.value,
+            FilterTag.NO_BASIC_NARR.value,
+            "--regex",
+            FilterTag.CUSTOM_CHAR.value,
+            "ten{3}",
+            "seco.+",
+            FilterTag.CUSTOM_TEXT_TAG.value,
+            "fzs?",
+            "py[Ww]",
+        ]
+        self.start_escape(args, 3)
+
+    def test_escaping_chain(self):
+        args = [
+            "game/",
+            FilterTag.NO_BASIC_CHAR.value,
+            FilterTag.NO_ITALIC_NARR.value,
+            FilterTag.NO_PARENTHESIS_NARR.value,
+            FilterTag.NO_BASIC_CHAR_OBJ.value,
+            FilterTag.NO_BASIC_NARR.value,
+            FilterTag.CUSTOM_CHAR.value,
+            "ten{3}",
+            "seco.+",
+            FilterTag.CUSTOM_TEXT_TAG.value,
+            "fzs?",
+            "py[Ww]",
+        ]
+        self.start_escape(args, 5)

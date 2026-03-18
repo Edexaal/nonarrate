@@ -1,0 +1,122 @@
+from .custom_types import FileInfo
+import typing
+
+
+@typing.final
+class NarratorHandler:
+    """Handles operations involving the removal of narration and thoughts.
+
+    This handler removes narration and thoughts detected in the contents of files. After the operation,
+    attempts to cleanup the file(s) are set in place.
+    """
+
+    def __get_indent_num(self, line: str) -> int:
+        """Gets the current amount of indentation."""
+        return len(line) - len(line.lstrip())
+
+    def __is_image_label(self, strip_line: str) -> bool:
+        return strip_line.startswith("image ") and strip_line.endswith(":")
+
+    def remove(self, file_infos: list[FileInfo], args) -> list[FileInfo]:
+        """Removes narration & thoughts from file content.
+
+        Along with the removal operation, cleanup operations are executed afterwards.
+
+        Args:
+            file_infos: a list of file information including their content and location.
+
+        Returns:
+            a list of file information and their modified content without the presence of a narrator or thought.
+        """
+        pause_statement = "pause "
+        label_check = {"is_choice_menu": False, "is_image_label": False}
+        for file_info in file_infos:
+            cleaned_lines = []
+            image_label_indent = 0
+            prev_line_info = {"is_narr": False, "line": ""}
+            for line in file_info.lines:
+                strip_line = line.strip()
+                is_narrator = args.validator.is_valid(strip_line)
+
+                # An 'image <label_name>:' is in use.
+                if not label_check["is_image_label"] and self.__is_image_label(strip_line):
+                    label_check["is_image_label"] = True
+                    image_label_indent = self.__get_indent_num(line)
+                elif (
+                    label_check["is_image_label"]
+                    and self.__get_indent_num(line) <= image_label_indent
+                    and not self.__is_image_label(strip_line)
+                ):
+                    label_check["is_image_label"] = False
+
+                if not label_check["is_image_label"]:
+                    if label_check["is_choice_menu"] or not is_narrator:
+                        cleaned_lines.append(line)
+                    elif (
+                        not args.no_pauses
+                        and is_narrator
+                        and not prev_line_info["line"].strip().startswith(pause_statement)
+                        and len(cleaned_lines)
+                        and cleaned_lines[len(cleaned_lines) - 1].strip().startswith(pause_statement)
+                    ):
+                        # Replaces narration with pauses
+                        cleaned_lines.append(f"{' ' * self.__get_indent_num(line)}pause")
+
+                        # Keeps the narrator during choice menu appearance
+                        if strip_line.startswith("menu:"):
+                            label_check["is_choice_menu"] = True
+                            if prev_line_info["is_narr"]:
+                                length = len(cleaned_lines)
+                                cleaned_lines.insert(length - 1, prev_line_info["line"])
+                        elif label_check["is_choice_menu"] and len(strip_line) != 0:
+                            label_check["is_choice_menu"] = False
+                else:
+                    cleaned_lines.append(line)
+
+                prev_line_info["is_narr"] = is_narrator
+                prev_line_info["line"] = line
+            file_info.lines = cleaned_lines
+        return self.__correct_indent(file_infos)
+
+    def __correct_indent(self, file_infos: list[FileInfo]) -> list[FileInfo]:
+        """Attempts to correct indentation for each line in a file content.
+
+        In order to do this, all file contents will be looped through again.
+
+        Args:
+            file_infos: list holding all files and their content.
+
+        Returns:
+            a list of all file info and their content.
+        """
+        for file_info in file_infos:
+            cleaned_lines = []
+            prev_indent_info = dict()
+            for line in file_info.lines:
+                strip_line = line.strip()
+                if strip_line.endswith(":") and not len(prev_indent_info):
+                    prev_indent_info["line"] = line
+                    prev_indent_info["indent"] = self.__get_indent_num(line)
+                elif strip_line.endswith(":") and len(prev_indent_info):
+                    line_indent_num = self.__get_indent_num(line)
+                    if prev_indent_info["indent"] < line_indent_num:
+                        cleaned_lines.append(prev_indent_info["line"])
+                        cleaned_lines.append(line)
+                    elif prev_indent_info["indent"] > line_indent_num:
+                        cleaned_lines.append(line)
+                    prev_indent_info.clear()
+                elif len(prev_indent_info):
+                    line_indent_num = self.__get_indent_num(line)
+                    if prev_indent_info["indent"] < line_indent_num:
+                        cleaned_lines.append(prev_indent_info["line"])
+                        cleaned_lines.append(line)
+                    elif not strip_line:
+                        cleaned_lines.append(prev_indent_info["line"])
+                    else:
+                        cleaned_lines.append(line)
+
+                    prev_indent_info.clear()
+                else:
+                    cleaned_lines.append(line)
+            file_info.lines = cleaned_lines
+        return file_infos

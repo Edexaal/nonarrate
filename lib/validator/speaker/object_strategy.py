@@ -16,7 +16,7 @@ class ObjectStrategy(IValidatorChain):
     __obj_name_pat = re.compile(r"^(?:define|default)\s+(\w+)")
     _speaker_objects: set[str] = set()
     _char_item_pats: list[re.Pattern] = list()
-    _validate_pat: re.Pattern
+    _validate_pat: "re.Pattern | None" = None
 
     def __init__(
         self,
@@ -31,7 +31,7 @@ class ObjectStrategy(IValidatorChain):
         if type(char_item) is list:
             char_item = "|".join(char_item)
         if char_item:
-            cls._char_item_pats.append(re.compile(rf"Character\(.*\b(?:{char_item})\b[^)]*\)"))
+            cls._char_item_pats.append(re.compile(rf"Character\([^)]*(?:{char_item})[^)]*\)"))
 
     @classmethod
     def reset(cls):
@@ -51,7 +51,7 @@ class ObjectStrategy(IValidatorChain):
             file_infos: list of all files and their content.
         """
         for file_info in file_infos:
-            for line in (line for lines in file_info.values() for line in lines):
+            for line in file_info.lines:
                 if any(char_pat.search(line) for char_pat in cls._char_item_pats):
                     speaker_matches = cls.__obj_name_pat.match(line) if cls.__obj_name_pat else None
                     speaker = speaker_matches.group(1) if speaker_matches else None
@@ -62,7 +62,7 @@ class ObjectStrategy(IValidatorChain):
             cls._validate_pat = re.compile(rf"\b(?:{joined_speakers})\b.+")
 
     def is_valid(self, line: str) -> bool:
-        if self._validate_pat.match(line):
+        if self._validate_pat and self._validate_pat.match(line):
             return True
         elif self._next_validator:
             return self._next_validator.is_valid(line)

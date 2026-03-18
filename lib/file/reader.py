@@ -12,12 +12,12 @@ class Reader:
             file_url: Path to file
 
         Returns:
-            A dictionary mapping file paths to their list of content in a file.
+            An object that holds file information.
         """
         lines = []
         with open(file_url, "r", encoding="utf-8") as f:
             lines = f.readlines()
-        return {file_url: lines}
+        return FileInfo(file_url, lines)
 
     def walk_files(self, root_dir: str) -> list[str]:
         """Retrieve all file paths recursively.

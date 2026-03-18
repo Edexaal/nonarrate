@@ -27,6 +27,6 @@ class FileExecutor:
         return file_infos
 
     @classmethod
-    def write_files(cls, writer: Writer, file_info: FileInfo):
+    def write_files(cls, writer: Writer, file_infos: list[FileInfo]):
         with ThreadPoolExecutor(cls.max_workers) as ex:
-            ex.map(writer.write_lines, list(file_info), list(file_info.values()))
+            ex.map(writer.write_lines, file_infos)

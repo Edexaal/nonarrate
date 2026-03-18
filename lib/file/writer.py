@@ -1,19 +1,20 @@
 import pathlib
 import shutil
 
+from lib.custom_types import FileInfo
+
 
 class Writer:
     """Tools for writing content to files."""
 
-    def write_lines(self, file_url: str, lines: list[str]):
+    def write_lines(self, file_info: FileInfo):
         """Write lines to a file.
 
         Args:
-            file_url: Path to a file.
-            lines: list of text content to write to file
+            file_info: Class that holds file information.
         """
-        with open(file_url, "w", encoding="utf-8") as f:
-            f.writelines(lines)
+        with open(file_info.url, "w", encoding="utf-8") as f:
+            f.writelines(file_info.lines)
 
     def copy_tree(self, src_dir: str | pathlib.Path, dest_dir: str | pathlib.Path):
         """Copy all files/folders in a directory recursively to specified location.
@@ -33,5 +34,5 @@ class Writer:
         Args:
             arg_namespace: Parsed arguments saved to a namespace
         """
-        if not arg_namespace.backup:
+        if arg_namespace.backup:
             self.copy_tree(arg_namespace.folder_or_file, arg_namespace.backup)

@@ -126,3 +126,6 @@ class TestCharacter(unittest.TestCase):
 
     def test_object_none_char_item(self):
         self.start_object(ObjectNoneItemStrategy(), [45, 46])
+
+    def test_chaining(self):
+        self.start_object(BasicObjectStrategy(ObjectStrategy("base")), [34, 38, 39, 40, 41, 43, 44])

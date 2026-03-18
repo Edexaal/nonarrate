@@ -19,7 +19,7 @@ class ObjectStrategy {
   {static}#charItemPats: List<Regex>
   {static}#validatePat: Regex
   {static}-initCharItem(char_item: str|list<str>|None)
-	+defineSpeakers(fileMap: List<Dictionary<str,List<str>>>)
+	+defineSpeakers(fileMap: List<FileInfo>)
   +isValid(line:str): bool
 }
 'Ex: narr "Player, please select this choice."
@@ -37,8 +37,8 @@ class BasicStrategy
 
 'File Descriptors
 class Reader {
-	+readLines(fileURL: str): Dictionary<str,List<str>>
-	+walkFiles(rootDir:str): List<str>
+	+readLines(fileURL: str): FileInfo
+  +walkFiles(rootDir:str): List<str>
 }
 class RenpyReader {
   +walkFiles(rootDir:str): List<str>
@@ -54,16 +54,15 @@ class Deleter {
 
 'ThreadExecutors
 class  FileExecutor <<Singleton>>{
-	{static}+fileLines(reader:Reader,rootDir:str): List<Dictionary<str,List<str>>>
-	{static}+writeFiles(writer:Writer,fileInfo:Dictionary<str,List<str>>)
+	{static}+fileLines(reader:Reader,rootDir:str): List<FileInfo>
+  {static}+writeFiles(writer:Writer,fileInfo:FileInfo)
 }
 
 'Narrator
 class  NarratorHandler <<Singleton>>{
-	+remove(IValidatorChain,lines:Map<str,Map<str,bool|List<str>>>)
-	-cleanup(lines: Map<str,Map<str,bool|List<str>>>)
-	-correctIndentation(lines: Map<str,Map<str,bool|List<str>>>)
-	-cleanPause(lines: Map<str,Map<str,bool|List<str>>>)
+	+remove(fileInfos:List<FileInfo>,args:Namespace): List<Dictionary<str,List<str>>>
+  -getIdentNum(line:str):int
+	-correctIndent(fileInfos:List<FileInfo>): List<FileInfo>
 }
 class  ErrorFixer <<Singleton>>{
 	-destPat: Regex
@@ -71,6 +70,10 @@ class  ErrorFixer <<Singleton>>{
 	-lineNumPat: Regex
 	-getErrors(reader:FileReader): Map<str,List<Map<str,str|int>>>
 	-correctErrors(errors: Map<str,List<Map<str,str|int>>>,reader: FileReader,writer: FileWriter, deleter: FileDeleter)
+}
+dataclass FileInfo {
+  +url:str
+  +lines: List<str>
 }
 
 'Argument Classes
@@ -87,7 +90,10 @@ class ArgChecker {
 }
 class ArgAssembler {
   {static}-validators: Dictionary<str,Type>
-  {static}+assemble(args)
+  {static}+assemble(args:Namespace)
+  {static}-convertFilters(args:Namespace)
+  {static}-escape(args:Namespace, arg_filter_val: Union<List<str>,None>>): Union<str,List<str>,None>
+  {static}-nargFilter(validator:Union<IValidatorChain,None>,arg_filter: Union<str,List<str>,None>,filterName:str): IValidatorChain
 }
 
 enum FilterTag {

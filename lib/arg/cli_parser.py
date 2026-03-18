@@ -60,6 +60,12 @@ class CLIParser:
             type=pathlib.Path,
             help="Backup the folder at specified location before using %(prog)s",
         )
+        self.__add_arg(
+            "-e",
+            "--regex",
+            action="store_true",
+            help="Enable regular expressions when specifying filter values.",
+        )
         no_filters: dict[str, str] = {
             FilterTag.NO_BASIC_NARR.value: "Do not remove dialogues that don't have a speaker",
             FilterTag.NO_BASIC_CHAR_OBJ.value: "Do not remove default narrators saved to a Character object",

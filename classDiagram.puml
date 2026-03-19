@@ -56,24 +56,39 @@ class Deleter {
 class  FileExecutor <<Singleton>>{
 	{static}+fileLines(reader:Reader,rootDir:str): List<FileInfo>
   {static}+writeFiles(writer:Writer,fileInfo:FileInfo)
+  {static}+fix_errors(error_txt:Path,reader:Reader)
+  {static}-fixFunc(errors: List<RenpyError>)
 }
 
 'Narrator
 class  NarratorHandler <<Singleton>>{
+  {static}+PAUSE_STATEMENT:str
 	+remove(fileInfos:List<FileInfo>,args:Namespace): List<Dictionary<str,List<str>>>
-  -getIdentNum(line:str):int
+  +getIdentNum(line:str):int
+  -isComment(line:str):bool
+  -isImageLabel(line:str):bool
 	-correctIndent(fileInfos:List<FileInfo>): List<FileInfo>
+  -pauseFilter(fileInfos:List<FileInfo>): List<FileInfo>
 }
 class  ErrorFixer <<Singleton>>{
 	-destPat: Regex
 	-typePat: Regex
 	-lineNumPat: Regex
-	-getErrors(reader:FileReader): Map<str,List<Map<str,str|int>>>
-	-correctErrors(errors: Map<str,List<Map<str,str|int>>>,reader: FileReader,writer: FileWriter, deleter: FileDeleter)
+  -projectDir:Union[str,None]
+  +fix(errors: List<RenpyError>,reader:Reader,writer:Writer,deleter:Deleter)
+  {static}-addError(errors: Dictionary<str,List<RenpyError>>,error: RenpyError)
+  {static}-getError(line:str): RenpyError
+  -dedentedLines(file_info:FileInfo,start_index: int): List<str>
+	-getErrors(errors_txt:Path, reader:FileReader): Dictionary<str,List<RenpyError>>
 }
 dataclass FileInfo {
   +url:str
   +lines: List<str>
+}
+dataclass RenpyError {
+  +line_num:Union[int,None]
+  +file_loc:Union[str,None]
+  +category:Union[str,None]
 }
 
 'Argument Classes

@@ -1,0 +1,9 @@
+{
+ "version": "0.2.0",
+  "configurations": [{
+    "type": "python",
+    "request": "launch",
+    "program": "${workspaceFolder}/main.py",
+    "name": "start main.py in root project"
+  }]
+}

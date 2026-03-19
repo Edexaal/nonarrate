@@ -51,14 +51,19 @@ python nonarrate C:\mycoolgame\errors.txt
 
 ### General
 
-***—no-pauses***
+***-p, —pauses***
 
-Do not show narrated scenes stripped of narration.
+Show narrated scenes stripped of narration by pausing.
 
-By default, *nonarrate* replaces a narration with a
+*nonarrate* will replace narration with a
  [￼`pause`￼ statement](https://www.renpy.org/doc/html/quickstart.html#pause-statement).
-This allows you to see narrated scenes without their dialogue *(so just the image)*.
+This allows you to see narrated scenes without their dialogue
+*(so you can see just the image/CG/animation/etc.)*.
 To disable this feature, use this option.
+
+**Side Note:** Since narrated dialogues are replaced by pause statements, there are times when
+clicking to move forward *feels* like it does nothing. In reality, the next
+sequence is *also* a pause statement.
 
 ***-b, --backup*** `<backup-path-directory>`
 

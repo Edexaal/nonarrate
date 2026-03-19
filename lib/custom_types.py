@@ -19,3 +19,12 @@ class FileInfo:
 
     url: str
     lines: list[str]
+
+
+@dataclass
+class RenpyError:
+    """Represents an error from the 'errors.txt' file."""
+
+    file_loc: str | None
+    line_num: int | None
+    category: str | None

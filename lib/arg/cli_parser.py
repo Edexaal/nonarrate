@@ -44,9 +44,10 @@ class CLIParser:
             help="Removes narration from .rpy files OR fix errors from errors.txt file",
         )
         self.__add_arg(
-            "--no-pauses",
+            "-p",
+            "--pauses",
             action="store_true",
-            help="Do now show narrated scenes stripped of narration",
+            help="Show narrated scenes stripped of narration by pausing.",
         )
         self.__add_arg(
             "-v",

@@ -8,9 +8,15 @@ class NarratorHandler:
 
     This handler removes narration and thoughts detected in the contents of files. After the operation,
     attempts to cleanup the file(s) are set in place.
+
+    Attributes:
+        PAUSE_STATEMENT: represents Ren'Py's 'pause' statement.
     """
 
-    def __get_indent_num(self, line: str) -> int:
+    PAUSE_STATEMENT: str = "pause"
+
+    @staticmethod
+    def get_indent_num(line: str) -> int:
         """Gets the current amount of indentation."""
         return len(line) - len(line.lstrip())
 
@@ -31,7 +37,6 @@ class NarratorHandler:
         Returns:
             a list of file information and their modified content without the presence of a narrator or thought.
         """
-        pause_statement = "pause "
         label_check = {"is_choice_menu": False, "is_image_label": False}
         for file_info in file_infos:
             cleaned_lines = []
@@ -46,10 +51,10 @@ class NarratorHandler:
                 # An 'image <label_name>:' is in use.
                 if not label_check["is_image_label"] and self.__is_image_label(strip_line):
                     label_check["is_image_label"] = True
-                    image_label_indent = self.__get_indent_num(line)
+                    image_label_indent = self.get_indent_num(line)
                 elif (
                     label_check["is_image_label"]
-                    and self.__get_indent_num(line) <= image_label_indent
+                    and self.get_indent_num(line) <= image_label_indent
                     and not self.__is_image_label(strip_line)
                 ):
                     label_check["is_image_label"] = False
@@ -58,14 +63,16 @@ class NarratorHandler:
                     if label_check["is_choice_menu"] or not is_narrator:
                         cleaned_lines.append(line)
                     elif (
-                        not args.no_pauses
+                        args.pauses
                         and is_narrator
-                        and not prev_line_info["line"].strip().startswith(pause_statement)
+                        and not prev_line_info["line"].strip().startswith(NarratorHandler.PAUSE_STATEMENT)
                         and len(cleaned_lines)
-                        and cleaned_lines[len(cleaned_lines) - 1].strip().startswith(pause_statement)
+                        and not cleaned_lines[len(cleaned_lines) - 1]
+                        .strip()
+                        .startswith(NarratorHandler.PAUSE_STATEMENT)
                     ):
                         # Replaces narration with pauses
-                        cleaned_lines.append(f"{' ' * self.__get_indent_num(line)}pause")
+                        cleaned_lines.append(f"{' ' * self.get_indent_num(line)}{NarratorHandler.PAUSE_STATEMENT}\n")
 
                     # Keeps the narrator during choice menu appearance
                     if strip_line.startswith("menu:"):
@@ -81,6 +88,8 @@ class NarratorHandler:
                 prev_line_info["is_narr"] = is_narrator
                 prev_line_info["line"] = line
             file_info.lines = cleaned_lines
+        if args.pauses:
+            file_infos = self.__pause_filter(file_infos)
         return self.__correct_indent(file_infos)
 
     def __correct_indent(self, file_infos: list[FileInfo]) -> list[FileInfo]:
@@ -101,17 +110,13 @@ class NarratorHandler:
                 strip_line = line.strip()
                 if strip_line.endswith(":") and not len(prev_indent_info):
                     prev_indent_info["line"] = line
-                    prev_indent_info["indent"] = self.__get_indent_num(line)
+                    prev_indent_info["indent"] = self.get_indent_num(line)
                 elif strip_line.endswith(":") and len(prev_indent_info):
-                    line_indent_num = self.__get_indent_num(line)
-                    if prev_indent_info["indent"] < line_indent_num:
-                        cleaned_lines.append(prev_indent_info["line"])
-                        cleaned_lines.append(line)
-                    elif prev_indent_info["indent"] > line_indent_num:
-                        cleaned_lines.append(line)
+                    cleaned_lines.append(prev_indent_info["line"])
+                    cleaned_lines.append(line)
                     prev_indent_info.clear()
                 elif len(prev_indent_info):
-                    line_indent_num = self.__get_indent_num(line)
+                    line_indent_num = self.get_indent_num(line)
                     if prev_indent_info["indent"] < line_indent_num:
                         cleaned_lines.append(prev_indent_info["line"])
                         cleaned_lines.append(line)
@@ -123,5 +128,23 @@ class NarratorHandler:
                     prev_indent_info.clear()
                 else:
                     cleaned_lines.append(line)
+            file_info.lines = cleaned_lines
+        return file_infos
+
+    def __pause_filter(self, file_infos: list[FileInfo]) -> list[FileInfo]:
+        """Removes subsequent pause statements.
+
+        Args:
+            file_infos: a list of file information.
+        """
+        for file_info in file_infos:
+            cleaned_lines = []
+            is_prev_pause = False
+            for line in file_info.lines:
+                is_pause = line.strip().startswith(NarratorHandler.PAUSE_STATEMENT)
+                if is_pause and is_prev_pause:
+                    continue
+                cleaned_lines.append(line)
+                is_prev_pause = is_pause
             file_info.lines = cleaned_lines
         return file_infos

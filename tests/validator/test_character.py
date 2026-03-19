@@ -8,14 +8,16 @@ from lib.validator.speaker import (
     BasicObjectStrategy,
 )
 from lib.validator.ivalidator_chain import IValidatorChain
+from lib.custom_types import FileInfo
 
 
 class TestCharacter(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.character_definitions = [
-            {
-                "file.rpy": [
+            FileInfo(
+                "file.rpy",
+                [
                     'define narr = Character("Narrator")',
                     'default narr = Character("Narrator")',
                     'define nik_mind = Character("Nik\'s Mind")',
@@ -31,7 +33,7 @@ class TestCharacter(unittest.TestCase):
                     "define none = Character(None)",
                     "default not_here = Character(None)",
                 ],
-            }
+            )
         ]
         cls.dialogues = {
             0: '"Jim liked driving around town with his hazard lights on."',

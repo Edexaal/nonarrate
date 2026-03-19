@@ -1,11 +1,12 @@
 import os
+import pathlib
 from ..custom_types import FileInfo
 
 
 class Reader:
     """Read content from file(s)."""
 
-    def read_lines(self, file_url: str) -> FileInfo:
+    def read_lines(self, file_url: str | pathlib.Path) -> FileInfo:
         """Retrieve lines from a file.
 
         Args:
@@ -17,7 +18,7 @@ class Reader:
         lines = []
         with open(file_url, "r", encoding="utf-8") as f:
             lines = f.readlines()
-        return FileInfo(file_url, lines)
+        return FileInfo(str(file_url), lines)
 
     def walk_files(self, root_dir: str) -> list[str]:
         """Retrieve all file paths recursively.

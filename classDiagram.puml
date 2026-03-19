@@ -81,6 +81,11 @@ class  ErrorFixer <<Singleton>>{
   -dedentedLines(file_info:FileInfo,start_index: int): List<str>
 	-getErrors(errors_txt:Path, reader:FileReader): Dictionary<str,List<RenpyError>>
 }
+class Log {
+  {static}+log(text:str)
+  {static}+complete(text:str)
+  {static}+wait(text:str)
+}
 dataclass FileInfo {
   +url:str
   +lines: List<str>

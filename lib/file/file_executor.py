@@ -2,6 +2,8 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 import pathlib
 
+from lib.log import Log
+
 from ..error_fixer import ErrorFixer
 
 from .deleter import Deleter
@@ -38,8 +40,11 @@ class FileExecutor:
 
     @classmethod
     def fix_errors(cls, error_txt: pathlib.Path, reader: Reader):
+        Log.wait(f"Parsing errors from {error_txt}")
         errors = ErrorFixer.get_errors(error_txt, reader)
+        Log.complete("Error parsing")
         with ThreadPoolExecutor(cls.max_workers) as ex:
+            Log.wait("Fixing errors")
             ex.map(cls.__fix_func, errors.values())
 
     @classmethod

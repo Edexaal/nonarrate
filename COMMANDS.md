@@ -61,9 +61,9 @@ This allows you to see narrated scenes without their dialogue
 *(so you can see just the image/CG/animation/etc.)*.
 To disable this feature, use this option.
 
-**Side Note:** Since narrated dialogues are replaced by pause statements, there are times when
-clicking to move forward *feels* like it does nothing. In reality, the next
-sequence is *also* a pause statement.
+**Side Note:** Since narrated dialogues are replaced by pause statements, there
+are some instances when clicking to move forward *feels* like it does nothing.
+In reality, the next sequence is *also* a pause statement.
 
 ***-b, --backup*** `<backup-path-directory>`
 

@@ -2,6 +2,7 @@ import pathlib
 import shutil
 
 from lib.custom_types import FileInfo
+from lib.log import Log
 
 
 class Writer:
@@ -35,4 +36,6 @@ class Writer:
             arg_namespace: Parsed arguments saved to a namespace
         """
         if arg_namespace.backup:
+            Log.wait(f"Backing up files to {arg_namespace.backup}")
             self.copy_tree(arg_namespace.folder_or_file, arg_namespace.backup)
+            Log.complete("Backup")

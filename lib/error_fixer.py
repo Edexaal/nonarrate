@@ -7,6 +7,7 @@ from lib.custom_types import FileInfo, RenpyError
 from lib.file.deleter import Deleter
 from lib.file.reader import Reader
 from lib.file.writer import Writer
+from lib.log import Log
 from lib.narrator_handler import NarratorHandler
 
 
@@ -59,12 +60,16 @@ class ErrorFixer:
         cls._project_dir = os.path.dirname(errors_txt)
         file_info = reader.read_lines(errors_txt)
         errors = {}
+        total_errors_log = 0
         for line in file_info.lines:
             strip_line = line.strip()
             if not strip_line.startswith("File") and not strip_line.startswith("and File"):
                 continue
             error = cls.__get_error(line)
+            if error.category:
+                total_errors_log += 1
             cls.__add_error(errors, error)
+        Log.log(f"Total errors detected: {total_errors_log}")
         return errors
 
     def __dedent_lines(self, file_info: FileInfo, start_index: int) -> list[str]:

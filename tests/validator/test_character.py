@@ -6,6 +6,7 @@ from lib.validator.speaker import (
     CharacterStrategy,
     ObjectStrategy,
     BasicObjectStrategy,
+    ItalicObjectStrategy,
 )
 from lib.validator.ivalidator_chain import IValidatorChain
 from lib.custom_types import FileInfo
@@ -36,6 +37,10 @@ class TestCharacter(unittest.TestCase):
                     'default ip = Character ("Ipol Thought")',
                     'define uma = Character  ("Umeha", kind=base)',
                     'define l = Character   ("Linda")',
+                    'define b_ = Character("Balum", what_italic=True)',
+                    'define bi_ = Character("Bilf",what_color="#FFFF00", what_italic=True)',
+                    'define bik_ = Character("Bikwaski", what_color="#FFFF00", what_italic= True)',
+                    'define bik_g = Character("Big Guy", what_color="#FFFF00", what_italic = True)',
                 ],
             )
         ]
@@ -93,6 +98,10 @@ class TestCharacter(unittest.TestCase):
             48: 'l "And so the story would move forward."',
             49: 'uma "And so the story would move forward."',
             50: 'not_now "And so the story would move forward."',
+            51: 'b_ "And so the story would move forward."',
+            52: 'bi_ "And so the story would move forward."',
+            53: 'bik_ "And so the story would move forward."',
+            54: 'bik_g "And so the story would move forward."',
         }
 
     def setUp(self) -> None:
@@ -147,3 +156,7 @@ class TestCharacter(unittest.TestCase):
             default n = Character     ('Nadia')
         """
         self.start_object(ObjectStrategy(["Linda", "Umeha"]), [48, 49])
+
+    def test_italic_object(self):
+        """Test if Character object has 'what_italic=True' parameter."""
+        self.start_object(ItalicObjectStrategy(), [51, 52, 53, 54])

@@ -20,6 +20,7 @@ class ErrorType(enum.StrEnum):
     EXPECTED_STATEMENT = "expected statement"
     INDENT_MISMATCH = "Indentation mismatch"
     DUPLICATE = enum.auto()
+    MENU_NO_CHOICES = "Menu does not contain any choices"
 
 
 @final
@@ -33,7 +34,7 @@ class ErrorFixer:
     _dest_pat: re.Pattern = re.compile(r"(?:and )?File\s+.+(game/.+\.rpy)")
     _line_num_pat: re.Pattern = re.compile(r".+line (\d+):")
     _type_pat: re.Pattern = re.compile(
-        rf".+({ErrorType.NON_EMPTY}|{ErrorType.INDENTED_LINE}|{ErrorType.EXPECTED_STATEMENT}|{ErrorType.INDENT_MISMATCH})"
+        rf".+({ErrorType.NON_EMPTY}|{ErrorType.INDENTED_LINE}|{ErrorType.EXPECTED_STATEMENT}|{ErrorType.INDENT_MISMATCH}|{ErrorType.MENU_NO_CHOICES})"
     )
     _project_dir: str | None = None
 
@@ -85,7 +86,7 @@ class ErrorFixer:
         Log.log(f"Total errors detected: {total_errors_log}")
         return errors
 
-    def __dedent_lines(self, lines: list[str], start_index: int) -> list[str]:
+    def __dedent_lines(self, lines: list[str], start_index: int, start_indent: int | None = None) -> list[str]:
         """Correct indentation by decreasing indent level by 1.
 
         Indentation will be decreased by 1 level (4 spaces) until a line with the
@@ -98,7 +99,7 @@ class ErrorFixer:
         Returns:
             a list including dedented lines.
         """
-        min_indent = None
+        min_indent = start_indent
         for i, line in enumerate(lines[start_index:], start_index):
             if min_indent is None:
                 lines[i] = line[4:]
@@ -154,6 +155,13 @@ class ErrorFixer:
                         file_info.lines = self.__dedent_lines(file_info.lines, error.line_num - 1)
                     elif ErrorType.INDENT_MISMATCH in error.category:
                         file_info.lines = self.__reverse_dedent_lines(file_info.lines, error.line_num - 1)
+                    elif ErrorType.MENU_NO_CHOICES in error.category:
+                        file_info.lines = self.__dedent_lines(
+                            file_info.lines,
+                            error.line_num,
+                            NarratorHandler.get_indent_num(file_info.lines[error.line_num - 1]),
+                        )
+                        file_info.lines.pop(error.line_num - 1)
                 elif ErrorType.DUPLICATE in error.category:
                     deleter.delete(current_file_loc)
         writer.write_lines(file_info)

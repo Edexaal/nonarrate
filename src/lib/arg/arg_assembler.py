@@ -2,13 +2,13 @@ import re
 from argparse import Namespace
 from typing import final
 from lib.validator.dialogue import ParenthesisStrategy, ItalicStrategy, BasicStrategy, CustomTextTagStrategy
-from lib.validator.ivalidator_chain import IValidatorChain
 from lib.validator.speaker import (
     ObjectNoneItemStrategy,
     ObjectStrategy,
     BasicCharacterStrategy,
     CharacterStrategy,
     BasicObjectStrategy,
+    ItalicObjectStrategy,
 )
 from lib.custom_types import FilterTag
 
@@ -52,6 +52,9 @@ class ArgAssembler:
             for narr_type in args.narr_types:
                 current_validator.next_validator = cls.__validators[narr_type]()
                 current_validator = current_validator.next_validator
+                if narr_type == FilterTag.NO_ITALIC_NARR.value:
+                    current_validator.next_validator = ItalicObjectStrategy()
+                    current_validator = current_validator.next_validator
         current_validator = cls.__narg_filter(
             current_validator, cls.__escape(args, args.custom_tag), FilterTag.CUSTOM_TEXT_TAG.value
         )

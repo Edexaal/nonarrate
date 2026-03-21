@@ -3,6 +3,7 @@ from .character_strategy import CharacterStrategy
 from .object_strategy import ObjectStrategy
 from .basic_object_strategy import BasicObjectStrategy
 from .object_none_item_strategy import ObjectNoneItemStrategy
+from .italic_object_strategy import ItalicObjectStrategy
 
 __all__ = [
     "ObjectNoneItemStrategy",
@@ -10,4 +11,5 @@ __all__ = [
     "ObjectStrategy",
     "BasicCharacterStrategy",
     "CharacterStrategy",
+    "ItalicObjectStrategy",
 ]

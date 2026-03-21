@@ -117,7 +117,16 @@ class NarratorHandler:
                     prev_indent_info.clear()
                 elif len(prev_indent_info):
                     line_indent_num = self.get_indent_num(line)
-                    if prev_indent_info["indent"] < line_indent_num:
+                    if (
+                        (prev_indent_info["indent"] < line_indent_num)
+                        # labels do not need to follow strict indentation
+                        # Valid example:
+                        # label my_cool_label:
+                        # scene 103
+                        # mc "esvebrewsgr"
+                        or prev_indent_info["indent"] == line_indent_num
+                        and prev_indent_info["line"].lstrip().startswith("label ")
+                    ):
                         cleaned_lines.append(prev_indent_info["line"])
                         cleaned_lines.append(line)
                     elif not strip_line:

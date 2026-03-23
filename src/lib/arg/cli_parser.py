@@ -35,6 +35,7 @@ class CLIParser:
 
     def __init_parser_groups(self):
         self.__filter_group = self.__parser.add_argument_group("Filters", "Types of narration to remove. (choose 1+)")
+        self.__search_group = self.__parser.add_argument_group("File Search", "Limits the search for .rpy files.")
 
     def __configure_opts(self):
         self.__add_arg(
@@ -67,7 +68,7 @@ class CLIParser:
             action="store_true",
             help="Enable regular expressions when specifying filter values.",
         )
-        self.__add_arg(
+        self.__add_search_arg(
             "--invalid-dirs",
             action=AppendUnique,
             default={
@@ -86,7 +87,7 @@ class CLIParser:
             metavar="IGNORE_FOLDERS",
             help="Ignore specified [folders] when looking for .rpy files",
         )
-        self.__add_arg(
+        self.__add_search_arg(
             "--invalid-files",
             action=AppendUnique,
             default={"gui", "options", "screens", "images", "gallery"},
@@ -94,12 +95,12 @@ class CLIParser:
             help="Ignore specified [files] when looking for .rpy files.",
         )
         no_filters: dict[str, str] = {
-            FilterTag.BASIC_NARR.value: "Do not remove dialogues that don't have a speaker",
-            FilterTag.BASIC_CHAR_OBJ.value: "Do not remove default narrators saved to a Character object",
-            FilterTag.ITALIC_NARR.value: "Do not remove dialogues that are fully italic",
-            FilterTag.PARENTHESIS_NARR.value: "Do not remove dialogue fully wrapped in a parenthesis",
-            FilterTag.BASIC_CHAR.value: "Keep default narrators not in a Character object",
-            FilterTag.NONE_CHAR_OBJ.value: "Do not remove empty Character objects.",
+            FilterTag.BASIC_NARR.value: "Keep dialogues that don't have a speaker",
+            FilterTag.BASIC_CHAR_OBJ.value: "Keep [default narrators] that are saved to a Character object",
+            FilterTag.ITALIC_NARR.value: "Keep fully italic dialogues",
+            FilterTag.PARENTHESIS_NARR.value: "Keep dialogue fully wrapped in a parenthesis",
+            FilterTag.BASIC_CHAR.value: "Keep [default narrators] not saved to a Character object",
+            FilterTag.NONE_CHAR_OBJ.value: "Keep empty Character objects.",
         }
         self.__add_no_filters(no_filters)
         self.__add_filter_arg(
@@ -152,6 +153,9 @@ class CLIParser:
 
     def __add_filter_arg(self, *args, **kwargs: Any):
         self.__filter_group.add_argument(*args, **kwargs)
+
+    def __add_search_arg(self, *args, **kwargs: Any):
+        self.__search_group.add_argument(*args, **kwargs)
 
     def parse_args(self, *args):
         """Parses a set of command arguments.

@@ -133,7 +133,7 @@ nonarrate will ignore the specified files when searching for *.rpy* files.
 nonarrate mycoolgame\game --basic-char-obj 
 ```
 
-Do **not** remove [default narrators](#default-narrators) saved to a `Character` object.
+Keep [default narrators](#default-narrators) saved to a `Character` object.
 
 By default, *nonarrate*
 will remove *all* [default narrators](#default-narrators) saved to a character object. Use this option to disable this filter.
@@ -154,7 +154,7 @@ narrator can introduce itself as *Emily*, *Dev*, *The Chosen One*, or anything e
 
 ***—basic-char***
 
-Do not remove [default narrators](#default-narrators) introduced in quotes.
+Keep [default narrators](#default-narrators) introduced in quotes.
 
 Prevents *all* [default narrators](#default-narrators) explicitly written in quotes
 alongside their dialogue from being removed. These types of narrators are
@@ -162,7 +162,7 @@ alongside their dialogue from being removed. These types of narrators are
 
 ***--none-char-obj***
 
-Do not remove narrators with empty Character objects.
+Keep empty Character objects.
 
 Empty character objects, written as `Character(), Character(None), Character("")`, or simply **NOT** using the [`name` parameter](https://www.renpy.org/doc/html/dialogue.html#Character),
 are often either used as a blank speaker or are later assigned an
@@ -202,13 +202,13 @@ of narration.
 
 ***—italic-narr***
 
-Do **not** remove dialogues that are fully italic
+Keep dialogues that are fully italic
 
 Developers tend to use italics to indicate what a person is thinking about. Use this option to allow this feature.
 
 ***—parenthesis-narr***
 
-Do **not** remove dialogue wrapped entirely in a parenthesis
+Keep dialogues wrapped entirely in a parenthesis
 
 Parentheses are used to indicate thoughts. It’s often used for narration.
 Use this option to allow this feature.

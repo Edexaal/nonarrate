@@ -106,21 +106,21 @@ class CLIParser:
         self.__add_filter_arg(
             FilterTag.NO_CUSTOM_TEXT_TAGS.value,
             "--nct",
-            metavar="TAG_NAME",
+            metavar="TAG_NAMES",
             nargs="*",
             help="Removes dialogue wrapped entirely in a custom text tag. Ex:{t}..{/t}",
         )
         self.__add_filter_arg(
             FilterTag.NO_CUSTOM_CHARS.value,
             "--ncc",
-            metavar="SPEAKER_NAME",
+            metavar="SPEAKER_NAMES",
             nargs="*",
             help="Removes speaker(s) surrounded by quotes.",
         )
         self.__add_filter_arg(
             FilterTag.NO_CUSTOM_CHAR_OBJS.value,
             "--ncco",
-            metavar="SPEAKER_OBJECT_NAME",
+            metavar="SPEAKER_OBJECT_NAMES",
             nargs="*",
             help="Removes speaker(s) saved to a Character object",
         )

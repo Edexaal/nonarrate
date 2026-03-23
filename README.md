@@ -1,6 +1,7 @@
-# No Narrate - Ren'Py Mod
-
-A tool for removing narration and thoughts from Ren'Py visual novel games.
+<div align="center">
+  <h1>No Narrate</h1>
+  <p>A tool for removing narration and thoughts from Ren'Py visual novel games.</p>
+</div>
 
 ## Idea
 
@@ -17,10 +18,9 @@ There are 2 sectors to identify narration in Ren'Py:
 - *Character/Speaker*
 - *Dialogue*
 
-<details>
-    <summary>Ren'Py Narrator Example</summary>
-    <img src="./assets/content-box.png" alt="Ren'Pys dialogue box with a narrator speaker" width="1010" height="224">
-</details>
+  ### Ren'Py Narrator Example
+
+  ![A narrator speaking in a Ren'Py game](./assets/content-box.png)
 
 ## Requirements
 

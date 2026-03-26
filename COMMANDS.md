@@ -94,7 +94,7 @@ Enable regular expressions when specifying filter values.
 For filters that allow for user input, all values are treated as a regular expression.
 See [REGEX Example](#regex-examples) for more info
 
-***-j, --jobs***
+***-j, --jobs*** `<number-of-threads>`
 
 Maximum workers to use for I/O tasks.
 

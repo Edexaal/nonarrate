@@ -161,6 +161,8 @@ class TestDialogue(unittest.TestCase):
             137: 'myvar = "~Smiles ~very~ softly~"',
             138: 'myvar = "Smiles ~very~ softly."',
             139: 'myvar = "~Smiles very softly~"',
+            140: '"Hey! That was not berry nices!',
+            141: '"Hey! That was not berry nices!:',
         }
 
     def validate_lines(self):
@@ -178,7 +180,7 @@ class TestDialogue(unittest.TestCase):
         self.validate_lines()
 
     def test_basic(self):
-        self.start(BasicStrategy(), [0, 4, 27, 53, 94,117])
+        self.start(BasicStrategy(), [0, 4, 27, 53, 94,117,140])
 
     def test_parenthesis(self):
         self.start(ParenthesisStrategy(), [10, 11, 12, 18, 19, 20])

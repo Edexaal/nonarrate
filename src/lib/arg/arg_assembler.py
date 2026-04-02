@@ -2,7 +2,8 @@ import re
 from argparse import Namespace
 from typing import final
 from lib.validator.dialogue import ParenthesisStrategy, ItalicStrategy, BasicStrategy, CustomTextTagStrategy
-from lib.validator.dialogue.expression_cue_strategy import ExpressionCueStrategy
+from lib.validator.dialogue.expression_cue_asterisk_strategy import ExpressionCueAsteriskStrategy
+from lib.validator.dialogue.expression_cue_tilda_strategy import ExpressionCueTildaStrategy
 from lib.validator.null_strategy import NullStrategy
 from lib.validator.speaker import (
     ObjectNoneItemStrategy,
@@ -19,17 +20,17 @@ from lib.custom_types import FilterTag
 class ArgAssembler:
     """Provides a class for converting parsed arguments into something more useful."""
 
-    __validators: dict[str, type] = {
+    __validators: dict[str, type | list[type]] = {
         FilterTag.BASIC_NARR.value: BasicStrategy,
         FilterTag.BASIC_CHAR_OBJ.value: BasicObjectStrategy,
-        FilterTag.ITALIC_NARR.value: ItalicStrategy,
+        FilterTag.ITALIC_NARR.value: [ ItalicStrategy,ItalicObjectStrategy ],
         FilterTag.PARENTHESIS_NARR.value: ParenthesisStrategy,
         FilterTag.BASIC_CHAR.value: BasicCharacterStrategy,
         FilterTag.NONE_CHAR_OBJ.value: ObjectNoneItemStrategy,
         FilterTag.NO_CUSTOM_TEXT_TAGS.value: CustomTextTagStrategy,
         FilterTag.NO_CUSTOM_CHARS.value: CharacterStrategy,
         FilterTag.NO_CUSTOM_CHAR_OBJS.value: ObjectStrategy,
-        FilterTag.EXPRESSION_CUES.value: ExpressionCueStrategy,
+        FilterTag.EXPRESSION_CUES.value: [ExpressionCueAsteriskStrategy, ExpressionCueTildaStrategy]
     }
 
     @classmethod
@@ -54,10 +55,12 @@ class ArgAssembler:
         current_validator = args.validator
         if args.narr_types:
             for narr_type in args.narr_types:
-                current_validator.next_validator = cls.__validators[narr_type]()
-                current_validator = current_validator.next_validator
-                if narr_type == FilterTag.ITALIC_NARR.value:
-                    current_validator.next_validator = ItalicObjectStrategy()
+                if type(cls.__validators[narr_type]) == list:
+                    for class_type in cls.__validators[narr_type]:
+                        current_validator.next_validator = class_type()
+                        current_validator = current_validator.next_validator
+                else:
+                    current_validator.next_validator = cls.__validators[narr_type]()
                     current_validator = current_validator.next_validator
         current_validator = cls.__narg_filter(
             current_validator, cls.__escape(args, args.no_custom_tags), FilterTag.NO_CUSTOM_TEXT_TAGS.value

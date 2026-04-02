@@ -4,7 +4,8 @@ from lib.validator.dialogue import (
     ItalicStrategy,
     CustomTextTagStrategy,
     BasicStrategy,
-    ExpressionCueStrategy,
+    ExpressionCueTildaStrategy,
+    ExpressionCueAsteriskStrategy,
 )
 from lib.validator.ivalidator_chain import IValidatorChain
 from tests.fixture import get_dialogue_list
@@ -137,6 +138,29 @@ class TestDialogue(unittest.TestCase):
             114: 'myvar = "*Smiles *very* softly*"',
             115: 'myvar = "Smiles *very* softly."',
             116: 'myvar = "*Smiles very softly*"',
+            117: '"~Jim liked driving around town with his hazard lights on.~"',
+            118: 'mc "Smiles ~very softly."',
+            119: 'mc "Smiles very ~softly~"',
+            120: 'mc "~Smiles very ~softly~"',
+            121: 'mc "~Smiles ~very~ softly~"',
+            122: 'mc "Smiles ~very~ softly"',
+            123: 'mc "~Smiles very softly~"',
+            124: 'mc "~Smiles very softly~    "',
+            125: 'mc "~Smiles very softly~."',
+            126: '"Narrator" "Smiles ~very softly."',
+            127: '"Narrator" "Smiles ~very softly~"',
+            128: '"Narrator" "~Smiles ~very softly~"',
+            129: '"Narrator" "~Smiles ~very~ softly~"',
+            130: '"Narrator" "Smiles ~very~ softly."',
+            131: '"Narrator" "~Smiles very softly~"',
+            132: '"Narrator" "~Smiles very softly~."',
+            133: '"Narrator" "~Smiles very softly~   "',
+            134: 'myvar = "Smiles ~very softly~"',
+            135: 'myvar = "Smiles ~very softly"',
+            136: 'myvar = "~Smiles ~very softly~"',
+            137: 'myvar = "~Smiles ~very~ softly~"',
+            138: 'myvar = "Smiles ~very~ softly."',
+            139: 'myvar = "~Smiles very softly~"',
         }
 
     def validate_lines(self):
@@ -154,7 +178,7 @@ class TestDialogue(unittest.TestCase):
         self.validate_lines()
 
     def test_basic(self):
-        self.start(BasicStrategy(), [0, 4, 27, 53, 94])
+        self.start(BasicStrategy(), [0, 4, 27, 53, 94,117])
 
     def test_parenthesis(self):
         self.start(ParenthesisStrategy(), [10, 11, 12, 18, 19, 20])
@@ -168,5 +192,8 @@ class TestDialogue(unittest.TestCase):
             [56, 57, 59, 60, 61, 62, 63, 64, 65, 66, 67, 70, 71, 73, 74, 75, 76, 77, 78, 79, 80],
         )
 
-    def test_cues(self):
-        self.start(ExpressionCueStrategy(), [100, 101, 108, 110])
+    def test_cues_asterisk(self):
+        self.start(ExpressionCueAsteriskStrategy(), [100, 101, 108, 110])
+
+    def test_cues_tilda(self):
+        self.start(ExpressionCueTildaStrategy(),[123,124,131,133])

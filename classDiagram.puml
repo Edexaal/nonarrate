@@ -39,8 +39,11 @@ class ParenthesisStrategy
 class CustomTextTagStrategy
 'Ex: "Marco jumps over the fence, scrapping his arm in the process"
 class BasicStrategy
-'Ex: mc "*smiles*"
 class ExpressionCueStrategy
+'Ex: mc "*smiles*"
+class ExpressionCueAsteriskStrategy
+'Ex: mc "~yawns~"
+class ExpressionCueTildaStrategy
 
 'File Descriptors
 class Reader {
@@ -89,11 +92,6 @@ class  ErrorFixer <<Singleton>>{
   -dedentLines(lines:List<str>,startIndex: int,startIndent: Union[int,None]): List<str>
   -reverseDedentLines(lines:List<str>,startIndex: int): List<str>
 	-getErrors(errors_txt:Path, reader:Reader): Dictionary<str,List<RenpyError>>
-}
-class Log {
-  {static}+log(text:str)
-  {static}+complete(text:str)
-  {static}+wait(text:str)
 }
 dataclass FileInfo {
   +url:str
@@ -148,9 +146,12 @@ IValidatorChain <|-- ObjectStrategy
 IValidatorChainSolo <|-- CharacterStrategy
 IValidatorChainSolo <|-- ExpressionCueStrategy
 IValidatorChainSolo <|-- NullStrategy
+ExpressionCueStrategy <|-- ExpressionCueAsteriskStrategy
+ExpressionCueStrategy <|-- ExpressionCueTildaStrategy
 CharacterStrategy <|-- BasicCharacterStrategy
 ObjectStrategy <|-- BasicObjectStrategy
 ObjectStrategy <|-- ObjectNoneItemStrategy
+ObjectStrategy <|-- ItalicObjectStrategy
 Reader <|-- RenpyReader
 
 'Argument Relations

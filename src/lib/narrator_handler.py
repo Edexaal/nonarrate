@@ -10,10 +10,10 @@ class NarratorHandler:
     attempts to cleanup the file(s) are set in place.
 
     Attributes:
-        PAUSE_STATEMENT: represents Ren'Py's 'pause' statement.
+        PAUSE_STATEMENTS: represents Ren'Py's 'pause' statements.
     """
 
-    PAUSE_STATEMENT: str = "pause"
+    PAUSE_STATEMENTS: tuple[str] = ("pause", "$ renpy.pause")
 
     def __init__(self) -> None:
         self._total_lines = 0
@@ -69,7 +69,7 @@ class NarratorHandler:
                         is_multi_line = False
                         if args.pauses:
                             # Replaces narration with pauses
-                            cleaned_lines.append(f"{' ' * self.get_indent_num(line)}{NarratorHandler.PAUSE_STATEMENT}\n")
+                            cleaned_lines.append(f"{' ' * self.get_indent_num(line)}{NarratorHandler.PAUSE_STATEMENTS[0]}\n")
                     continue
                 is_narrator = args.validator.is_valid(strip_line)
 
@@ -90,14 +90,14 @@ class NarratorHandler:
                     elif (
                         args.pauses
                         and is_narrator
-                        and not prev_line_info["line"].strip().startswith(NarratorHandler.PAUSE_STATEMENT)
+                        and not prev_line_info["line"].strip().startswith(NarratorHandler.PAUSE_STATEMENTS)
                         and len(cleaned_lines)
                         and not cleaned_lines[len(cleaned_lines) - 1]
                         .strip()
-                        .startswith(NarratorHandler.PAUSE_STATEMENT)
+                        .startswith(NarratorHandler.PAUSE_STATEMENTS)
                     ):
                         # Replaces narration with pauses
-                        cleaned_lines.append(f"{' ' * self.get_indent_num(line)}{NarratorHandler.PAUSE_STATEMENT}\n")
+                        cleaned_lines.append(f"{' ' * self.get_indent_num(line)}{NarratorHandler.PAUSE_STATEMENTS[0]}\n")
 
                     # Keeps the narrator during choice menu appearance
                     if strip_line.startswith("menu:"):
@@ -180,7 +180,7 @@ class NarratorHandler:
             cleaned_lines = []
             is_prev_pause = False
             for line in file_info.lines:
-                is_pause = line.strip().startswith(NarratorHandler.PAUSE_STATEMENT)
+                is_pause = line.strip().startswith(NarratorHandler.PAUSE_STATEMENTS)
                 if is_pause and is_prev_pause:
                     continue
                 cleaned_lines.append(line)

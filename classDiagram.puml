@@ -71,7 +71,7 @@ class  FileExecutor <<Singleton>>{
 
 'Narrator
 class  NarratorHandler <<Singleton>>{
-  {static}+PAUSE_STATEMENT:str
+  {static}+PAUSE_STATEMENTS:tuple<str>
 	+remove(fileInfos:List<FileInfo>,args:Namespace): List<Dictionary<str,List<str>>>
   +getIdentNum(line:str):int
   -isComment(line:str):bool

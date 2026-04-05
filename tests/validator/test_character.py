@@ -96,44 +96,45 @@ class TestCharacter(unittest.TestCase):
             31: '"maya cornstarke" "Today I heard something new and unmemorable."',
             32: '"Maya" "Today I heard something new and unmemorable."',
             33: '"Maya\'s Mind" "Today I heard something new and unmemorable."',
+            34: "'Caliek' 'Today I heard something new and unmemorable.",
             # Custom Object
-            34: 'marco "And so the story would move forward."',
-            35: 'kelly "And so the story would move forward."',
-            36: 'Marco "And so the story would move forward."',
-            37: 'marc "And so the story would move forward."',
-            38: 'carsi "And so the story would move forward."',
-            39: 'blanka "And so the story would move forward."',
-            40: 'narr "And so the story would move forward."',
-            41: 'nik_mind "And so the story would move forward."',
-            42: 'miyai "And so the story would move forward."',
-            43: 'miyaki "And so the story would move forward."',
-            44: 'loval "And so the story would move forward."',
-            45: 'none "And so the story would move forward."',
-            46: 'not_here "And so the story would move forward."',
-            47: 'ip "And so the story would move forward."',
-            48: 'l "And so the story would move forward."',
-            49: 'uma "And so the story would move forward."',
-            50: 'not_now "And so the story would move forward."',
-            51: 'b_ "And so the story would move forward."',
-            52: 'bi_ "And so the story would move forward."',
-            53: 'bik_ "And so the story would move forward."',
-            54: 'bik_g "And so the story would move forward."',
-            55: 'po "And so the story would move forward."',
-            56: 'pop "And so the story would move forward."',
-            57: 'sind "And so the story would move forward."',
-            58: 'nigel "And so the story would move forward."',
-            59: 'zy "And so the story would move forward."',
-            60: 'none2 "And so the story would move forward."',
-            61: 'none3 "And so the story would move forward."',
-            62: 'none4 "And so the story would move forward."',
-            63: 'pop2 "And so the story would move forward."',
-            64: 'pop3 "And so the story would move forward."',
-            65: 'pop4 "And so the story would move forward."',
-            66: 'translate "And so the story would move forward."',
-            67: 'translate2 "And so the story would move forward."',
-            68: 'translate3 "And so the story would move forward."',
-            69: 'translate4 "And so the story would move forward."',
-            70: 'translate5 "And so the story would move forward."',
+            35: 'marco "And so the story would move forward."',
+            36: 'kelly "And so the story would move forward."',
+            37: 'Marco "And so the story would move forward."',
+            38: 'marc "And so the story would move forward."',
+            39: 'carsi "And so the story would move forward."',
+            40: 'blanka "And so the story would move forward."',
+            41: 'narr "And so the story would move forward."',
+            42: 'nik_mind "And so the story would move forward."',
+            43: 'miyai "And so the story would move forward."',
+            44: 'miyaki "And so the story would move forward."',
+            45: 'loval "And so the story would move forward."',
+            46: 'none "And so the story would move forward."',
+            47: 'not_here "And so the story would move forward."',
+            48: 'ip "And so the story would move forward."',
+            49: 'l "And so the story would move forward."',
+            50: 'uma "And so the story would move forward."',
+            51: 'not_now "And so the story would move forward."',
+            52: 'b_ "And so the story would move forward."',
+            53: 'bi_ "And so the story would move forward."',
+            54: 'bik_ "And so the story would move forward."',
+            55: 'bik_g "And so the story would move forward."',
+            56: 'po "And so the story would move forward."',
+            57: 'pop "And so the story would move forward."',
+            58: 'sind "And so the story would move forward."',
+            59: 'nigel "And so the story would move forward."',
+            60: 'zy "And so the story would move forward."',
+            61: 'none2 "And so the story would move forward."',
+            62: 'none3 "And so the story would move forward."',
+            63: 'none4 "And so the story would move forward."',
+            64: 'pop2 "And so the story would move forward."',
+            65: 'pop3 "And so the story would move forward."',
+            66: 'pop4 "And so the story would move forward."',
+            67: 'translate "And so the story would move forward."',
+            68: 'translate2 "And so the story would move forward."',
+            69: 'translate3 "And so the story would move forward."',
+            70: 'translate4 "And so the story would move forward."',
+            71: 'translate5 "And so the story would move forward."',
         }
 
     def setUp(self) -> None:
@@ -165,21 +166,23 @@ class TestCharacter(unittest.TestCase):
 
     def test_custom_char(self):
         self.start(CharacterStrategy("maya"), [21, 22, 23, 24, 25, 26, 27, 31, 32, 33])
+        # Single quotes and multi line test
+        self.start(CharacterStrategy("Caliek"), [34])
 
     def test_object_char(self):
-        self.start_object(ObjectStrategy("Marco"), [34])
+        self.start_object(ObjectStrategy("Marco"), [35])
 
     def test_object_char_item(self):
-        self.start_object(ObjectStrategy("base"), [38, 39, 49])
+        self.start_object(ObjectStrategy("base"), [39, 40, 50])
 
     def test_basic_object_char(self):
-        self.start_object(BasicObjectStrategy(), [34, 40, 41, 43, 44, 47])
+        self.start_object(BasicObjectStrategy(), [35,41, 42, 44, 45,48])
 
     def test_object_none_char_item(self):
-        self.start_object(ObjectNoneItemStrategy(), [45, 46, 50, 55, 56, 57, 59,60,61,62,63,64,65,66,67,68,69,70])
+        self.start_object(ObjectNoneItemStrategy(), [46, 47, 51, 56, 57, 58, 60,61,62,63,64,65,66,67,68,69,70,71])
 
     def test_chaining(self):
-        self.start_object(BasicObjectStrategy(ObjectStrategy("base")), [34, 38, 39, 40, 41, 43, 44, 47, 49])
+        self.start_object(BasicObjectStrategy(ObjectStrategy("base")), [35, 39, 40, 41, 42, 44, 45, 48, 50])
 
     def test_spaces(self):
         """Test spaces between character object and calling parenthesis.
@@ -187,8 +190,8 @@ class TestCharacter(unittest.TestCase):
         Example:
             default n = Character     ('Nadia')
         """
-        self.start_object(ObjectStrategy(["Linda", "Umeha"]), [48, 49])
+        self.start_object(ObjectStrategy(["Linda", "Umeha"]), [49, 50])
 
     def test_italic_object(self):
         """Test if Character object has 'what_italic=True' parameter."""
-        self.start_object(ItalicObjectStrategy(), [51, 52, 53, 54, 57, 58])
+        self.start_object(ItalicObjectStrategy(), [52, 53, 54, 55, 58, 59])

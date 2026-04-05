@@ -16,4 +16,4 @@ class CharacterStrategy(IValidatorChainSolo):
 
     def __init__(self, speaker_name, next_validator: "IValidatorChain | None" = None) -> None:
         super().__init__(next_validator)
-        self._validate_pat = re.compile(rf'".*\b(?:{speaker_name})\b.*"\s*"[^"]+"', re.IGNORECASE)
+        self._validate_pat = re.compile(rf'([\'"]).*?\b(?:{speaker_name})\b.*?\1\s*([\'"])[^\2]+\2?', re.IGNORECASE)

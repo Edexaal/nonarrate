@@ -20,6 +20,7 @@ def run():
     writer = Writer()
     Log.wait("Extracting lines from .rpy files")
     file_infos = file_executor.file_lines(reader, arg_namespace)
+    Log.info("Files detected", len(file_infos))
     Log.log("Getting ready for removal process")
     ObjectStrategy.define_speakers(file_infos)
     narrator_handler = NarratorHandler()
@@ -27,12 +28,12 @@ def run():
     file_infos = narrator_handler.remove(file_infos, arg_namespace)
     Log.wait("Writing modified lines to files")
     file_executor.write_files(writer, file_infos)
-    Log.log("DONE! Enjoy!")
+    Log.mark("DONE! Enjoy!")
     total_cleaned_lines, total_lines = narrator_handler.line_stats()
     Log.log(f"""Stats:
-        Code Removed: {total_lines - total_cleaned_lines} lines
-        Code Removed (%): {(total_lines - total_cleaned_lines) / total_lines * 100} %
-        Code Remaining (%): {(total_cleaned_lines / total_lines) * 100} %""")
+        [Code Removed]: {total_lines - total_cleaned_lines} lines
+        [Code Removed (%)]: {(total_lines - total_cleaned_lines) / total_lines * 100} %
+        [Code Remaining (%)]: {(total_cleaned_lines / total_lines) * 100} %""")
 
 
 if __name__ == "__main__":

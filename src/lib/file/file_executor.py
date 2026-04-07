@@ -47,7 +47,7 @@ class FileExecutor:
         with ThreadPoolExecutor(cls.max_workers) as ex:
             Log.wait("Fixing errors")
             ex.map(cls.__fix_func, errors.values())
-        Log.log("----------> DONE! Enjoy!")
+        Log.mark("DONE! Enjoy!")
 
     @classmethod
     def __fix_func(cls, errors: list[RenpyError]):

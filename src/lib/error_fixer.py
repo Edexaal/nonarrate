@@ -83,7 +83,7 @@ class ErrorFixer:
             if error.category:
                 total_errors_log += 1
             cls.__add_error(errors, error)
-        Log.log(f"Total errors detected: {total_errors_log}")
+        Log.info("Errors detected", total_errors_log)
         return errors
 
     def __dedent_lines(self, lines: list[str], start_index: int, start_indent: int | None = None) -> list[str]:

@@ -12,3 +12,12 @@ class Log:
     @classmethod
     def wait(cls, text: str):
         cls.log(f"{text}...")
+
+    @classmethod
+    def mark(cls,text: str):
+        dashes = '-' * 8
+        cls.log(f"{dashes}> {text} <{dashes}")
+
+    @classmethod
+    def info(cls,title:str,value):
+        cls.log(f"[{title}]: {value}")

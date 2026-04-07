@@ -15,9 +15,8 @@ class NarratorHandler:
     """
 
     PAUSE_STATEMENTS: tuple[str, str] = ("pause", "$ renpy.pause")
-    DOUBLE_QUOTE: str = '"'
-    SINGLE_QUOTE: str = "'"
     __alt_pat: re.Pattern = re.compile(r".*\b(?:image|layeredimage|show|scene|transform)\b[^:]+:")
+    __closing_pat: re.Pattern = re.compile(r"(?:[\"']|[\"']\s*with .+)$")
 
     def __init__(self) -> None:
         self._total_lines = 0
@@ -36,6 +35,9 @@ class NarratorHandler:
 
     def __is_atl_block(self, strip_line: str) -> bool:
         return True if self.__alt_pat.match(strip_line) else False
+
+    def __is_closing(self,strip_line: str) -> bool:
+        return True if self.__closing_pat.search(strip_line) else False
 
     def __reset_line_stats(self):
         self._total_cleaned_lines = 0
@@ -68,9 +70,6 @@ class NarratorHandler:
                 strip_line = line.strip()
                 if self.__is_comment(strip_line):
                     continue
-                endswith_quote = strip_line.endswith(NarratorHandler.DOUBLE_QUOTE) or strip_line.endswith(
-                    NarratorHandler.SINGLE_QUOTE
-                )
                 # REF:https://www.renpy.org/doc/html/transforms.html#atl-animation-and-transformation-language
                 # Example:
                 # init -2 layeredimage augustina:
@@ -91,7 +90,7 @@ class NarratorHandler:
                 # narr ".....................
                 # ....................."
                 if is_multi_line:
-                    if endswith_quote:
+                    if self.__is_closing(strip_line):
                         is_multi_line = False
                         if args.pauses:
                             # Replaces narration with pauses
@@ -146,7 +145,7 @@ class NarratorHandler:
                 else:
                     cleaned_lines.append(line)
 
-                if is_narrator and not is_multi_line and not endswith_quote:
+                if is_narrator and not is_multi_line and not self.__is_closing(strip_line):
                     is_multi_line = True
                     prev_line_info["multiline"].clear()
                     prev_line_info["multiline"].append(line)

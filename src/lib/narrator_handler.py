@@ -217,10 +217,12 @@ class NarratorHandler:
             cleaned_lines = []
             is_prev_pause = False
             for line in file_info.lines:
-                is_pause = line.strip().startswith(NarratorHandler.PAUSE_STATEMENTS)
+                strip_line = line.strip()
+                is_pause = strip_line.startswith(NarratorHandler.PAUSE_STATEMENTS)
                 if is_pause and is_prev_pause:
                     continue
                 cleaned_lines.append(line)
-                is_prev_pause = is_pause
+                if strip_line:
+                    is_prev_pause = is_pause
             file_info.lines = cleaned_lines
         return file_infos

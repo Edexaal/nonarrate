@@ -31,6 +31,8 @@ class AppendUnique(argparse.Action):
         if not values:
             return
         self._items = getattr(namespace, self.dest, set())
+        if self._items is None:
+            self._items = set()
         if type(values) is str:
             self._items.add(values)
         else:

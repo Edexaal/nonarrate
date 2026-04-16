@@ -126,7 +126,28 @@ nonarrate mycoolgame\game --invalid-files options image keymap
 
 Ignore specified *.rpy* files when looking for *.rpy* files.
 
-nonarrate will ignore the specified files when searching for *.rpy* files.
+nonarrate will ignore the specified files when searching for *.rpy* files. Can
+be used with `--invalid-globs`.
+
+***NOTE: Do *not* include `.rpy`. nonarrate will automatically assume this file type!**
+
+***--invalid-globs*** `<file-glob...>`
+
+```bash
+# ignore files matching: [0-9][0-9][a-zA-Z]*
+# This pattern will match files such as 01animation.rpy, 93decor_tl.rpy, and 25TEST.rpy
+nonarrate mycoolgame\game --invalid-globs '[0-9][0-9][a-zA-Z]*'
+```
+
+Ignore *.rpy* files using globs.
+
+nonarrate will ignore files that match any of the specified file globs. Can be used
+with `--invalid-files`. 
+
+See [Python's fnmatch library](https://docs.python.org/3/library/fnmatch.html#module-fnmatch)
+for list of available globs. **Globs**: `*`, `?`, `[...]`
+
+***NOTE: Do *not* include `.rpy`. nonarrate will automatically assume this file type!**
 
 ___
 

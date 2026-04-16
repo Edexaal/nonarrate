@@ -51,7 +51,7 @@ class Reader {
   +walkFiles(rootDir:str): List<str>
 }
 class RenpyReader {
-  +walkFiles(rootDir:str,invalid_folders: Union[Set<str>,None], invalid_files:Union[Set<str>,None]): List<str>
+  +walkFiles(rootDir:str,invalid_folders: Union[Set<str>,None], invalid_files:Union[Set<str>,None], invalid_globs: Union[Set<str>, None]): List<str>
 }
 class Writer {
 	+writeLines(fileInfo:FileInfo)

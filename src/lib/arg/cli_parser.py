@@ -20,7 +20,7 @@ class CLIParser:
     """
 
     def __init__(self):
-        self.__version_num = "2.1.6"
+        self.__version_num = "2.2.0"
         self.__setup()
 
     def __setup(self):
@@ -103,6 +103,12 @@ class CLIParser:
             default={"gui", "options", "screens", "images", "gallery"},
             metavar="IGNORE_FILES",
             help="Ignore specified [files] when looking for .rpy files.",
+        )
+        self.__add_search_arg(
+            "--invalid-globs",
+            action=AppendUnique,
+            metavar="IGNORE_FILE_GLOBS",
+            help="Ignore specified [files] using glob syntax."
         )
         no_filters: dict[str, str] = {
             FilterTag.BASIC_NARR.value: "Keep dialogues that don't have a speaker",

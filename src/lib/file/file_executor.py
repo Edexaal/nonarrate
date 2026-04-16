@@ -26,7 +26,7 @@ class FileExecutor:
 
     @classmethod
     def file_lines(cls, reader: RenpyReader, arg_namespace) -> list[FileInfo]:
-        files = reader.walk_files(arg_namespace.folder_or_file, arg_namespace.invalid_dirs, arg_namespace.invalid_files)
+        files = reader.walk_files(arg_namespace.folder_or_file, arg_namespace.invalid_dirs, arg_namespace.invalid_files,arg_namespace.invalid_globs)
         if arg_namespace.backup:
             Writer.backup_dir(files, arg_namespace.backup)
         file_infos = None

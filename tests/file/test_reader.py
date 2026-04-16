@@ -18,3 +18,8 @@ class TestReader(unittest.TestCase):
         args = fixture.get_args(self._parser, [fixture.DUMMY_PATH, "--invalid-dirs", "child_dir"])
         files = self._reader.walk_files(args.folder_or_file, invalid_folders=args.invalid_dirs)
         self.assertEqual(len(files), 1, "hello.rpy should not be seen by reader")
+
+    def test_invalid_file_globs(self):
+        args = fixture.get_args(self._parser,[fixture.DUMMY_PATH,"--invalid-globs","[hz]*"])
+        files = self._reader.walk_files(args.folder_or_file, invalid_globs=args.invalid_globs)
+        self.assertEqual(len(files),1, "Glob should not match any .rpy files!")

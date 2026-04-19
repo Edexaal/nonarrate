@@ -100,7 +100,15 @@ class CLIParser:
         self.__add_search_arg(
             "--invalid-files",
             action=AppendUnique,
-            default={"gui", "options", "screens", "images", "gallery"},
+            default={"gui",
+                     "options",
+                     "screens",
+                     "images",
+                     "gallery",
+                     "camera",
+                     "credits",
+                     "splashscreen",
+                     "transitions"},
             metavar="IGNORE_FILES",
             help="Ignore specified [files] when looking for .rpy files.",
         )

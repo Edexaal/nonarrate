@@ -245,6 +245,8 @@ class TestDialogue(unittest.TestCase):
             220: '"Narrator" "*Hey! That was not berry nices!*" with vpunch',
             221: '"Narrator" "~Hey! That was not berry nices!~" with vpunch',
             222: '"Narrator" "**Hey! That was not berry nices!**" with vpunch',
+            # Italic
+            223: 'mc "{i}He found a leprechaun in his walnut shell.{i}"',
         }
 
     def validate_lines(self):
@@ -269,7 +271,7 @@ class TestDialogue(unittest.TestCase):
 
     def test_italic(self):
         self.start(ItalicStrategy(),
-                   [44, 45, 46, 47, 48, 49, 50, 51, 57, 58, 59, 60, 61, 62, 63, 64, 202, 203, 204, 205])
+                   [44, 45, 46, 47, 48, 49, 50, 51, 57, 58, 59, 60, 61, 62, 63, 64, 202, 203, 204, 205,223])
 
     def test_custom_tags(self):
         self.start(

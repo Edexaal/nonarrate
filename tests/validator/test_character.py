@@ -59,6 +59,7 @@ class TestCharacter(unittest.TestCase):
                     "default translate3 = Character(_(''))",
                     "default translate4 = Character( _(''))",
                     "default translate5 = Character( _( ' ' ))",
+                    'define think = Character("{i}Thoughts{i}")'
                 ],
             )
         ]
@@ -148,6 +149,7 @@ class TestCharacter(unittest.TestCase):
             79: 'none "And so the story would move forward." with vpunch',
             80: 'b_ "And so the story would move forward." with vpunch',
             81: 'l "And so the story would move forward." with vpunch',
+            82: 'think "And so the story would move forward." with vpunch',
         }
 
     def setUp(self) -> None:
@@ -189,7 +191,7 @@ class TestCharacter(unittest.TestCase):
         self.start_object(ObjectStrategy("base"), [39, 40, 50, 78])
 
     def test_basic_object_char(self):
-        self.start_object(BasicObjectStrategy(), [35, 41, 42, 44, 45, 48, 77])
+        self.start_object(BasicObjectStrategy(), [35, 41, 42, 44, 45, 48, 77,82])
 
     def test_object_none_char_item(self):
         self.start_object(
@@ -198,7 +200,7 @@ class TestCharacter(unittest.TestCase):
         )
 
     def test_chaining(self):
-        self.start_object(BasicObjectStrategy(ObjectStrategy("base")), [35, 39, 40, 41, 42, 44, 45, 48, 50, 77, 78])
+        self.start_object(BasicObjectStrategy(ObjectStrategy("base")), [35, 39, 40, 41, 42, 44, 45, 48, 50, 77, 78,82])
 
     def test_spaces(self):
         """Test spaces between character object and calling parenthesis.
@@ -210,4 +212,4 @@ class TestCharacter(unittest.TestCase):
 
     def test_italic_object(self):
         """Test if Character object has 'what_italic=True' parameter."""
-        self.start_object(ItalicObjectStrategy(), [52, 53, 54, 55, 58, 59, 80])
+        self.start_object(ItalicObjectStrategy(), [52, 53, 54, 55, 58, 59, 80,82])

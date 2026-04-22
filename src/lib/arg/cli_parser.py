@@ -93,6 +93,7 @@ class CLIParser:
                 "functions",
                 "music",
                 "audio",
+                "gallery"
             },
             metavar="IGNORE_FOLDERS",
             help="Ignore specified [folders] when looking for .rpy files",
@@ -109,7 +110,9 @@ class CLIParser:
                      "credits",
                      "splashscreen",
                      "transitions",
-                     "transforms"},
+                     "transforms",
+                     "achievement"
+                     },
             metavar="IGNORE_FILES",
             help="Ignore specified [files] when looking for .rpy files.",
         )

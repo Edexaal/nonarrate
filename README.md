@@ -34,13 +34,13 @@ There are multiple ways to install/upgrade.
 ### From GitHub
 
 ```bash
-python -m pip install "nonarrate @ git+https://github.com/Edexaal/nonarrate.git"
+python -m pip install "nonarrate @ git+https://github.com/ZimCodes/nonarrate.git"
 ```
 
 ### From Source Code
 
 ```bash
-git clone https://github.com/Edexaal/nonarrate.git && cd nonarrate
+git clone https://github.com/ZimCodes/nonarrate.git && cd nonarrate
 python -m pip install .
 ```
 

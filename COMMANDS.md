@@ -105,7 +105,7 @@ ___
 
 ### File Searching
 
-***--invalid-dirs*** `<directory-name...>`
+***--invalid-dirs, --ind*** `<directory-name...>`
 
 ```bash
 # While looking through 'mycoolgame\game' ignore directories: gui/, gamepad_control_schemes/, and cache helper/
@@ -119,7 +119,7 @@ nonarrate will search subdirectories starting from the folder you point it to fo
 
 Nonarrate will ignore certain folders by default. See [IGNORED_FILES.md](./IGNORED_FILES.md) for list.
 
-***--invalid-files*** `<filename...>`
+***--invalid-files, --inf*** `<filename...>`
 
 ```bash
 # While looking through 'mycoolgame\game' ignore files named: options.rpy, image.rpy, keymap.rpy
@@ -135,7 +135,7 @@ Nonarrate will ignore certain files by default. See [IGNORED_FILES.md](./IGNORED
 
 ***NOTE: Do *not* include `.rpy`. nonarrate will automatically assume this file type!**
 
-***--invalid-globs*** `<file-glob...>`
+***--invalid-globs, --ing*** `<file-glob...>`
 
 ```bash
 # ignore files matching: [0-9][0-9][a-zA-Z]*

@@ -20,7 +20,7 @@ class CLIParser:
     """
 
     def __init__(self):
-        self.__version_num = "2.3.0"
+        self.__version_num = "2.4.0"
         self.__setup()
 
     def __setup(self):
@@ -80,6 +80,7 @@ class CLIParser:
         )
         self.__add_search_arg(
             "--invalid-dirs",
+            "--ind",
             action=AppendUnique,
             default={
                 "tl",
@@ -93,13 +94,16 @@ class CLIParser:
                 "functions",
                 "music",
                 "audio",
-                "gallery"
+                "gallery",
+                "videos",
+                "sounds"
             },
             metavar="IGNORE_FOLDERS",
             help="Ignore specified [folders] when looking for .rpy files",
         )
         self.__add_search_arg(
             "--invalid-files",
+            "--inf",
             action=AppendUnique,
             default={"gui",
                      "options",
@@ -113,13 +117,15 @@ class CLIParser:
                      "transitions",
                      "transforms",
                      "achievement",
-                     "achievements"
+                     "achievements",
+                     "audio"
                      },
             metavar="IGNORE_FILES",
             help="Ignore specified [files] when looking for .rpy files.",
         )
         self.__add_search_arg(
             "--invalid-globs",
+            "--ing",
             action=AppendUnique,
             metavar="IGNORE_FILE_GLOBS",
             help="Ignore specified [files] using glob syntax."

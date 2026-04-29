@@ -5,7 +5,7 @@ from lib.validator.dialogue import (
     CustomTextTagStrategy,
     BasicStrategy,
     ExpressionCueTildaStrategy,
-    ExpressionCueAsteriskStrategy,
+    ExpressionCueAsteriskStrategy
 )
 from lib.validator.ivalidator_chain import IValidatorChain
 from tests.fixture import get_dialogue_list
@@ -247,6 +247,27 @@ class TestDialogue(unittest.TestCase):
             222: '"Narrator" "**Hey! That was not berry nices!**" with vpunch',
             # Italic
             223: 'mc "{i}He found a leprechaun in his walnut shell.{i}"',
+            # Custom text tag as parent
+            224: 'mc "{tag=10}*Smiles very softly*{/tag}"',
+            225: 'mc "{tag}*Smiles very softly*{/tag}"',
+            226: 'mc "{tag=10}~Smiles very softly~{/tag}"',
+            227: 'mc "{tag}~Smiles very softly~{/tag}"',
+            228: 'mc "{tag=10}{i}Smiles very softly{/i}{/tag}"',
+            229: 'mc "{tag}{i}Smiles very softly{/i}{/tag}"',
+            230: 'mc "{tag=10}(Smiles very softly){/tag}"',
+            231: 'mc "{tag}(Smiles very softly){/tag}"',
+            232: 'mc "{tag=10}*Smiles very softly*{/tag}" with vpunch',
+            233: 'mc "{tag=10}~Smiles very softly~{/tag}" with vpunch',
+            234: 'mc "{tag=10}{i}Smiles very softly{/i}{/tag}" with vpunch',
+            235: 'mc "{tag=10}(Smiles very softly){/tag}" with vpunch',
+            236: 'mc "{tag}*Smiles very softly*"',
+            237: 'mc "{tag}~Smiles very softly~"',
+            238: 'mc "{tag}{i}Smiles very softly{/i}"',
+            239: 'mc "{tag}{i}Smiles very softly"',
+            240: 'mc "{tag}(Smiles very softly)"',
+            241: 'mc "{tag}(Smiles very softly"',
+            # Extras
+            242: 'mc "(Whenever you are ready! Okay?"'
         }
 
     def validate_lines(self):
@@ -267,11 +288,14 @@ class TestDialogue(unittest.TestCase):
         self.start(BasicStrategy(), [0, 4, 5, 6, 38, 73, 132, 167, 199, 201])
 
     def test_parenthesis(self):
-        self.start(ParenthesisStrategy(), [12, 13, 14, 15, 16, 17, 18, 24, 25, 26, 27, 28, 29, 30, 206, 207, 208, 209])
+        self.start(ParenthesisStrategy(),
+                   [12, 13, 14, 15, 16, 17, 18, 24, 25, 26, 27, 28, 29, 30, 206, 207, 208, 209, 211, 213, 215, 217, 230,
+                    231, 235, 240, 241, 242])
 
     def test_italic(self):
         self.start(ItalicStrategy(),
-                   [44, 45, 46, 47, 48, 49, 50, 51, 57, 58, 59, 60, 61, 62, 63, 64, 202, 203, 204, 205,223])
+                   [44, 45, 46, 47, 48, 49, 50, 51, 57, 58, 59, 60, 61, 62, 63, 64, 202, 203, 204, 205, 223, 228, 229,
+                    234, 238, 239])
 
     def test_custom_tags(self):
         self.start(
@@ -281,7 +305,9 @@ class TestDialogue(unittest.TestCase):
         )
 
     def test_cues_asterisk(self):
-        self.start(ExpressionCueAsteriskStrategy(), [138, 139, 140, 141, 143, 145, 151, 152, 153, 154, 156,158, 218, 220,222])
+        self.start(ExpressionCueAsteriskStrategy(),
+                   [138, 139, 140, 141, 143, 145, 151, 152, 153, 154, 156, 158, 218, 220, 222, 224, 225, 232, 236])
 
     def test_cues_tilda(self):
-        self.start(ExpressionCueTildaStrategy(), [173, 174, 175, 176, 178, 185, 186, 187, 188, 190, 219, 221])
+        self.start(ExpressionCueTildaStrategy(),
+                   [173, 174, 175, 176, 178, 185, 186, 187, 188, 190, 219, 221, 226, 227, 233, 237])

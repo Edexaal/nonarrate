@@ -90,13 +90,15 @@ class CLIParser:
                 "images",
                 "cache",
                 "fonts",
+                "font",
                 "voices",
                 "functions",
                 "music",
                 "audio",
                 "gallery",
                 "videos",
-                "sounds"
+                "sounds",
+                "sound"
             },
             metavar="IGNORE_FOLDERS",
             help="Ignore specified [folders] when looking for .rpy files",

@@ -140,12 +140,12 @@ enum FilterTag {
 }
 
 'Validator Relations
+IValidatorChain <|-- ObjectStrategy
 IValidatorChain <|-- IValidatorChainSolo
 IValidatorChainSolo <|-- BasicStrategy
 IValidatorChainSolo <|-- CustomTextTagStrategy
 IValidatorChainSolo <|-- ParenthesisStrategy
 IValidatorChainSolo <|-- ItalicStrategy
-IValidatorChain <|-- ObjectStrategy
 IValidatorChainSolo <|-- CharacterStrategy
 IValidatorChainSolo <|-- ExpressionCueStrategy
 IValidatorChainSolo <|-- NullStrategy

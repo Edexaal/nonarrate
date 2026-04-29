@@ -1,9 +1,9 @@
 import re
 from argparse import Namespace
 from typing import final
-from lib.validator.dialogue import ParenthesisStrategy, ItalicStrategy, BasicStrategy, CustomTextTagStrategy
-from lib.validator.dialogue.expression_cue_asterisk_strategy import ExpressionCueAsteriskStrategy
-from lib.validator.dialogue.expression_cue_tilda_strategy import ExpressionCueTildaStrategy
+from lib.validator.dialogue import ParenthesisStrategy, ItalicStrategy, BasicStrategy, CustomTextTagStrategy, \
+    ExpressionCueTildaStrategy, ExpressionCueAsteriskStrategy
+
 from lib.validator.null_strategy import NullStrategy
 from lib.validator.speaker import (
     ObjectNoneItemStrategy,
@@ -23,7 +23,7 @@ class ArgAssembler:
     __validators: dict[str, type | list[type]] = {
         FilterTag.BASIC_NARR.value: BasicStrategy,
         FilterTag.BASIC_CHAR_OBJ.value: BasicObjectStrategy,
-        FilterTag.ITALIC_NARR.value: [ ItalicStrategy,ItalicObjectStrategy ],
+        FilterTag.ITALIC_NARR.value: [ItalicStrategy, ItalicObjectStrategy],
         FilterTag.PARENTHESIS_NARR.value: ParenthesisStrategy,
         FilterTag.BASIC_CHAR.value: BasicCharacterStrategy,
         FilterTag.NONE_CHAR_OBJ.value: ObjectNoneItemStrategy,

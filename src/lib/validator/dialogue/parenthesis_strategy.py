@@ -9,8 +9,9 @@ class ParenthesisStrategy(IValidatorChainSolo):
 
     Example:
         mc "(It's got to be here somewhere.)"
+        mc "{tag}(It's got to be here somewhere.){/tag}"
     """
 
     def __init__(self, next_validator: "IValidatorChainSolo | None" = None) -> None:
         super().__init__(next_validator)
-        self._validate_pat = re.compile(r'^[^=]+([\'"])\([^()]+\)?[?.!]?\s*(?:\1|\1\s*with .+)?$')
+        self._validate_pat = re.compile(r'^[^=]+([\'"])(?:{\w+(?:=[^}]+)?})*\([^()]+\)?(?:[.?!]?(?:{/\w+})*|(?:{/\w+})*[/?!]?)\s*(?:\1|\1\s*with .+)?$')

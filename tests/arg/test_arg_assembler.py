@@ -72,7 +72,8 @@ class TestArgAssembler(unittest.TestCase):
             "se",
         ]
         self.start(
-            args, {NullStrategy, ObjectNoneItemStrategy, CustomTextTagStrategy, CharacterStrategy, ObjectStrategy,ObjectVarStrategy}
+            args, {NullStrategy, ObjectNoneItemStrategy, CustomTextTagStrategy, CharacterStrategy, ObjectStrategy,
+                   ObjectVarStrategy}
         )
 
     def test_regex_chain(self):

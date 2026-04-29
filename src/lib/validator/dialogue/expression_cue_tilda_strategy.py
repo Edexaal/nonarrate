@@ -7,9 +7,9 @@ class ExpressionCueTildaStrategy(ExpressionCueStrategy):
 
     Examples:
         mc "~yawns~"
-        "~pounces~"
+        mc "{tag}~yawns~{/tag}"
     """
 
     def __init__(self, next_validator: "IValidatorChain | None" = None) -> None:
         super().__init__(next_validator)
-        self._validate_pat = re.compile(r"[^=]+(['\"])~[^~]+~[?.!]?\s*\1(?:\s*with .+)?")
+        self._validate_pat = re.compile(r"[^=]+(['\"])(?:{\w+(?:=[^}]+)?})*~[^~]+~(?:(?:{/\w+})*[.?!]?|[.?!]?(?:{/\w+})*)\s*\1(?:\s*with .+)?")

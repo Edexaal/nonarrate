@@ -55,7 +55,7 @@ class NarratorHandler:
     def remove(self, file_infos: list[FileInfo], args) -> list[FileInfo]:
         """Removes narration & thoughts from file content.
 
-        Along with the removal operation, cleanup operations are executed afterwards.
+        Along with the removal operation, cleanup operations are executed afterward.
 
         args:
             file_infos: a list of file information including their content and location.

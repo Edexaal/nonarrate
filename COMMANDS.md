@@ -166,6 +166,7 @@ These filters deal with the **speaker** portion of a dialogue box.
 | --basic-char-obj                      | n = Character(“Narrator”, …)                                                                                                            | [Default narrators](#default-narrators) saved to character object.                                    |
 | --no-custom-char-objs,<br>--ncco      | d = Character(“Developer”, …)                                                                                                           | Custom speaker saved to character object by their _in-game_ name. In this example, its `"Developer"`. |
 | --basic-char                          | “Narrator” “It was a sunny day.”                                                                                                        | [Default narrators](#default-narrators) wrapped in quotes.                                            |
+| --none-char                           | "" "It was a bright and stormy night."                                                                                                  | Using empty quotes in-place of speaker.                                                               |
 | --none-char-obj                       | narr = Character("", ‥)<br> narr = Character(None, ‥) <br> narr = Character() <br> narr = Character(Nothing in the `name` parameter, ‥) | Narrators using an empty character object. In short, nothing in the `name` parameter.                 |
 | --no-custom-chars,<br>--ncc           | “Lily's Inner Self” “It would be a good idea to distract them first”                                                                    | Custom Speaker wrapped in quotes                                                                      |
 | --no-custom-char-var-objs,<br>--nccvo | se = Character("Sue", …)                                                                                                                | Custom speaker saved to character object by their _variable_ name. In this example, its `se`.         |
@@ -218,6 +219,12 @@ Keep [default narrators](#default-narrators) introduced in quotes.
 Prevents *all* [default narrators](#default-narrators) explicitly written in quotes
 alongside their dialogue from being removed. These types of narrators are
 **NOT** saved to a `Character` object.
+
+***--none-char***
+
+Keeps empty quoted speakers not saved to a Character object.
+
+This option keeps the following type of dialogue `"" "Hey! I'm a narrator!"`.
 
 ***--none-char-obj***
 

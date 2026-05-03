@@ -20,7 +20,7 @@ class CLIParser:
     """
 
     def __init__(self):
-        self.__version_num = "2.7.0"
+        self.__version_num = "2.8.0"
         self.__setup()
 
     def __setup(self):
@@ -142,6 +142,7 @@ class CLIParser:
             FilterTag.NONE_CHAR_OBJ.value: "Keep empty Character objects.",
             FilterTag.EXPRESSION_CUES.value: "Keep expression cues. Ex: *smiles*, ~raises eyebrows~.",
             FilterTag.ONLY_PERIODS.value: "Keeps dialogue containing only periods. Ex: '......'",
+            FilterTag.NONE_CHAR.value: "Keeps empty quoted speakers not saved to a Character object."
         }
         self.__add_no_filters(no_filters)
         self.__add_filter_arg(

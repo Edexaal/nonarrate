@@ -6,7 +6,7 @@ from lib.validator.null_strategy import NullStrategy
 from tests import fixture
 from lib.custom_types import FilterTag
 from lib.validator.speaker import ObjectNoneItemStrategy, ObjectStrategy, CharacterStrategy, BasicObjectStrategy, \
-    ItalicObjectStrategy, ObjectVarStrategy
+    ItalicObjectStrategy, ObjectVarStrategy, CharacterNoneStrategy
 from lib.validator.dialogue import CustomTextTagStrategy, ParenthesisStrategy, ExpressionCueAsteriskStrategy, \
     ExpressionCueTildaStrategy, ItalicStrategy, OnlyPeriodsStrategy
 
@@ -46,7 +46,7 @@ class TestArgAssembler(unittest.TestCase):
             FilterTag.BASIC_NARR.value,
         ]
         self.start(args, {NullStrategy, ObjectNoneItemStrategy, ParenthesisStrategy, BasicObjectStrategy,
-                          ExpressionCueAsteriskStrategy,ExpressionCueTildaStrategy, OnlyPeriodsStrategy})
+                          ExpressionCueAsteriskStrategy,ExpressionCueTildaStrategy, OnlyPeriodsStrategy,CharacterNoneStrategy})
 
     def test_nargs(self):
         args = [
@@ -58,6 +58,7 @@ class TestArgAssembler(unittest.TestCase):
             FilterTag.BASIC_NARR.value,
             FilterTag.EXPRESSION_CUES.value,
             FilterTag.ONLY_PERIODS.value,
+            FilterTag.NONE_CHAR.value,
             FilterTag.NO_CUSTOM_CHARS.value,
             "ten",
             "narrator",
@@ -88,6 +89,7 @@ class TestArgAssembler(unittest.TestCase):
             FilterTag.NONE_CHAR_OBJ.value,
             FilterTag.EXPRESSION_CUES.value,
             FilterTag.ONLY_PERIODS.value,
+            FilterTag.NONE_CHAR.value,
             "--regex",
             FilterTag.NO_CUSTOM_CHARS.value,
             "ten{3}",
@@ -109,6 +111,7 @@ class TestArgAssembler(unittest.TestCase):
             FilterTag.NONE_CHAR_OBJ.value,
             FilterTag.EXPRESSION_CUES.value,
             FilterTag.ONLY_PERIODS.value,
+            FilterTag.NONE_CHAR.value,
             FilterTag.NO_CUSTOM_CHARS.value,
             "ten{3}",
             "seco.+",
@@ -128,6 +131,7 @@ class TestArgAssembler(unittest.TestCase):
             FilterTag.BASIC_NARR.value,
             FilterTag.NONE_CHAR_OBJ.value,
             FilterTag.ONLY_PERIODS.value,
+            FilterTag.NONE_CHAR.value,
         ]
         self.start(
             args, {NullStrategy, ItalicStrategy,ItalicObjectStrategy,ExpressionCueTildaStrategy,ExpressionCueAsteriskStrategy}

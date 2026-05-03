@@ -11,7 +11,7 @@ from lib.validator.speaker import (
     BasicCharacterStrategy,
     CharacterStrategy,
     BasicObjectStrategy,
-    ItalicObjectStrategy, ObjectVarStrategy,
+    ItalicObjectStrategy, ObjectVarStrategy, CharacterNoneStrategy,
 )
 from lib.custom_types import FilterTag
 
@@ -33,6 +33,7 @@ class ArgAssembler:
         FilterTag.EXPRESSION_CUES.value: [ExpressionCueAsteriskStrategy, ExpressionCueTildaStrategy],
         FilterTag.NO_CUSTOM_CHAR_VAR_OBJS.value: ObjectVarStrategy,
         FilterTag.ONLY_PERIODS.value: OnlyPeriodsStrategy,
+        FilterTag.NONE_CHAR.value: CharacterNoneStrategy,
     }
 
     @classmethod

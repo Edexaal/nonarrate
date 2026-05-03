@@ -13,6 +13,8 @@ abstract class IValidatorChainSolo {
 'Ex: "Narrator" "Player listen to me..."
 class CharacterStrategy
 class BasicCharacterStrategy
+'Ex: "" "Winds furosiously blew to the east."
+class CharacterNoneStrategy
 
 class ObjectStrategy {
 	{static}#speakerObjects: Set<str>
@@ -130,6 +132,7 @@ class ArgAssembler {
 
 enum FilterTag {
   BASIC_CHAR
+  NONE_CHAR
   ITALIC_NARR
   PARENTHESIS_NARR
   BASIC_NARR
@@ -150,6 +153,7 @@ IValidatorChainSolo <|-- CustomTextTagStrategy
 IValidatorChainSolo <|-- ParenthesisStrategy
 IValidatorChainSolo <|-- ItalicStrategy
 IValidatorChainSolo <|-- CharacterStrategy
+IValidatorChainSolo <|-- CharacterNoneStrategy
 IValidatorChainSolo <|-- ExpressionCueStrategy
 IValidatorChainSolo <|-- NullStrategy
 IValidatorChainSolo <|-- OnlyPeriodsStrategy

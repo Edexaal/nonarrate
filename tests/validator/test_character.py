@@ -7,7 +7,7 @@ from lib.validator.speaker import (
     ObjectStrategy,
     BasicObjectStrategy,
     ItalicObjectStrategy,
-    ObjectVarStrategy
+    ObjectVarStrategy, CharacterNoneStrategy
 )
 from lib.validator.ivalidator_chain import IValidatorChain
 from lib.custom_types import FileInfo
@@ -151,6 +151,9 @@ class TestCharacter(unittest.TestCase):
             80: 'b_ "And so the story would move forward." with vpunch',
             81: 'l "And so the story would move forward." with vpunch',
             82: 'think "And so the story would move forward." with vpunch',
+            # Empty quote speaker
+            83: '"" "But oh man, how wrong I was..."',
+            84: '"  " "But oh man, how wrong I was..."',
         }
 
     def setUp(self) -> None:
@@ -217,3 +220,6 @@ class TestCharacter(unittest.TestCase):
 
     def test_object_var(self):
         self.start_object(ObjectVarStrategy("pop"), [57])
+
+    def test_empty_char(self):
+        self.start(CharacterNoneStrategy(),[83,84])

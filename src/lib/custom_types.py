@@ -8,6 +8,7 @@ class FilterTag(Enum):
     ITALIC_NARR = "--italic-narr"
     PARENTHESIS_NARR = "--parenthesis-narr"
     BASIC_CHAR = "--basic-char"
+    NONE_CHAR = "--none-char"
     NONE_CHAR_OBJ = "--none-char-obj"
     EXPRESSION_CUES = "--cues"
     ONLY_PERIODS = "--periods"

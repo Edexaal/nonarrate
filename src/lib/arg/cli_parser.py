@@ -120,7 +120,8 @@ class CLIParser:
                      "transforms",
                      "achievement",
                      "achievements",
-                     "audio"
+                     "audio",
+                     "animations"
                      },
             metavar="IGNORE_FILES",
             help="Ignore specified [files] when looking for .rpy files.",

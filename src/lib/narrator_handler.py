@@ -1,7 +1,4 @@
-from lib.handler.atl_info import AtlInfo
-from lib.handler.line_info import LineInfo
-from lib.handler.prev_indent_info import PrevIndentInfo
-from lib.handler.prev_multi_info import PrevMultiInfo
+from lib.handler import AtlInfo, LineInfo, PauseInfo, PrevIndentInfo, PrevMultiInfo
 from .custom_types import FileInfo, MultiLineType
 import typing
 import re
@@ -91,7 +88,8 @@ class NarratorHandler:
                         cleaned_lines.append(line)
                     else:
                         if (
-                            prev_info.multi_type is MultiLineType.ONE_QUOTE and self.__is_closing(line_info.strip_line)
+                                prev_info.multi_type is MultiLineType.ONE_QUOTE and self.__is_closing(
+                            line_info.strip_line)
                         ) or (prev_info.multi_type is MultiLineType.TRIPLE_QUOTE and line_info.is_triple_quote_end):
                             prev_info.multi_type = MultiLineType.NONE
                             if args.pauses:
@@ -111,11 +109,12 @@ class NarratorHandler:
                     if not line_info.is_triple_quote:
                         cleaned_lines.append(line)
                 elif (
-                    args.pauses
-                    and is_narrator
-                    and not prev_info.line.strip().startswith(NarratorHandler.PAUSE_STATEMENTS)
-                    and len(cleaned_lines)
-                    and not cleaned_lines[len(cleaned_lines) - 1].strip().startswith(NarratorHandler.PAUSE_STATEMENTS)
+                        args.pauses
+                        and is_narrator
+                        and not prev_info.line.strip().startswith(NarratorHandler.PAUSE_STATEMENTS)
+                        and len(cleaned_lines)
+                        and not cleaned_lines[len(cleaned_lines) - 1].strip().startswith(
+                    NarratorHandler.PAUSE_STATEMENTS)
                 ):
                     # Replaces narration with pauses
                     cleaned_lines.append(f"{' ' * self.get_indent_num(line)}{NarratorHandler.PAUSE_STATEMENTS[0]}\n")
@@ -184,14 +183,15 @@ class NarratorHandler:
                 elif not prev_info.has_reset:
                     line_indent_num = self.get_indent_num(line)
                     if (
-                        (prev_info.indent_num < line_indent_num)
-                        # labels do not need to follow strict indentation
-                        # Valid example:
-                        # label my_cool_label:
-                        # scene 103
-                        # mc "esvebrewsgr"
-                        or prev_info.indent_num == line_indent_num
-                        and prev_info.recent_line.lstrip().startswith("label ")
+                            (prev_info.indent_num < line_indent_num)
+                            # labels do not need to follow strict indentation. Also,
+                            # if previous is a statement (<block>:) allow it through.
+                            # Valid example:
+                            # label my_cool_label:
+                            # scene 103
+                            # mc "esvebrewsgr"
+                            or prev_info.indent_num == line_indent_num
+                            and prev_info.recent_line.rstrip().endswith(":")
                     ):
                         cleaned_lines.append(prev_info.recent_line)
                         cleaned_lines.append(line)
@@ -215,14 +215,14 @@ class NarratorHandler:
         """
         for file_info in file_infos:
             cleaned_lines = []
-            is_prev_pause = False
+            pause_info = PauseInfo()
             for line in file_info.lines:
                 strip_line = line.strip()
-                is_pause = strip_line.startswith(NarratorHandler.PAUSE_STATEMENTS)
-                if is_pause and is_prev_pause:
+                pause_info.set_pause(strip_line.startswith(NarratorHandler.PAUSE_STATEMENTS))
+                if pause_info.is_duplicate():
                     continue
                 cleaned_lines.append(line)
                 if strip_line:
-                    is_prev_pause = is_pause
+                    pause_info.snapshot_pause_state()
             file_info.lines = cleaned_lines
         return file_infos

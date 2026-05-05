@@ -130,6 +130,13 @@ class PrevIndentInfo {
   #hasReset: bool
   +reset()
 }
+class PauseInfo {
+  -isPause: bool
+  -isPrevPause: bool
+  +setPause(value:bool)
+  +isDuplicate(): bool
+  +snapshotPauseState()
+}
 
 'Narrator Handler
 class  NarratorHandler <<Singleton>>{
@@ -215,6 +222,13 @@ FileFilter <|-- RenpyFilter
 PrevInfo <|-- PrevIndentInfo
 PrevInfo <|-- PrevMultiInfo
 MultiLineInfo o-- PrevMultiInfo
+
+'Handler Relations
+NarratorHandler --> PrevIndentInfo : uses
+NarratorHandler --> PrevMultiInfo : uses
+NarratorHandler --> AltInfo : uses
+NarratorHandler --> LineInfo : uses
+NarratorHandler --> PauseInfo : uses
 
 'Validator Relations
 IValidatorChain <|-- ObjectStrategy

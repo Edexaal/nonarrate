@@ -101,6 +101,7 @@ class LineInfo {
   +setup(line:str)
   {static}-isTripleQuote(stripLine:str): bool
   {static}-endswithTripleQuote(stripLine:str): bool
+  {static}-isChoiceMenu(stripLine:str): bool
 }
 class MultiLineInfo {
   +multiType: MultiLineType

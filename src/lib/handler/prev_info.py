@@ -6,7 +6,7 @@ class PrevInfo:
     """
 
     def __init__(self):
-        self.reset()
+        self.line = ""
 
     def reset(self):
         """Reset all previous information back to default values."""

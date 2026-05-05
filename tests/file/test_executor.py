@@ -5,7 +5,7 @@ from lib.arg.arg_assembler import ArgAssembler
 from lib.arg.cli_parser import CLIParser
 from lib.custom_types import FileInfo
 from lib.file import FileExecutor, Reader, Writer
-from .. import fixture
+from tests import fixture
 
 
 class TestExecutor(unittest.TestCase):

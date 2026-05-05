@@ -75,7 +75,7 @@ class NarratorHandler:
                         continue
                     else:
                         atl_info.is_atl = False
-                elif atl_info.is_block(line_info.strip_line):
+                if atl_info.is_block(line_info.strip_line):
                     atl_info.is_atl = True
                     atl_info.indent_num = self.get_indent_num(line)
                     cleaned_lines.append(line)

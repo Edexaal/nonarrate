@@ -16,7 +16,8 @@ class AtlInfo:
     __atl_pat: re.Pattern = re.compile(r".*\b(?:image|layeredimage|show|scene|transform)\b[^:]+:")
 
     def __init__(self):
-        self.reset()
+        self.is_atl = False
+        self.indent_num = 0
 
     def reset(self):
         """Reset all values back to default."""

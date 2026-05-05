@@ -13,7 +13,9 @@ class MultiLineInfo:
     """
 
     def __init__(self) -> None:
-        self.reset()
+        self._lines = list()
+        self.multi_type = MultiLineType.NONE
+        self.is_choice_menu = False
 
     def clear(self):
         """Clear collection of multiple lines stored."""

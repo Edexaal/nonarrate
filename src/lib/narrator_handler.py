@@ -1,3 +1,7 @@
+from lib.handler.atl_info import AtlInfo
+from lib.handler.line_info import LineInfo
+from lib.handler.prev_indent_info import PrevIndentInfo
+from lib.handler.prev_multi_info import PrevMultiInfo
 from .custom_types import FileInfo, MultiLineType
 import typing
 import re
@@ -15,7 +19,6 @@ class NarratorHandler:
     """
 
     PAUSE_STATEMENTS: tuple[str, str] = ("pause", "$ renpy.pause")
-    __atl_pat: re.Pattern = re.compile(r".*\b(?:image|layeredimage|show|scene|transform)\b[^:]+:")
     __closing_pat: re.Pattern = re.compile(r"(?:[\"']|[\"']\s*with .+)$")
 
     def __init__(self) -> None:
@@ -27,23 +30,11 @@ class NarratorHandler:
         """Gets the current amount of indentation."""
         return len(line) - len(line.lstrip())
 
-    def __is_image_label(self, strip_line: str) -> bool:
-        return strip_line.startswith("image ") and strip_line.endswith(":")
-
     def __is_comment(self, strip_line: str) -> bool:
         return strip_line.startswith("\ufeff#") or strip_line.startswith("#")
 
-    def __is_atl_block(self, strip_line: str) -> bool:
-        return True if self.__atl_pat.match(strip_line) else False
-
     def __is_closing(self, strip_line: str) -> bool:
         return True if self.__closing_pat.search(strip_line) else False
-
-    def __endswith_triple_quote(self, strip_line: str) -> bool:
-        return strip_line.endswith("'''") or strip_line.endswith('"""')
-
-    def __is_triple_quote(self, strip_line: str) -> bool:
-        return strip_line == '"""' or strip_line == "'''"
 
     def __reset_line_stats(self):
         self._total_cleaned_lines = 0
@@ -64,126 +55,103 @@ class NarratorHandler:
             a list of file information and their modified content without the presence of a narrator or thought.
         """
         self.__reset_line_stats()
-        label_check = {"is_choice_menu": False, "is_image_label": False}
         for file_info in file_infos:
             self._total_lines += len(file_info.lines)
             cleaned_lines = []
-            image_label_indent = 0
-            prev_line_info = {"is_narr": False, "line": "", "multiline": list()}
-            multi_line_type = MultiLineType.NONE
-            atl_info = {"indent": 0, "is": False}
+            line_info = LineInfo()
+            atl_info = AtlInfo()
+            prev_info = PrevMultiInfo()
             for line in file_info.lines:
-                strip_line = line.strip()
-                is_triple_quote = self.__is_triple_quote(strip_line)
-                is_triple_quote_end = True if is_triple_quote else self.__endswith_triple_quote(strip_line)
-                is_menu = strip_line.startswith("menu:")
-                if self.__is_comment(strip_line):
+                line_info.setup(line)
+                if self.__is_comment(line_info.strip_line):
                     continue
                 # REF:https://www.renpy.org/doc/html/transforms.html#atl-animation-and-transformation-language
                 # Example:
                 # init -2 layeredimage augustina:
                 #   "image_smile.png"
-                if atl_info["is"]:
-                    if self.get_indent_num(line) > atl_info["indent"]:
+                if atl_info.is_atl:
+                    if self.get_indent_num(line) > atl_info.indent_num:
                         cleaned_lines.append(line)
                         continue
                     else:
-                        atl_info["is"] = False
-                elif self.__is_atl_block(strip_line):
-                    atl_info["is"] = True
-                    atl_info["indent"] = self.get_indent_num(line)
+                        atl_info.is_atl = False
+                elif atl_info.is_block(line_info.strip_line):
+                    atl_info.is_atl = True
+                    atl_info.indent_num = self.get_indent_num(line)
                     cleaned_lines.append(line)
                     continue
 
                 # If narrator is multiline. Ex:
                 # narr ".....................
                 # ....................."
-                if multi_line_type is not MultiLineType.NONE:
-                    if multi_line_type is MultiLineType.VALID_TRIPLE_QUOTE:
-                        if is_triple_quote_end:
-                            multi_line_type = MultiLineType.NONE
+                if prev_info.multi_type is not MultiLineType.NONE:
+                    if prev_info.multi_type is MultiLineType.VALID_TRIPLE_QUOTE:
+                        if line_info.is_triple_quote_end:
+                            prev_info.multi_type = MultiLineType.NONE
                         cleaned_lines.append(line)
                     else:
-                        if (multi_line_type is MultiLineType.ONE_QUOTE and self.__is_closing(strip_line)) or (
-                            multi_line_type is MultiLineType.TRIPLE_QUOTE and is_triple_quote_end
-                        ):
-                            multi_line_type = MultiLineType.NONE
+                        if (
+                            prev_info.multi_type is MultiLineType.ONE_QUOTE and self.__is_closing(line_info.strip_line)
+                        ) or (prev_info.multi_type is MultiLineType.TRIPLE_QUOTE and line_info.is_triple_quote_end):
+                            prev_info.multi_type = MultiLineType.NONE
                             if args.pauses:
                                 # Replaces narration with pauses
                                 cleaned_lines.append(
                                     f"{' ' * self.get_indent_num(line)}{NarratorHandler.PAUSE_STATEMENTS[0]}\n"
                                 )
-                        prev_line_info["multiline"].append(line)
+                        prev_info.append_line(line)
                     continue
 
-                if not is_menu and strip_line != "":
-                    prev_line_info["multiline"].clear()
+                if not line_info.is_menu and line_info.strip_line != "":
+                    prev_info.clear_list()
 
-                is_narrator = args.validator.is_valid(strip_line)
+                is_narrator = args.validator.is_valid(line_info.strip_line)
 
-                # An 'image <label_name>:' is in use.
-                if not label_check["is_image_label"] and self.__is_image_label(strip_line):
-                    label_check["is_image_label"] = True
-                    image_label_indent = self.get_indent_num(line)
+                if prev_info.is_choice_menu or not is_narrator:
+                    if not line_info.is_triple_quote:
+                        cleaned_lines.append(line)
                 elif (
-                    label_check["is_image_label"]
-                    and self.get_indent_num(line) <= image_label_indent
-                    and not self.__is_image_label(strip_line)
+                    args.pauses
+                    and is_narrator
+                    and not prev_info.line.strip().startswith(NarratorHandler.PAUSE_STATEMENTS)
+                    and len(cleaned_lines)
+                    and not cleaned_lines[len(cleaned_lines) - 1].strip().startswith(NarratorHandler.PAUSE_STATEMENTS)
                 ):
-                    label_check["is_image_label"] = False
+                    # Replaces narration with pauses
+                    cleaned_lines.append(f"{' ' * self.get_indent_num(line)}{NarratorHandler.PAUSE_STATEMENTS[0]}\n")
 
-                if not label_check["is_image_label"]:
-                    if label_check["is_choice_menu"] or not is_narrator:
-                        if not is_triple_quote:
-                            cleaned_lines.append(line)
-                    elif (
-                        args.pauses
-                        and is_narrator
-                        and not prev_line_info["line"].strip().startswith(NarratorHandler.PAUSE_STATEMENTS)
-                        and len(cleaned_lines)
-                        and not cleaned_lines[len(cleaned_lines) - 1]
-                        .strip()
-                        .startswith(NarratorHandler.PAUSE_STATEMENTS)
-                    ):
-                        # Replaces narration with pauses
-                        cleaned_lines.append(
-                            f"{' ' * self.get_indent_num(line)}{NarratorHandler.PAUSE_STATEMENTS[0]}\n"
-                        )
+                # Keeps the narrator during choice menu appearance
+                if line_info.is_menu:
+                    prev_info.is_choice_menu = True
+                    if prev_info.is_narr:
+                        length = len(cleaned_lines)
+                        cleaned_lines.insert(length - 1, prev_info.line)
+                    elif not prev_info.is_empty_list():
+                        last_cleaned_line = cleaned_lines.pop()
+                        cleaned_lines.extend(prev_info.get_lines())
+                        cleaned_lines.append(last_cleaned_line)
+                        prev_info.clear_list()
+                elif prev_info.is_choice_menu and len(line_info.strip_line) != 0:
+                    prev_info.is_choice_menu = False
 
-                    # Keeps the narrator during choice menu appearance
-                    if is_menu:
-                        label_check["is_choice_menu"] = True
-                        if prev_line_info["is_narr"]:
-                            length = len(cleaned_lines)
-                            cleaned_lines.insert(length - 1, prev_line_info["line"])
-                        elif len(prev_line_info["multiline"]):
-                            last_cleaned_line = cleaned_lines.pop()
-                            cleaned_lines.extend(prev_line_info["multiline"])
-                            cleaned_lines.append(last_cleaned_line)
-                            prev_line_info["multiline"].clear()
-                    elif label_check["is_choice_menu"] and len(strip_line) != 0:
-                        label_check["is_choice_menu"] = False
-                else:
-                    cleaned_lines.append(line)
-
-                if multi_line_type is MultiLineType.NONE:
-                    if is_narrator and not self.__is_closing(strip_line):
-                        multi_line_type = MultiLineType.ONE_QUOTE
-                    elif is_triple_quote or (is_narrator and is_triple_quote_end):
-                        multi_line_type = MultiLineType.TRIPLE_QUOTE
-                    elif not is_narrator and is_triple_quote_end:
+                if prev_info.multi_type is MultiLineType.NONE:
+                    if is_narrator and not self.__is_closing(line_info.strip_line):
+                        prev_info.multi_type = MultiLineType.ONE_QUOTE
+                    elif line_info.is_triple_quote or (is_narrator and line_info.is_triple_quote_end):
+                        prev_info.multi_type = MultiLineType.TRIPLE_QUOTE
+                    elif not is_narrator and line_info.is_triple_quote_end:
                         # linda """
-                        multi_line_type = MultiLineType.VALID_TRIPLE_QUOTE
+                        prev_info.multi_type = MultiLineType.VALID_TRIPLE_QUOTE
 
-                    if multi_line_type is not MultiLineType.NONE:
-                        prev_line_info["multiline"].clear()
-                        if multi_line_type is not MultiLineType.VALID_TRIPLE_QUOTE:
-                            prev_line_info["multiline"].append(line)
+                    if prev_info.multi_type is not MultiLineType.NONE:
+                        prev_info.clear_list()
+                        if prev_info.multi_type is not MultiLineType.VALID_TRIPLE_QUOTE:
+                            prev_info.append_line(line)
                         continue
 
-                if strip_line != "":
-                    prev_line_info["is_narr"] = is_narrator
-                    prev_line_info["line"] = line
+                if line_info.strip_line != "":
+                    prev_info.is_narr = is_narrator
+                    prev_info.line = line
 
             file_info.lines = cleaned_lines
         if args.pauses:
@@ -203,36 +171,36 @@ class NarratorHandler:
         """
         for file_info in file_infos:
             cleaned_lines = []
-            prev_indent_info = dict()
+            prev_info = PrevIndentInfo()
             for line in file_info.lines:
                 strip_line = line.strip()
-                if strip_line.endswith(":") and not len(prev_indent_info):
-                    prev_indent_info["line"] = line
-                    prev_indent_info["indent"] = self.get_indent_num(line)
-                elif strip_line.endswith(":") and len(prev_indent_info):
-                    cleaned_lines.append(prev_indent_info["line"])
+                if strip_line.endswith(":") and prev_info.has_reset:
+                    prev_info.recent_line = line
+                    prev_info.indent_num = self.get_indent_num(line)
+                elif strip_line.endswith(":") and not prev_info.has_reset:
+                    cleaned_lines.append(prev_info.recent_line)
                     cleaned_lines.append(line)
-                    prev_indent_info.clear()
-                elif len(prev_indent_info):
+                    prev_info.reset()
+                elif not prev_info.has_reset:
                     line_indent_num = self.get_indent_num(line)
                     if (
-                        (prev_indent_info["indent"] < line_indent_num)
+                        (prev_info.indent_num < line_indent_num)
                         # labels do not need to follow strict indentation
                         # Valid example:
                         # label my_cool_label:
                         # scene 103
                         # mc "esvebrewsgr"
-                        or prev_indent_info["indent"] == line_indent_num
-                        and prev_indent_info["line"].lstrip().startswith("label ")
+                        or prev_info.indent_num == line_indent_num
+                        and prev_info.recent_line.lstrip().startswith("label ")
                     ):
-                        cleaned_lines.append(prev_indent_info["line"])
+                        cleaned_lines.append(prev_info.recent_line)
                         cleaned_lines.append(line)
                     elif not strip_line:
-                        cleaned_lines.append(prev_indent_info["line"])
+                        cleaned_lines.append(prev_info.recent_line)
                     else:
                         cleaned_lines.append(line)
 
-                    prev_indent_info.clear()
+                    prev_info.reset()
                 else:
                     cleaned_lines.append(line)
             file_info.lines = cleaned_lines

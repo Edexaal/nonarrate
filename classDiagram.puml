@@ -86,15 +86,58 @@ class  FileExecutor <<Singleton>>{
   {static}-fixFunc(errors: List<RenpyError>)
 }
 
-'Narrator
+'Handler Info
+class AtlInfo {
+  +isAtl: bool
+  +indentNum: int
+  -altPat: Regex
+  {static}+isBlock(stripLine:str): bool
+}
+class LineInfo {
+  #stripLine: str
+  #isTripleQuote: bool
+  #isTripleQuoteEnd: bool
+  #isMenu: bool
+  +setup(line:str)
+  {static}-isTripleQuote(stripLine:str): bool
+  {static}-endswithTripleQuote(stripLine:str): bool
+}
+class MultiLineInfo {
+  +multiType: MultiLineType
+  +isChoiceMenu: bool
+  #lines: List<str>
+  +clear()
+  +append(line:str)
+  +isEmpty(): bool
+  +reset()
+}
+class PrevInfo {
+  +line: str
+  +reset()
+}
+class PrevMultiInfo {
+  #multiInfo: MultiLineInfo
+  +isNarr: bool
+  +appendLine(line:str)
+  +clearList()
+  +isEmptyList(): bool
+  +getLines(): List<str>
+  +reset()
+}
+class PrevIndentInfo {
+  #indentNum: int
+  #hasReset: bool
+  +reset()
+}
+
+'Narrator Handler
 class  NarratorHandler <<Singleton>>{
   {static}+PAUSE_STATEMENTS:tuple<str>
-  {static}-altPat: Regex
   {static}-closingPat: Regex
   +remove(fileInfos:List<FileInfo>,args:Namespace): List<Dictionary<str,List<str>>>
   +getIdentNum(line:str):int
   -isComment(line:str):bool
-  -isImageLabel(line:str):bool
+  -isClosing(line:str):bool
   -resetLineStats()
   -lineStats(): Tuple<int,int>
   -correctIndent(fileInfos:List<FileInfo>): List<FileInfo>
@@ -156,6 +199,20 @@ enum FilterTag {
   NO_CUSTOM_TEXT_TAGS
   NO_CUSTOM_CHARS
 }
+
+enum MultiLineType {
+  NONE
+  ONE_QUOTE
+  TRIPLE_QUOTE 
+  VALID_TRIPLE_QUOTE
+}
+
+'Invalid Filters Relations
+FileFilter <|-- RenpyFilter
+
+'Info Relations
+PrevInfo <|-- PrevIndentInfo
+PrevInfo <|-- PrevMultiInfo
 
 'Validator Relations
 IValidatorChain <|-- ObjectStrategy

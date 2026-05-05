@@ -1,6 +1,8 @@
 import re
+from typing import final
 
 
+@final
 class AtlInfo:
     """Holds line information involving Animation and Transformation language (atl).
 

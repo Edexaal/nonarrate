@@ -213,6 +213,7 @@ FileFilter <|-- RenpyFilter
 'Info Relations
 PrevInfo <|-- PrevIndentInfo
 PrevInfo <|-- PrevMultiInfo
+MultiLineInfo o-- PrevMultiInfo
 
 'Validator Relations
 IValidatorChain <|-- ObjectStrategy

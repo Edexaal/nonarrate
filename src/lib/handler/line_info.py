@@ -1,3 +1,7 @@
+from typing import final
+
+
+@final
 class LineInfo:
     """Holds line information from a file."""
 

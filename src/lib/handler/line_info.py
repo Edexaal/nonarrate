@@ -9,9 +9,8 @@ class LineInfo:
         if line is not None:
             self._strip_line = line.strip()
             self._is_triple_quote_start = LineInfo.__startswith_triple_quote(self._strip_line)
-            self._is_triple_quote_end = (
-                True if self._is_triple_quote_start else LineInfo.__endswith_triple_quote(self._strip_line)
-            )
+            self._is_triple_quote_end = LineInfo.__endswith_triple_quote(self._strip_line)
+            self._has_triple_quote = LineInfo.__has_triple_quote(self._strip_line)
             self._is_menu = LineInfo.__is_choice_menu(self._strip_line)
 
     @staticmethod
@@ -21,6 +20,9 @@ class LineInfo:
     @staticmethod
     def __endswith_triple_quote(strip_line: str) -> bool:
         return strip_line.endswith("'''") or strip_line.endswith('"""')
+    @staticmethod
+    def __has_triple_quote(strip_line: str) -> bool:
+        return '"""' in strip_line or "'''" in strip_line
 
     @staticmethod
     def __is_choice_menu(strip_line:str) -> bool:
@@ -30,6 +32,7 @@ class LineInfo:
         self._strip_line = line.strip()
         self._is_triple_quote_start = LineInfo.__startswith_triple_quote(self._strip_line)
         self._is_triple_quote_end = LineInfo.__endswith_triple_quote(self._strip_line)
+        self._has_triple_quote = LineInfo.__has_triple_quote(self._strip_line)
         self._is_menu = LineInfo.__is_choice_menu(self._strip_line)
 
     @property
@@ -43,6 +46,10 @@ class LineInfo:
     @property
     def is_triple_quote_end(self):
         return self._is_triple_quote_end
+
+    @property
+    def has_triple_quote(self):
+        return self._has_triple_quote
 
     @property
     def is_menu(self):

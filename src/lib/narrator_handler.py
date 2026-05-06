@@ -138,8 +138,8 @@ class NarratorHandler:
                         prev_info.multi_type = MultiLineType.TRIPLE_QUOTE
                     elif is_narrator and not self.__is_closing(line_info.strip_line):
                         prev_info.multi_type = MultiLineType.ONE_QUOTE
-                    elif not is_narrator and line_info.is_triple_quote_end:
-                        # linda """
+                    elif not is_narrator and line_info.has_triple_quote:
+                        # linda """You are not narrator
                         prev_info.multi_type = MultiLineType.VALID_TRIPLE_QUOTE
 
                     if prev_info.multi_type is not MultiLineType.NONE:

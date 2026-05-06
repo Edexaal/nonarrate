@@ -106,7 +106,7 @@ class NarratorHandler:
                 is_narrator = args.validator.is_valid(line_info.strip_line)
 
                 if prev_info.is_choice_menu or not is_narrator:
-                    if not line_info.is_triple_quote:
+                    if not line_info.is_triple_quote_start:
                         cleaned_lines.append(line)
                 elif (
                         args.pauses
@@ -134,10 +134,10 @@ class NarratorHandler:
                     prev_info.is_choice_menu = False
 
                 if prev_info.multi_type is MultiLineType.NONE:
-                    if is_narrator and not self.__is_closing(line_info.strip_line):
-                        prev_info.multi_type = MultiLineType.ONE_QUOTE
-                    elif line_info.is_triple_quote or (is_narrator and line_info.is_triple_quote_end):
+                    if line_info.is_triple_quote_start or (is_narrator and line_info.is_triple_quote_end):
                         prev_info.multi_type = MultiLineType.TRIPLE_QUOTE
+                    elif is_narrator and not self.__is_closing(line_info.strip_line):
+                        prev_info.multi_type = MultiLineType.ONE_QUOTE
                     elif not is_narrator and line_info.is_triple_quote_end:
                         # linda """
                         prev_info.multi_type = MultiLineType.VALID_TRIPLE_QUOTE

@@ -134,7 +134,9 @@ class NarratorHandler:
                     prev_info.is_choice_menu = False
 
                 if prev_info.multi_type is MultiLineType.NONE:
-                    if line_info.is_triple_quote_start or (is_narrator and line_info.is_triple_quote_end):
+                    if (line_info.is_triple_quote_start
+                            or (is_narrator and line_info.has_triple_quote and not line_info.is_triple_quote_end)
+                            or (is_narrator and line_info.is_triple_quote_end)):
                         prev_info.multi_type = MultiLineType.TRIPLE_QUOTE
                     elif is_narrator and not self.__is_closing(line_info.strip_line):
                         prev_info.multi_type = MultiLineType.ONE_QUOTE

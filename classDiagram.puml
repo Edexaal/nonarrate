@@ -97,9 +97,11 @@ class LineInfo {
   #stripLine: str
   #isTripleQuote: bool
   #isTripleQuoteEnd: bool
+  #hasTripleQuote: bool
   #isMenu: bool
   +setup(line:str)
-  {static}-isTripleQuote(stripLine:str): bool
+  {static}-startswitchTripleQuote(stripLine:str): bool
+  {static}-hasTripleQuote(stripLine:str): bool
   {static}-endswithTripleQuote(stripLine:str): bool
   {static}-isChoiceMenu(stripLine:str): bool
 }

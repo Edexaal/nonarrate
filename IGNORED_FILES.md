@@ -10,6 +10,7 @@ Placed here are a list of files and folders _nonarrate_ will ignore by default.
 |  images   | cache  | fonts | voices  |
 | functions | music  | audio | gallery |
 |  sounds   | videos | sound |  font   |
+|   movie   | video  |       |         |
 
 ## Invalid Files
 

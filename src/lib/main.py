@@ -22,13 +22,12 @@ def run():
     Log.info("Files detected", len(file_infos))
     Log.log("Getting ready for removal process")
     ObjectStrategy.define_speakers(file_infos)
-    narrator_handler = NarratorHandler()
     Log.wait("Removing narration from files. This might take a while")
-    file_infos = narrator_handler.remove(file_infos, arg_namespace)
+    file_infos = NarratorHandler.remove(file_infos, arg_namespace)
     Log.wait("Writing modified lines to files")
     file_executor.write_files(writer, file_infos)
     Log.mark("DONE! Enjoy!")
-    total_cleaned_lines, total_lines = narrator_handler.line_stats()
+    total_cleaned_lines, total_lines = NarratorHandler.line_stats()
     Log.log(f"""Stats:
         [Code Removed]: {total_lines - total_cleaned_lines} lines
         [Code Removed (%)]: {(total_lines - total_cleaned_lines) / total_lines * 100} %

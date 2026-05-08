@@ -34,7 +34,7 @@ class ErrorFixer:
     _dest_pat: re.Pattern = re.compile(r"(?:and )?File\s+.+(game/.+\.rpy)")
     _line_num_pat: re.Pattern = re.compile(r".+line (\d+):")
     _type_pat: re.Pattern = re.compile(
-        rf".+({ErrorType.NON_EMPTY}|{ErrorType.INDENTED_LINE}|{ErrorType.EXPECTED_STATEMENT}|{ErrorType.INDENT_MISMATCH}|{ErrorType.MENU_NO_CHOICES})"
+        rf".+({ErrorType.NON_EMPTY}|{ErrorType.INDENTED_LINE}|{ErrorType.EXPECTED_STATEMENT}|[iI]ndentation mismatch|{ErrorType.MENU_NO_CHOICES})"
     )
     _project_dir: str | None = None
 
@@ -86,7 +86,8 @@ class ErrorFixer:
         Log.info("Errors detected", total_errors_log)
         return errors
 
-    def __dedent_lines(self, lines: list[str], start_index: int, start_indent: int | None = None) -> list[str]:
+    @staticmethod
+    def __dedent_lines(lines: list[str], start_index: int, start_indent: int | None = None) -> list[str]:
         """Correct indentation by decreasing indent level by 1.
 
         Indentation will be decreased by 1 level (4 spaces) until a line with the
@@ -110,7 +111,8 @@ class ErrorFixer:
                 break
         return lines
 
-    def __reverse_dedent_lines(self, lines: list[str], start_index: int) -> list[str]:
+    @staticmethod
+    def __reverse_dedent_lines(lines: list[str], start_index: int) -> list[str]:
         """Correct indentation by decreasing indent level by 1 going up to preceding lines.
 
         All preceding lines with an indentation level higher than the starting line will be dedented 1 level.
@@ -127,6 +129,8 @@ class ErrorFixer:
         start_index = start_index - 1
         for i in range(start_index, 0, -1):
             line = lines[i]
+            if not line.lstrip():
+                continue
             line_indent = NarratorHandler.get_indent_num(line)
             if line_indent <= min_indent:
                 break
@@ -137,8 +141,10 @@ class ErrorFixer:
         """Attempts to fix an error generated from 'errors.txt'.
 
         Args:
-            error: error information
+            errors: collection of error information
             reader: class for extracting content from a file.
+            writer: class for writing content to a file.
+            deleter: class for deleting an entire file.
         """
         if self._project_dir is None:
             return
@@ -153,7 +159,7 @@ class ErrorFixer:
                         file_info.lines.pop(error.line_num - 1)
                     elif ErrorType.INDENTED_LINE in error.category:
                         file_info.lines = self.__dedent_lines(file_info.lines, error.line_num - 1)
-                    elif ErrorType.INDENT_MISMATCH in error.category:
+                    elif ErrorType.INDENT_MISMATCH.lower() in error.category.lower():
                         file_info.lines = self.__reverse_dedent_lines(file_info.lines, error.line_num - 1)
                     elif ErrorType.MENU_NO_CHOICES in error.category:
                         file_info.lines = self.__dedent_lines(

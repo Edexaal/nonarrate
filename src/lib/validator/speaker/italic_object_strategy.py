@@ -9,4 +9,5 @@ class ItalicObjectStrategy(ObjectStrategy):
     def __init__(self, next_validator: "IValidatorChain | None" = None) -> None:
         super().__init__(None, next_validator)
         ItalicObjectStrategy._char_item_pats.append(re.compile(r"what_italic\s*=\s*True"))
+        ItalicObjectStrategy._char_item_pats.append(re.compile(r"what_prefix\s*=\s*([\"'])\{i}\1"))
         ItalicObjectStrategy._char_item_pats.append(re.compile(r"Character\(\s*(['\"])\s*\{i\}[^\"']+\{/?i\}\s*\1"))

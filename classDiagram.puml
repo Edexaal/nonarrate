@@ -144,26 +144,28 @@ class PauseInfo {
 class  NarratorHandler <<Singleton>>{
   {static}+PAUSE_STATEMENTS:tuple<str>
   {static}-closingPat: Regex
-  +remove(fileInfos:List<FileInfo>,args:Namespace): List<Dictionary<str,List<str>>>
-  +getIdentNum(line:str):int
-  -isComment(line:str):bool
-  -isClosing(line:str):bool
-  -resetLineStats()
-  -lineStats(): Tuple<int,int>
-  -correctIndent(fileInfos:List<FileInfo>): List<FileInfo>
-  -pauseFilter(fileInfos:List<FileInfo>): List<FileInfo>
+  {static}-totalLines: int
+  {static}-totalCleanedLines: int
+  {static}+remove(fileInfos:List<FileInfo>,args:Namespace): List<Dictionary<str,List<str>>>
+  {static}+getIdentNum(line:str):int
+  {static}-isComment(line:str):bool
+  {static}-isClosing(line:str):bool
+  {static}-resetLineStats()
+  {static}+lineStats(): Tuple<int,int>
+  {static}-correctIndent(fileInfos:List<FileInfo>): List<FileInfo>
+  {static}-pauseFilter(fileInfos:List<FileInfo>): List<FileInfo>
 }
-class  ErrorFixer <<Singleton>>{
-	-destPat: Regex
-	-typePat: Regex
-	-lineNumPat: Regex
-  -projectDir:Union[str,None]
+class  ErrorFixer {
+  {static}-destPat: Regex
+  {static}-typePat: Regex
+  {static}-lineNumPat: Regex
+  {static}-projectDir:Union[str,None]
   +fix(errors: List<RenpyError>,reader:Reader,writer:Writer,deleter:Deleter)
+  {static}+getErrors(errors_txt:Path, reader:Reader): Dictionary<str,List<RenpyError>>
   {static}-addError(errors: Dictionary<str,List<RenpyError>>,error: RenpyError)
   {static}-getError(line:str): RenpyError
-  -dedentLines(lines:List<str>,startIndex: int,startIndent: Union[int,None]): List<str>
-  -reverseDedentLines(lines:List<str>,startIndex: int): List<str>
-	-getErrors(errors_txt:Path, reader:Reader): Dictionary<str,List<RenpyError>>
+  {static}-dedentLines(lines:List<str>,startIndex: int,startIndent: Union[int,None]): List<str>
+  {static}-reverseDedentLines(lines:List<str>,startIndex: int): List<str>
 }
 dataclass FileInfo {
   +url:str

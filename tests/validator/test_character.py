@@ -60,7 +60,8 @@ class TestCharacter(unittest.TestCase):
                     "default translate3 = Character(_(''))",
                     "default translate4 = Character( _(''))",
                     "default translate5 = Character( _( ' ' ))",
-                    'define think = Character("{i}Thoughts{i}")'
+                    'define think = Character("{i}Thoughts{i}")',
+                    'define ci = Character("[persistent.player_name]", color="#4169e1", what_suffix="{/i}", what_prefix="{i}")'
                 ],
             )
         ]
@@ -154,6 +155,8 @@ class TestCharacter(unittest.TestCase):
             # Empty quote speaker
             83: '"" "But oh man, how wrong I was..."',
             84: '"  " "But oh man, how wrong I was..."',
+            # what_prefix italics
+            85: 'ci "Maybe I shouldn\'t have done that."'
         }
 
     def setUp(self) -> None:
@@ -216,7 +219,7 @@ class TestCharacter(unittest.TestCase):
 
     def test_italic_object(self):
         """Test if Character object has 'what_italic=True' parameter."""
-        self.start_object(ItalicObjectStrategy(), [52, 53, 54, 55, 58, 59, 80, 82])
+        self.start_object(ItalicObjectStrategy(), [52, 53, 54, 55, 58, 59, 80, 82,85])
 
     def test_object_var(self):
         self.start_object(ObjectVarStrategy("pop"), [57])

@@ -3,11 +3,7 @@ from .prev_info import PrevInfo
 
 
 class PrevIndentInfo(PrevInfo):
-    """Holds previous line indentation information.
-
-    Attributes:
-        indent_num: Number of whitespaces previous line has.
-    """
+    """Holds previous line indentation information."""
 
     def __init__(self):
         super().__init__()

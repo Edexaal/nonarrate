@@ -123,7 +123,8 @@ class CLIParser:
                      "achievement",
                      "achievements",
                      "audio",
-                     "animations"
+                     "animations",
+                     "scenes",
                      },
             metavar="IGNORE_FILES",
             help="Ignore specified [files] when looking for .rpy files.",

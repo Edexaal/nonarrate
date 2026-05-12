@@ -19,4 +19,4 @@ Placed here are a list of files and folders _nonarrate_ will ignore by default.
 |     gui      |   options   |  screens   |    images    |
 |   gallery    |   camera    |  credits   |   Credits    |
 | splashscreen | transitions | transforms | achievements |
-| achievement  |    audio    | animations |              |
+| achievement  |    audio    | animations |    scenes    |

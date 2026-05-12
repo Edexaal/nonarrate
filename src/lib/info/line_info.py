@@ -20,12 +20,13 @@ class LineInfo:
     @staticmethod
     def __endswith_triple_quote(strip_line: str) -> bool:
         return strip_line.endswith("'''") or strip_line.endswith('"""')
+
     @staticmethod
     def __has_triple_quote(strip_line: str) -> bool:
         return '"""' in strip_line or "'''" in strip_line
 
     @staticmethod
-    def __is_choice_menu(strip_line:str) -> bool:
+    def __is_choice_menu(strip_line: str) -> bool:
         return strip_line.startswith("menu") and strip_line.endswith(":")
 
     def setup(self, line: str):

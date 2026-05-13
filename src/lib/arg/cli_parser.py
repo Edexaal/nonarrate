@@ -20,7 +20,7 @@ class CLIParser:
     """
 
     def __init__(self):
-        self.__version_num = "2.10.0"
+        self.__version_num = "2.10.1"
         self.__setup()
 
     def __setup(self):
@@ -97,11 +97,13 @@ class CLIParser:
                 "music",
                 "audio",
                 "gallery",
+                "Gallery",
                 "videos",
                 "video",
                 "sounds",
                 "sound",
                 "movie",
+                "python-packages"
             },
             metavar="IGNORE_FOLDERS",
             help="Ignore specified [folders] when looking for .rpy files",
@@ -125,7 +127,9 @@ class CLIParser:
                      "audio",
                      "animations",
                      "scenes",
-                     "disclaimer"
+                     "disclaimer",
+                     "background",
+                     "keymap",
                      },
             metavar="IGNORE_FILES",
             help="Ignore specified [files] when looking for .rpy files. Case-insensitive",

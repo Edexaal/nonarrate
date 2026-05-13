@@ -14,18 +14,19 @@ class Log:
         cls.log(f"{text}...")
 
     @classmethod
-    def mark(cls,text: str):
+    def mark(cls, text: str):
         dashes = '-' * 8
         cls.log(f"{dashes}> {text} <{dashes}")
 
     @classmethod
-    def info(cls,title:str,value):
+    def info(cls, title: str, value):
         cls.log(f"[{title}]: {value}")
 
     @classmethod
-    def print_stats(cls,total_lines:int,total_cleaned: int):
+    def print_stats(cls, total_lines: int, total_cleaned: int):
         cls.log(f"""
         Stats:
         [Code Removed]: {total_lines - total_cleaned} lines
         [Code Removed (%)]: {(total_lines - total_cleaned) / total_lines * 100} %
-        [Code Remaining (%)]: {(total_cleaned / total_lines) * 100} %""")
+        [Code Remaining (%)]: {(total_cleaned / total_lines) * 100} %
+        """)

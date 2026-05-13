@@ -52,12 +52,13 @@ class OnlyPeriodsStrategy
 
 'File Descriptors
 class Reader {
-	+readLines(fileURL: Union[str,Path]): FileInfo
+  +readLines(fileURL: Union[str,Path]): FileInfo
   +walkFiles(rootDir:str): List<str>
 }
 class Writer {
-	+writeLines(fileInfo:FileInfo)
-  +backupDir(filePaths:List<str>,backupDirPath:Path)
+  +writeLines(fileInfo:FileInfo)
+  {static}+backupDir(filePaths:List<str>,backupDirPath:Path)
+  {static}+printStats(total_lines:int, total_cleaned:int)
 }
 class Deleter {
 	+delete(fileURL: str)

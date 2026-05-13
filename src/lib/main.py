@@ -28,10 +28,9 @@ def run():
     file_executor.write_files(writer, file_infos)
     Log.mark("DONE! Enjoy!")
     total_cleaned_lines, total_lines = NarratorHandler.line_stats()
-    Log.log(f"""Stats:
-        [Code Removed]: {total_lines - total_cleaned_lines} lines
-        [Code Removed (%)]: {(total_lines - total_cleaned_lines) / total_lines * 100} %
-        [Code Remaining (%)]: {(total_cleaned_lines / total_lines) * 100} %""")
+    if arg_namespace.stats:
+        writer.dump_stats(total_lines,total_cleaned_lines)
+    Log.print_stats(total_lines, total_cleaned_lines)
 
 
 if __name__ == "__main__":

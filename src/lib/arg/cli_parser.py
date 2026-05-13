@@ -64,6 +64,7 @@ class CLIParser:
             type=pathlib.Path,
             help="Backup .rpy files to a specified location.",
         )
+        self.__add_arg("-s", "--stats", action="store_true", help="Write stats to a file, 'stats.json'")
         self.__add_arg(
             "-e",
             "--regex",

@@ -87,6 +87,13 @@ Backup *.rpy* files to a specified location.
 
 Backup the project's *.rpy* files to a specified location *before* removing narration.
 
+***-s, --stats***
+
+Write resulting stats to a file.
+
+Statistical data featuring code removal will be exported to a file called, `stats.json`.
+This same data is also printed on screen.
+
 ***-e, --regex***
 
 Enable regular expressions when specifying filter values.

@@ -12,5 +12,5 @@ class BasicCharacterStrategy(CharacterStrategy):
     """
 
     def __init__(self, next_validator: "IValidatorChain | None" = None) -> None:
-        narrators = ["thinking", "thoughts?", "narrator", "mind"]
+        narrators = ["thinking", "thoughts?", "narrator", "mind", "inner voice", "inner monologue"]
         super().__init__("|".join(narrators), next_validator)

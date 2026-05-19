@@ -4,13 +4,14 @@ Placed here are a list of files and folders _nonarrate_ will ignore by default.
 
 ## Invalid Folders
 
-|           |        |                 |         |
-|:---------:|:------:|:---------------:|:-------:|
-|    tl     |  menu  |       gui       |  saves  |
-|  images   | cache  |      fonts      | voices  |
-| functions | music  |      audio      | gallery |
-|  sounds   | videos |      sound      |  font   |
-|   movie   | video  | python-packages | Gallery |
+|           |         |                 |         |
+|:---------:|:-------:|:---------------:|:-------:|
+|    tl     |  menu   |       gui       |  saves  |
+|  images   |  cache  |      fonts      | voices  |
+| functions |  music  |      audio      | gallery |
+|  sounds   | videos  |      sound      |  font   |
+|   movie   |  video  | python-packages | Gallery |
+|  shaders  | screens |                 |         |
 
 ## Invalid Files
 **NOTE:** case-insensitive. Meaning `Credits`, `credits`, `cReDiTS` will be ignored.

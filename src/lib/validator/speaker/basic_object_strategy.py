@@ -13,7 +13,9 @@ class BasicObjectStrategy(ObjectStrategy):
     """
 
     def __init__(
-        self,
-        next_validator: "IValidatorChain | None" = None,
+            self,
+            next_validator: "IValidatorChain | None" = None,
     ) -> None:
-        super().__init__(["[Tt]hinking", "[Tt]houghts?", "[Nn]arrator", "[Mm]ind"], next_validator)
+        super().__init__(
+            ["[Tt]hinking", "[Tt]houghts?", "[Nn]arrator", "[Mm]ind", "[Ii]nner [Vv]oice", "[Ii]nner [Mm]onologue"],
+            next_validator)

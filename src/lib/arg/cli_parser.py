@@ -20,7 +20,7 @@ class CLIParser:
     """
 
     def __init__(self):
-        self.__version_num = "2.10.2"
+        self.__version_num = "2.11.0"
         self.__setup()
 
     def __setup(self):
@@ -103,7 +103,9 @@ class CLIParser:
                 "sounds",
                 "sound",
                 "movie",
-                "python-packages"
+                "python-packages",
+                "shaders",
+                "screens"
             },
             metavar="IGNORE_FOLDERS",
             help="Ignore specified [folders] when looking for .rpy files",
@@ -149,7 +151,7 @@ class CLIParser:
             FilterTag.BASIC_CHAR.value: "Keep [default narrators] not saved to a Character object",
             FilterTag.NONE_CHAR_OBJ.value: "Keep empty Character objects.",
             FilterTag.EXPRESSION_CUES.value: "Keep expression cues. Ex: *smiles*, ~raises eyebrows~.",
-            FilterTag.ONLY_PERIODS.value: "Keeps dialogue containing only periods. Ex: '......'",
+            FilterTag.ONLY_PUNCTUATIONS.value: "Keeps dialogue containing only punctuation marks. Ex: '......'",
             FilterTag.NONE_CHAR.value: "Keeps empty quoted speakers not saved to a Character object."
         }
         self.__add_no_filters(no_filters)

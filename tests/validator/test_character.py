@@ -61,7 +61,10 @@ class TestCharacter(unittest.TestCase):
                     "default translate4 = Character( _(''))",
                     "default translate5 = Character( _( ' ' ))",
                     'define think = Character("{i}Thoughts{i}")',
-                    'define ci = Character("[persistent.player_name]", color="#4169e1", what_suffix="{/i}", what_prefix="{i}")'
+                    'define ci = Character("[persistent.player_name]", color="#4169e1", what_suffix="{/i}", what_prefix="{i}")',
+                    'define miami = Character("Miami\'s Inner Monologue")',
+                    'define miami2 = Character("Miami\'s Inner voice")',
+                    'define miami3 = Character("Miami\'s inner Monologue")',
                 ],
             )
         ]
@@ -156,7 +159,15 @@ class TestCharacter(unittest.TestCase):
             83: '"" "But oh man, how wrong I was..."',
             84: '"  " "But oh man, how wrong I was..."',
             # what_prefix italics
-            85: 'ci "Maybe I shouldn\'t have done that."'
+            85: 'ci "Maybe I shouldn\'t have done that."',
+            # More default narrators
+            86: 'miami "Jason headed slowly to the car."',
+            87: 'miami2 "Jason headed slowly to the car."',
+            88: 'miami3 "Jason headed slowly to the car."',
+            89: '"Miami\'s inner voice" "Jason headed slowly to the car."',
+            90: '"Miami\'s inner monologue" "Jason headed slowly to the car."',
+            91: '"Miami\'s Inner monologue" "Jason headed slowly to the car."',
+            92: '"Miami\'s Inner Voice" "Jason headed slowly to the car."',
         }
 
     def setUp(self) -> None:
@@ -183,7 +194,7 @@ class TestCharacter(unittest.TestCase):
     def test_basic_char(self):
         self.start(
             BasicCharacterStrategy(),
-            [3, 7, 8, 9, 10, 11, 12, 13, 14, 22, 23, 24, 25, 26, 27, 33, 74],
+            [3, 7, 8, 9, 10, 11, 12, 13, 14, 22, 23, 24, 25, 26, 27, 33, 74, 89, 90, 91, 92],
         )
 
     def test_custom_char(self):
@@ -198,7 +209,7 @@ class TestCharacter(unittest.TestCase):
         self.start_object(ObjectStrategy("base"), [39, 40, 50, 78])
 
     def test_basic_object_char(self):
-        self.start_object(BasicObjectStrategy(), [35, 41, 42, 44, 45, 48, 77, 82])
+        self.start_object(BasicObjectStrategy(), [35, 41, 42, 44, 45, 48, 77, 82, 86, 87, 88])
 
     def test_object_none_char_item(self):
         self.start_object(
@@ -207,7 +218,8 @@ class TestCharacter(unittest.TestCase):
         )
 
     def test_chaining(self):
-        self.start_object(BasicObjectStrategy(ObjectStrategy("base")), [35, 39, 40, 41, 42, 44, 45, 48, 50, 77, 78, 82])
+        self.start_object(BasicObjectStrategy(ObjectStrategy("base")),
+                          [35, 39, 40, 41, 42, 44, 45, 48, 50, 77, 78, 82, 86, 87, 88])
 
     def test_spaces(self):
         """Test spaces between character object and calling parenthesis.
@@ -219,10 +231,10 @@ class TestCharacter(unittest.TestCase):
 
     def test_italic_object(self):
         """Test if Character object has 'what_italic=True' parameter."""
-        self.start_object(ItalicObjectStrategy(), [52, 53, 54, 55, 58, 59, 80, 82,85])
+        self.start_object(ItalicObjectStrategy(), [52, 53, 54, 55, 58, 59, 80, 82, 85])
 
     def test_object_var(self):
         self.start_object(ObjectVarStrategy("pop"), [57])
 
     def test_empty_char(self):
-        self.start(CharacterNoneStrategy(),[83,84])
+        self.start(CharacterNoneStrategy(), [83, 84])

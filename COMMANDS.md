@@ -274,7 +274,7 @@ These filters deal with the **dialogue** portion of dialogue box.
 | --parenthesis-narr      | mc “(It’s got to be here somewhere.)” <br>mc "{tag}(Opens the car door){/tag}"       | `()`. Thinking/Narrator dialogue                                                                             |
 | --no-custom-tags, --nct | mc “{fzs}A small bold font tag.{/fzs}” <br>mc "{fzs=10}My text is here{/fzs}"        | [Custom text tag.](https://www.renpy.org/doc/html/custom_text_tags.html) Can be used for thoughts/narrative. |
 | --cues                  | mc "\**blushes softly*\*" <br>mc "{tag}\~*jumps*\~{/tag}"                            | Expression cues. \**smiles*\*, \~yawns\~, \*\**taps foot*\*\*                                                |
-| --periods               | mc "......" <br>mc "{tag}..........{/tag}"                                           | Periods only dialogue                                                                                        |
+| --punctuations          | mc "......" <br>mc "{tag}..........{/tag}" <br>mc "!!!"                              | Dialogues with only punctuation marks                                                                        |
 
 ***—basic-narr***
 
@@ -336,11 +336,11 @@ Expression cue examples:
 - \*\*rubs shoulder\*\*
 - \*\*eats slowly\*\*
 
-**--periods**
+**--punctuations**
 
-Keeps period only dialogue.
+Keeps dialogue with only punctuation marks.
 
-By default, dialogue consisting of only periods are removed. To keep them, use this option.
+By default, dialogue consisting of only punctuations are removed. To keep them, use this option.
 
 - - -
 
@@ -353,6 +353,8 @@ This is a list of common narrator names. *(includes capital case too)*
 - thinking
 - mind
 - narrator
+- inner voice
+- inner monologue
 
 ## REGEX Examples
 

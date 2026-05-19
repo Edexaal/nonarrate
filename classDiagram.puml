@@ -48,7 +48,7 @@ class ExpressionCueAsteriskStrategy
 'Ex: mc "~yawns~"
 class ExpressionCueTildaStrategy
 'Ex: mc "......."'
-class OnlyPeriodsStrategy
+class OnlyPunctuationStrategy
 
 'File Descriptors
 class Reader {
@@ -207,7 +207,7 @@ enum FilterTag {
   BASIC_CHAR_OBJ
   NONE_CHAR_OBJ
   EXPRESSION_CUES
-  ONLY_PERIODS
+  ONLY_PUNCTUATIONS
   NO_CUSTOM_CHAR_OBJS
   NO_CUSTOM_TEXT_TAGS
   NO_CUSTOM_CHARS
@@ -246,7 +246,7 @@ IValidatorChainSolo <|-- CharacterStrategy
 IValidatorChainSolo <|-- CharacterNoneStrategy
 IValidatorChainSolo <|-- ExpressionCueStrategy
 IValidatorChainSolo <|-- NullStrategy
-IValidatorChainSolo <|-- OnlyPeriodsStrategy
+IValidatorChainSolo <|-- OnlyPunctuationStrategy
 ExpressionCueStrategy <|-- ExpressionCueAsteriskStrategy
 ExpressionCueStrategy <|-- ExpressionCueTildaStrategy
 CharacterStrategy <|-- BasicCharacterStrategy

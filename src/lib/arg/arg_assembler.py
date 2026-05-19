@@ -8,7 +8,7 @@ from lib.validator.dialogue import (
     CustomTextTagStrategy,
     ExpressionCueTildaStrategy,
     ExpressionCueAsteriskStrategy,
-    OnlyPeriodsStrategy,
+    OnlyPunctuationStrategy,
 )
 
 from lib.validator.null_strategy import NullStrategy
@@ -42,7 +42,7 @@ class ArgAssembler:
         FilterTag.NO_CUSTOM_CHAR_OBJS.value: ObjectStrategy,
         FilterTag.EXPRESSION_CUES.value: [ExpressionCueAsteriskStrategy, ExpressionCueTildaStrategy],
         FilterTag.NO_CUSTOM_CHAR_VAR_OBJS.value: ObjectVarStrategy,
-        FilterTag.ONLY_PERIODS.value: OnlyPeriodsStrategy,
+        FilterTag.ONLY_PUNCTUATIONS.value: OnlyPunctuationStrategy,
         FilterTag.NONE_CHAR.value: CharacterNoneStrategy,
     }
 

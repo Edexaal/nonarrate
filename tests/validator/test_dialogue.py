@@ -6,7 +6,7 @@ from lib.validator.dialogue import (
     BasicStrategy,
     ExpressionCueTildaStrategy,
     ExpressionCueAsteriskStrategy,
-    OnlyPeriodsStrategy
+    OnlyPunctuationStrategy
 )
 from lib.validator.ivalidator_chain import IValidatorChain
 from tests.fixture import get_dialogue_list
@@ -278,6 +278,9 @@ class TestDialogue(unittest.TestCase):
             # Parentheses surrounded by escaped quotes
             248: r'mc "\"(Why is this so hard to understand!)\""',
             249: r'mc "\'(Why is this so hard to understand!)\'"',
+            # Only Punctuations
+            250: 'mc "?????????"',
+            251: 'mc "!!!"',
         }
 
     def validate_lines(self):
@@ -322,5 +325,5 @@ class TestDialogue(unittest.TestCase):
         self.start(ExpressionCueTildaStrategy(),
                    [173, 174, 175, 176, 178, 185, 186, 187, 188, 190, 219, 221, 226, 227, 233, 237])
 
-    def test_only_periods(self):
-        self.start(OnlyPeriodsStrategy(), [244, 245, 246, 247])
+    def test_only_punctuations(self):
+        self.start(OnlyPunctuationStrategy(), [244, 245, 246, 247, 250, 251])

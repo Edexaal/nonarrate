@@ -26,7 +26,7 @@ def get_dialogue_list(valid_indexes: list[int], dialogues: dict[int, str]):
 def validate_solo(rule: Rule) -> IValidatorChainSolo:
     return IValidatorChainSolo(rule)
 
-def validate_obj(rule: Rule, chain: IValidatorChain = None) -> ObjectStrategy:
+def validate_obj(rule: Rule, chain: IValidatorChain|None = None) -> ObjectStrategy:
     return ObjectStrategy(rule,chain)
 
 def check_args(parser: CLIParser,command: str):

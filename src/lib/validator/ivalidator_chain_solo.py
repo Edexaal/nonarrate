@@ -1,5 +1,4 @@
 from abc import ABC
-import re
 from typing import override
 
 from .ivalidator_chain import IValidatorChain

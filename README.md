@@ -51,6 +51,8 @@ python -m pip uninstall nonarrate
 
 ## Usage
 
+For instructions on how to use nonarrate, see [INSTRUCTIONS.md](INSTRUCTIONS.md)!
+
 See [COMMANDS.md](./COMMANDS.md) for a full list of commands!
 
 ## Project Structure

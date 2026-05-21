@@ -1,4 +1,4 @@
-from lib.arg import CLIParser, ArgChecker, WrongFileError
+from lib.arg import CLIParser, WrongFileError
 import tests.fixture as fixture
 import unittest
 

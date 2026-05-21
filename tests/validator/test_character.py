@@ -1,16 +1,8 @@
 import unittest
-from tests.fixture import get_dialogue_list
-from lib.validator.speaker import (
-    ObjectNoneItemStrategy,
-    BasicCharacterStrategy,
-    CharacterStrategy,
-    ObjectStrategy,
-    BasicObjectStrategy,
-    ItalicObjectStrategy,
-    ObjectVarStrategy, CharacterNoneStrategy
-)
-from lib.validator.ivalidator_chain import IValidatorChain
+from tests.fixture import get_dialogue_list,validate_solo,validate_obj
+from lib.validator import ObjectStrategy, IValidatorChain
 from lib.custom_types import FileInfo
+from lib.validator.rule import SpeakerRules
 
 
 class TestCharacter(unittest.TestCase):
@@ -193,32 +185,43 @@ class TestCharacter(unittest.TestCase):
 
     def test_basic_char(self):
         self.start(
-            BasicCharacterStrategy(),
+            validate_solo(SpeakerRules.CHARACTER_BASIC.value),
             [3, 7, 8, 9, 10, 11, 12, 13, 14, 22, 23, 24, 25, 26, 27, 33, 74, 89, 90, 91, 92],
         )
 
     def test_custom_char(self):
-        self.start(CharacterStrategy("maya"), [21, 22, 23, 24, 25, 26, 27, 31, 32, 33, 75])
+        rule = SpeakerRules.CHARACTER.value("maya")
+        obj = validate_solo(rule)
+        self.start(obj, [21, 22, 23, 24, 25, 26, 27, 31, 32, 33, 75])
         # Single quotes and multi line test
-        self.start(CharacterStrategy("Caliek"), [34, 76])
+        rule = SpeakerRules.CHARACTER.value("Caliek")
+        obj = validate_solo(rule)
+        self.start(obj, [34, 76])
 
     def test_object_char(self):
-        self.start_object(ObjectStrategy("Marco"), [35, 77])
+        rule = SpeakerRules.OBJECT.value("Marco")
+        obj = validate_obj(rule)
+        self.start_object(obj, [35, 77])
 
     def test_object_char_item(self):
-        self.start_object(ObjectStrategy("base"), [39, 40, 50, 78])
+        rule = SpeakerRules.OBJECT.value("base")
+        obj = validate_obj(rule)
+        self.start_object(obj, [39, 40, 50, 78])
 
     def test_basic_object_char(self):
-        self.start_object(BasicObjectStrategy(), [35, 41, 42, 44, 45, 48, 77, 82, 86, 87, 88])
+        obj = validate_obj(SpeakerRules.OBJECT_BASIC.value)
+        self.start_object(obj, [35, 41, 42, 44, 45, 48, 77, 82, 86, 87, 88])
 
     def test_object_none_char_item(self):
+        obj = validate_obj(SpeakerRules.OBJECT_NONE.value)
         self.start_object(
-            ObjectNoneItemStrategy(),
+            obj,
             [46, 47, 51, 56, 57, 58, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 79]
         )
 
     def test_chaining(self):
-        self.start_object(BasicObjectStrategy(ObjectStrategy("base")),
+        obj = validate_obj(SpeakerRules.OBJECT_BASIC.value, validate_obj(SpeakerRules.OBJECT.value("base")))
+        self.start_object(obj,
                           [35, 39, 40, 41, 42, 44, 45, 48, 50, 77, 78, 82, 86, 87, 88])
 
     def test_spaces(self):
@@ -227,14 +230,18 @@ class TestCharacter(unittest.TestCase):
         Example:
             default n = Character     ('Nadia')
         """
-        self.start_object(ObjectStrategy(["Linda", "Umeha"]), [49, 50, 81])
+        obj = validate_obj([SpeakerRules.OBJECT.value("Linda"),SpeakerRules.OBJECT.value("Umeha")])
+        self.start_object(obj, [49, 50, 81])
 
     def test_italic_object(self):
         """Test if Character object has 'what_italic=True' parameter."""
-        self.start_object(ItalicObjectStrategy(), [52, 53, 54, 55, 58, 59, 80, 82, 85])
+        obj = validate_obj(SpeakerRules.OBJECT_ITALIC.value)
+        self.start_object(obj, [52, 53, 54, 55, 58, 59, 80, 82, 85])
 
     def test_object_var(self):
-        self.start_object(ObjectVarStrategy("pop"), [57])
+        obj = validate_obj(SpeakerRules.OBJECT_VAR.value("pop"))
+        self.start_object(obj, [57])
 
     def test_empty_char(self):
-        self.start(CharacterNoneStrategy(), [83, 84])
+        obj = validate_solo(SpeakerRules.CHARACTER_NONE.value)
+        self.start(obj, [83, 84])

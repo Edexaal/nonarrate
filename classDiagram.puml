@@ -1,6 +1,6 @@
 @startuml
 hide empty members
-'Validator
+'Validators
 abstract class IValidatorChain {
 	#nextValidator: IValidatorChain
 	{abstract} +isValid(line:str): bool
@@ -10,54 +10,33 @@ abstract class IValidatorChainSolo {
 	#validatePat: Regex
   +isValid(line:str): bool
 }
-'Ex: "Narrator" "Player listen to me..."
-class CharacterStrategy
-class BasicCharacterStrategy
-'Ex: "" "Winds furosiously blew to the east."
-class CharacterNoneStrategy
-
 class ObjectStrategy {
 	{static}#speakerObjects: Set<str>
   {static}-objNamePat: Regex
   {static}#charItemPats: List<Regex>
   {static}#validatePat: Regex
-  {static}-initCharItem(char_item: str|list<str>|None)
+  {static}-initCharItems(charItems: List<Rule>)
   {static}+reset()
-	+defineSpeakers(fileInfos: List<FileInfo>)
+  +defineSpeakers(fileInfos: List<FileInfo>)
   +isValid(line:str): bool
 }
-'Ex: narr "Player, please select this choice."
-class BasicObjectStrategy
-'Ex: define narr = Character(None)
-class ObjectNoneItemStrategy
-'Ex: define narr = Character("Mi", what_italic=True)
-class ItalicObjectStrategy
 class NullStrategy
-class ObjectVarStrategy
 
-class ItalicStrategy
-class ParenthesisStrategy
-'Ex: "{i}What am I thinking! I can't do that... right?{/i}" OR
-'Ex: "Player" "{i}What am I thinking! I can't do that... right?{/i}"
-class CustomTextTagStrategy
-'Ex: "Marco jumps over the fence, scrapping his arm in the process"
-class BasicStrategy
-class ExpressionCueStrategy
-'Ex: mc "*smiles*"
-class ExpressionCueAsteriskStrategy
-'Ex: mc "~yawns~"
-class ExpressionCueTildaStrategy
-'Ex: mc "......."'
-class OnlyPunctuationStrategy
+'Validator Rules
+dataclass Rule {
+    +pattern: Regex
+}
+dataclass CharRule
+dataclass BasicCharRule
+dataclass CueRule
+dataclass TextTagRule
+dataclass ObjectRule
+dataclass BasicObjectRule
+dataclass VarObjectRule
+dataclass TQCueRule
+dataclass TQTextTagRule
 
-'Triple quote validators
-class TQExpressionCueStrategy
-class TQExpressionCueAsteriskStrategy
-class TQExpressionCueTildaStrategy
-class TQItalicStrategy
-class TQOnlyPunctuationStrategy
-class TQParenthesisStrategy
-class TQTextTagStrategy
+
 
 'File Descriptors
 class Reader {
@@ -210,14 +189,45 @@ class ArgChecker {
     {static}-validateFolderOrFileArg(folderOrFileArg: Path)
 }
 class ArgAssembler {
-  {static}-validators: Dictionary<str,Type>
-  {static}-tqValidators: List<Type>
+  {static}-narrValidators: Dictionary<str,Union<List<IValidatorChain>, IValidatorChain>>>
+  {static}-nargValidators: Dictionary<str,Type<IValidatorChain>>
+  {static}-tqValidators: List<IValidatorChain>
   {static}+assemble(args:Namespace)
   {static}-convertFilters(args:Namespace)
   {static}-escape(args:Namespace, arg_filter_val: Union<List<str>,None>>): Union<str,List<str>,None>
-  {static}-nargFilter(validator:Union<IValidatorChain,None>,arg_filter: Union<str,List<str>,None>,filterName:str): IValidatorChain
+  {static}-nargFilter(validator:Union<IValidatorChain,None>,arg_filter: Union<str,List<str>,None>,filterName:str, ruleType: Type<Rule>): IValidatorChain
   {static}-tripleQuoteFilter(args:Namespace)
-  {static}-tripleQuoteNArgs(validator:Union<IValidatorChain,None>, argFilter: Union<str,List<str>,None>,filterType: Type)
+  {static}-tripleQuoteNArgs(validator:Union<IValidatorChain,None>, argFilter: Union<str,List<str>,None>,filterType: Type<IValidatorChain>, ruleType: Type<Rule>)
+}
+
+'Enums
+enum DialogueRules {
+  BASIC
+  ITALIC
+  ONLY_PUNCTUATION
+  PARENTHESIS
+  TILDA_EXPRESSION_CUE
+  ASTERISK_EXPRESSION_CUE
+  TEXT_TAG
+}
+
+enum SpeakerRules {
+  CHARACTER
+  CHARACTER_BASIC
+  CHARACTER_NONE
+  OBJECT
+  OBJECT_ITALIC
+  OBJECT_NONE
+  OBJECT_VAR
+}
+
+enum TripleQuoteRules {
+  EXPRESSION_CUE_TILDA
+  EXPRESSION_CUE_ASTERISK
+  ITALIC
+  ONLY_PUNCTUATION
+  PARENTHESIS
+  TEXT_TAG
 }
 
 enum FilterTag {
@@ -262,29 +272,20 @@ NarratorHandler --> PauseInfo : uses
 'Validator Relations
 IValidatorChain <|-- ObjectStrategy
 IValidatorChain <|-- IValidatorChainSolo
-IValidatorChainSolo <|-- BasicStrategy
-IValidatorChainSolo <|-- CustomTextTagStrategy
-IValidatorChainSolo <|-- ParenthesisStrategy
-IValidatorChainSolo <|-- ItalicStrategy
-IValidatorChainSolo <|-- CharacterStrategy
-IValidatorChainSolo <|-- CharacterNoneStrategy
-IValidatorChainSolo <|-- ExpressionCueStrategy
 IValidatorChainSolo <|-- NullStrategy
-IValidatorChainSolo <|-- OnlyPunctuationStrategy
-IValidatorChainSolo <|-- TQExpressionCueStrategy
-IValidatorChainSolo <|-- TQItalicStrategy
-IValidatorChainSolo <|-- TQOnlyPunctuationStrategy
-IValidatorChainSolo <|-- TQParenthesisStrategy
-IValidatorChainSolo <|-- TQTextTagStrategy
-TQExpressionCueStrategy <|-- TQExpressionCueAsteriskStrategy
-TQExpressionCueStrategy <|-- TQExpressionCueTildaStrategy
-ExpressionCueStrategy <|-- ExpressionCueAsteriskStrategy
-ExpressionCueStrategy <|-- ExpressionCueTildaStrategy
-CharacterStrategy <|-- BasicCharacterStrategy
-ObjectStrategy <|-- BasicObjectStrategy
-ObjectStrategy <|-- ObjectNoneItemStrategy
-ObjectStrategy <|-- ItalicObjectStrategy
-ObjectStrategy <|-- ObjectVarStrategy
+IValidatorChainSolo ..> Rule : uses
+
+'Rules Relations
+Rule <|-- CharRule
+Rule <|-- CueRule
+Rule <|-- TextTagRule
+Rule <|-- ObjectRule
+Rule <|-- VarObjectRule
+Rule <|-- TQCueRule
+Rule <|-- TQTextTagRule
+CharRule <|-- BasicCharRule
+ObjectRule <|-- BasicObjectRule
+
 
 'Argument Relations
 ArgChecker ..> CLIParser : uses

@@ -8,6 +8,7 @@ import tests.fixture as fixture
 class TestReader(unittest.TestCase):
     def setUp(self) -> None:
         self._parser = CLIParser()
+        self._path = fixture.get_dummy_path(self._parser)
         self._reader = Reader()
 
     def _prepare_args(self, arg_opts: list[str]):
@@ -16,21 +17,21 @@ class TestReader(unittest.TestCase):
         return args
 
     def test_all_files_valid(self):
-        args = self._prepare_args([fixture.DUMMY_PATH])
+        args = self._prepare_args([self._path])
         files = self._reader.walk_files(args.folder_or_file, args.file_filter)
         self.assertEqual(len(files), 2, "all .rpy files should not be seen by reader")
 
     def test_invalid_files(self):
-        args = self._prepare_args([fixture.DUMMY_PATH, "--invalid-files", "ex_reader", "hello"])
+        args = self._prepare_args([self._path, "--invalid-files", "ex_reader", "hello"])
         files = self._reader.walk_files(args.folder_or_file, args.file_filter)
         self.assertEqual(len(files), 0, "ex_reader.py and hello.rpy should not be seen by reader")
 
     def test_invalid_dirs(self):
-        args = self._prepare_args([fixture.DUMMY_PATH, "--invalid-dirs", "child_dir"])
+        args = self._prepare_args([self._path, "--invalid-dirs", "child_dir"])
         files = self._reader.walk_files(args.folder_or_file, args.file_filter)
         self.assertEqual(len(files), 1, "hello.rpy should not be seen by reader")
 
     def test_invalid_file_globs(self):
-        args = self._prepare_args([fixture.DUMMY_PATH, "--invalid-globs", "[hz]*"])
+        args = self._prepare_args([self._path, "--invalid-globs", "[hz]*"])
         files = self._reader.walk_files(args.folder_or_file, args.file_filter)
         self.assertEqual(len(files), 1, "Glob should not match any .rpy files!")

@@ -9,17 +9,20 @@ from tests import fixture
 
 
 class TestExecutor(unittest.TestCase):
+    def setUp(self):
+        self.parser = CLIParser()
+        self.path = fixture.get_dummy_path(self.parser)
+
     def test_reader(self):
-        parser = CLIParser()
         reader = Reader()
-        args = fixture.get_args(parser, fixture.DUMMY_PATH)
+        args = fixture.get_args(self.parser, self.path)
         ArgAssembler.assemble(args)
         file_infos = FileExecutor.file_lines(reader, args)
         self.assertEqual(len(file_infos), 2, "Total renpy files detected!")
 
     def test_writer(self):
         writer = Writer()
-        file_loc = f"{fixture.DUMMY_PATH}/ex_writer.rpy"
+        file_loc = f"{self.path}/ex_writer.rpy"
         file_infos = [
             FileInfo(
                 file_loc,

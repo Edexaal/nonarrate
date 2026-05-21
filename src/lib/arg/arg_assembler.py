@@ -1,54 +1,40 @@
 import re
 from argparse import Namespace
 from typing import final
-from lib.validator.dialogue import (
-    ParenthesisStrategy,
-    ItalicStrategy,
-    BasicStrategy,
-    CustomTextTagStrategy,
-    ExpressionCueTildaStrategy,
-    ExpressionCueAsteriskStrategy,
-    OnlyPunctuationStrategy,
-)
-from lib.validator.ivalidator_chain import IValidatorChain
-
-from lib.validator.null_strategy import NullStrategy
-from lib.validator.speaker import (
-    ObjectNoneItemStrategy,
-    ObjectStrategy,
-    BasicCharacterStrategy,
-    CharacterStrategy,
-    BasicObjectStrategy,
-    ItalicObjectStrategy,
-    ObjectVarStrategy,
-    CharacterNoneStrategy,
-)
-from lib.file.filter import InvalidRenpyFilter,ValidRenpyFilter
+from lib.validator import ObjectStrategy, IValidatorChain, IValidatorChainSolo, NullStrategy
+from lib.file.filter import InvalidRenpyFilter, ValidRenpyFilter
 from lib.custom_types import FilterTag
-from lib.validator.triple_quote import *
+from lib.validator.rule import SpeakerRules, DialogueRules, TripleQuoteRules, Rule
 
 
 @final
 class ArgAssembler:
     """Provides a class for converting parsed arguments into something more useful."""
 
-    __validators: dict[str, type | list[type]] = {
-        FilterTag.BASIC_NARR.value: BasicStrategy,
-        FilterTag.BASIC_CHAR_OBJ.value: BasicObjectStrategy,
-        FilterTag.ITALIC_NARR.value: [ItalicStrategy, ItalicObjectStrategy],
-        FilterTag.PARENTHESIS_NARR.value: ParenthesisStrategy,
-        FilterTag.BASIC_CHAR.value: BasicCharacterStrategy,
-        FilterTag.NONE_CHAR_OBJ.value: ObjectNoneItemStrategy,
-        FilterTag.NO_CUSTOM_TEXT_TAGS.value: CustomTextTagStrategy,
-        FilterTag.NO_CUSTOM_CHARS.value: CharacterStrategy,
-        FilterTag.NO_CUSTOM_CHAR_OBJS.value: ObjectStrategy,
-        FilterTag.EXPRESSION_CUES.value: [ExpressionCueAsteriskStrategy, ExpressionCueTildaStrategy],
-        FilterTag.NO_CUSTOM_CHAR_VAR_OBJS.value: ObjectVarStrategy,
-        FilterTag.ONLY_PUNCTUATIONS.value: OnlyPunctuationStrategy,
-        FilterTag.NONE_CHAR.value: CharacterNoneStrategy,
+    __narr_validators: dict[str, list[IValidatorChain] | IValidatorChain] = {
+        FilterTag.BASIC_NARR.value: IValidatorChainSolo(DialogueRules.BASIC.value),
+        FilterTag.BASIC_CHAR_OBJ.value: ObjectStrategy(SpeakerRules.OBJECT_BASIC.value),
+        FilterTag.ITALIC_NARR.value: [IValidatorChainSolo(DialogueRules.ITALIC.value),
+                                      ObjectStrategy(SpeakerRules.OBJECT_ITALIC.value)],
+        FilterTag.PARENTHESIS_NARR.value: IValidatorChainSolo(DialogueRules.PARENTHESIS.value),
+        FilterTag.BASIC_CHAR.value: IValidatorChainSolo(SpeakerRules.CHARACTER_BASIC.value),
+        FilterTag.NONE_CHAR_OBJ.value: ObjectStrategy(SpeakerRules.OBJECT_NONE.value),
+        FilterTag.EXPRESSION_CUES.value: [IValidatorChainSolo(DialogueRules.EXPRESSION_CUE_TILDA.value),
+                                          IValidatorChainSolo(DialogueRules.EXPRESSION_CUE_ASTERISK.value)],
+        FilterTag.ONLY_PUNCTUATIONS.value: IValidatorChainSolo(DialogueRules.ONLY_PUNCTUATION.value),
+        FilterTag.NONE_CHAR.value: IValidatorChainSolo(SpeakerRules.CHARACTER_NONE.value),
     }
-    __tq_validators: list[type] = [TQExpressionCueTildaStrategy, TQItalicStrategy, TQParenthesisStrategy,
-                                   TQExpressionCueAsteriskStrategy, TQOnlyPunctuationStrategy]
+    __narg_validators: dict[str, type[IValidatorChain]] = {
+        FilterTag.NO_CUSTOM_TEXT_TAGS.value: IValidatorChainSolo,
+        FilterTag.NO_CUSTOM_CHARS.value: IValidatorChainSolo,
+        FilterTag.NO_CUSTOM_CHAR_VAR_OBJS.value: ObjectStrategy,
+        FilterTag.NO_CUSTOM_CHAR_OBJS.value: ObjectStrategy,
+    }
+    __tq_validators: list[IValidatorChain] = [IValidatorChainSolo(TripleQuoteRules.EXPRESSION_CUE_TILDA.value),
+                                              IValidatorChainSolo(TripleQuoteRules.EXPRESSION_CUE_ASTERISK.value),
+                                              IValidatorChainSolo(TripleQuoteRules.ITALIC.value),
+                                              IValidatorChainSolo(TripleQuoteRules.ONLY_PUNCTUATION.value),
+                                              IValidatorChainSolo(TripleQuoteRules.PARENTHESIS.value)]
 
     @classmethod
     def assemble(cls, args: Namespace):
@@ -74,24 +60,28 @@ class ArgAssembler:
         current_validator = args.validator
         if args.narr_types:
             for narr_type in args.narr_types:
-                if type(cls.__validators[narr_type]) == list:
-                    for class_type in cls.__validators[narr_type]:
-                        current_validator.next_validator = class_type()
+                if type(cls.__narr_validators[narr_type]) == list:
+                    for validator in cls.__narr_validators[narr_type]:
+                        current_validator.next_validator = validator
                         current_validator = current_validator.next_validator
                 else:
-                    current_validator.next_validator = cls.__validators[narr_type]()
+                    current_validator.next_validator = cls.__narr_validators[narr_type]
                     current_validator = current_validator.next_validator
         current_validator = cls.__narg_filter(
-            current_validator, cls.__escape(args, args.no_custom_tags), FilterTag.NO_CUSTOM_TEXT_TAGS.value
+            current_validator, cls.__escape(args, args.no_custom_tags), FilterTag.NO_CUSTOM_TEXT_TAGS.value,
+            DialogueRules.TEXT_TAG.value
         )
         current_validator = cls.__narg_filter(
-            current_validator, cls.__escape(args, args.no_custom_chars), FilterTag.NO_CUSTOM_CHARS.value
+            current_validator, cls.__escape(args, args.no_custom_chars), FilterTag.NO_CUSTOM_CHARS.value,
+            SpeakerRules.CHARACTER.value
         )
         current_validator = cls.__narg_filter(
-            current_validator, cls.__escape(args, args.no_custom_char_objs), FilterTag.NO_CUSTOM_CHAR_OBJS.value
+            current_validator, cls.__escape(args, args.no_custom_char_objs), FilterTag.NO_CUSTOM_CHAR_OBJS.value,
+            SpeakerRules.OBJECT.value
         )
         current_validator = cls.__narg_filter(
-            current_validator, cls.__escape(args, args.no_custom_char_var_objs), FilterTag.NO_CUSTOM_CHAR_VAR_OBJS.value
+            current_validator, cls.__escape(args, args.no_custom_char_var_objs),
+            FilterTag.NO_CUSTOM_CHAR_VAR_OBJS.value, SpeakerRules.OBJECT_VAR.value
         )
 
     @staticmethod
@@ -107,17 +97,19 @@ class ArgAssembler:
             return "|".join(arg_filter_val)
 
     @classmethod
-    def __narg_filter(cls, validator, arg_filter: str | list[str] | None, filter_name: str):
+    def __narg_filter(cls, validator, arg_filter: str | list[str] | None, filter_name: str, rule_type: type[Rule]):
         if not arg_filter:
             return validator
         if type(arg_filter) is str:
             # Regex is On
-            validator.next_validator = cls.__validators[filter_name](arg_filter)
+            rule = rule_type(arg_filter)
+            validator.next_validator = cls.__narg_validators[filter_name](rule)
         else:
             # Regex is Off
             arg_filter_len = len(arg_filter)
             for i in range(arg_filter_len):
-                validator.next_validator = cls.__validators[filter_name](arg_filter[i])
+                rule = rule_type(arg_filter[i])
+                validator.next_validator = cls.__narg_validators[filter_name](rule)
                 if i < arg_filter_len - 1:
                     validator = validator.next_validator
         return validator.next_validator
@@ -127,26 +119,29 @@ class ArgAssembler:
         current_validator: IValidatorChain | None = None
         for validator in cls.__tq_validators:
             if not current_validator:
-                args.triple_quote_validator = validator()
+                args.triple_quote_validator = validator
                 current_validator = args.triple_quote_validator
             else:
-                current_validator.next_validator = validator()
+                current_validator.next_validator = validator
                 current_validator = current_validator.next_validator
+
         current_validator = cls.__triple_quote_nargs(current_validator, cls.__escape(args, args.no_custom_tags),
-                                                     TQTextTagStrategy)
+                                                     IValidatorChainSolo, TripleQuoteRules.TEXT_TAG.value)
 
     @staticmethod
-    def __triple_quote_nargs(validator, arg_filter: str | list[str] | None, filter_type: type):
+    def __triple_quote_nargs(validator, arg_filter: str | list[str] | None, filter_type: type[IValidatorChain], rule_type: type[Rule]):
         if not arg_filter:
             return validator
         if type(arg_filter) is str:
             # Regex is On
-            validator.next_validator = filter_type(arg_filter)
+            rule = rule_type(arg_filter)
+            validator.next_validator = filter_type(rule)
         else:
             # Regex is Off
             arg_filter_len = len(arg_filter)
             for i in range(arg_filter_len):
-                validator.next_validator = filter_type(arg_filter[i])
+                rule = rule_type(arg_filter[i])
+                validator.next_validator = filter_type(rule)
                 if i < arg_filter_len - 1:
                     validator = validator.next_validator
         return validator.next_validator
@@ -161,6 +156,6 @@ class ArgAssembler:
             args: Namespace class containing parsed arguments.
         """
         if args.valid_dirs or args.valid_files:
-            args.file_filter = ValidRenpyFilter(args.valid_dirs,args.valid_files,args.valid_globs)
+            args.file_filter = ValidRenpyFilter(args.valid_dirs, args.valid_files, args.valid_globs)
         else:
-            args.file_filter =  InvalidRenpyFilter(args.invalid_dirs, args.invalid_files, args.invalid_globs)
+            args.file_filter = InvalidRenpyFilter(args.invalid_dirs, args.invalid_files, args.invalid_globs)

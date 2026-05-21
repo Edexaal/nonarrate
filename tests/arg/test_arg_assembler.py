@@ -2,44 +2,26 @@ import unittest
 
 from lib.arg.arg_assembler import ArgAssembler
 from lib.arg.cli_parser import CLIParser
-from lib.validator.null_strategy import NullStrategy
 from tests import fixture
 from lib.custom_types import FilterTag
-from lib.validator.speaker import ObjectNoneItemStrategy, ObjectStrategy, CharacterStrategy, BasicObjectStrategy, \
-    ItalicObjectStrategy, ObjectVarStrategy, CharacterNoneStrategy
-from lib.validator.dialogue import CustomTextTagStrategy, ParenthesisStrategy, ExpressionCueAsteriskStrategy, \
-    ExpressionCueTildaStrategy, ItalicStrategy, OnlyPunctuationStrategy
 
 
 class TestArgAssembler(unittest.TestCase):
     def setUp(self) -> None:
         self._parser = CLIParser()
 
-    def eval_triple_quote_chain(self, arg_namespace, correct_count: int):
+    def eval_validator_chain(self, arg_namespace, correct_count: int, is_triple_quote: bool = False):
         ArgAssembler.assemble(arg_namespace)
-        current_validator = arg_namespace.triple_quote_validator
+        current_validator = arg_namespace.triple_quote_validator if is_triple_quote else arg_namespace.validator
         count = 0
         while current_validator:
             count += 1
             current_validator = current_validator.next_validator
-        self.assertEqual(count, correct_count, "Triple quote validators are not assembled correctly.")
+        self.assertEqual(count, correct_count, "Validators does not match correct list.")
 
-    def eval_validator_chain(self, arg_namespace, correct_type_list):
-        ArgAssembler.assemble(arg_namespace)
-        current_validator = arg_namespace.validator
-        validators = set()
-        while current_validator:
-            validators.add(type(current_validator))
-            current_validator = current_validator.next_validator
-        self.assertCountEqual(validators, correct_type_list, "Validators does not match correct list.")
-
-    def start(self, args, correct_type_list):
+    def start(self, args, correct_count: int, is_triple_quote: bool = False):
         arg_namespace = fixture.get_args(self._parser, args)
-        self.eval_validator_chain(arg_namespace, correct_type_list)
-
-    def start_triple_quote(self, args, correct_count: int):
-        arg_namespace = fixture.get_args(self._parser, args)
-        self.eval_triple_quote_chain(arg_namespace, correct_count)
+        self.eval_validator_chain(arg_namespace, correct_count, is_triple_quote)
 
     def start_escape(self, args, correct_count: int):
         arg_namespace = fixture.get_args(self._parser, args)
@@ -58,9 +40,7 @@ class TestArgAssembler(unittest.TestCase):
             FilterTag.ITALIC_NARR.value,
             FilterTag.BASIC_NARR.value,
         ]
-        self.start(args, {NullStrategy, ObjectNoneItemStrategy, ParenthesisStrategy, BasicObjectStrategy,
-                          ExpressionCueAsteriskStrategy, ExpressionCueTildaStrategy, OnlyPunctuationStrategy,
-                          CharacterNoneStrategy})
+        self.start(args, 8)
 
     def test_nargs(self):
         args = [
@@ -73,6 +53,7 @@ class TestArgAssembler(unittest.TestCase):
             FilterTag.EXPRESSION_CUES.value,
             FilterTag.ONLY_PUNCTUATIONS.value,
             FilterTag.NONE_CHAR.value,
+            FilterTag.NONE_CHAR_OBJ.value,
             FilterTag.NO_CUSTOM_CHARS.value,
             "ten",
             "narrator",
@@ -87,10 +68,7 @@ class TestArgAssembler(unittest.TestCase):
             "naomi",
             "se",
         ]
-        self.start(
-            args, {NullStrategy, ObjectNoneItemStrategy, CustomTextTagStrategy, CharacterStrategy, ObjectStrategy,
-                   ObjectVarStrategy}
-        )
+        self.start(args, 10)
 
     def test_regex_chain(self):
         args = [
@@ -147,14 +125,8 @@ class TestArgAssembler(unittest.TestCase):
             FilterTag.ONLY_PUNCTUATIONS.value,
             FilterTag.NONE_CHAR.value,
         ]
-        self.start(
-            args, {NullStrategy, ItalicStrategy, ItalicObjectStrategy, ExpressionCueTildaStrategy,
-                   ExpressionCueAsteriskStrategy}
-        )
-    def test_triple_quote_args(self):
-        args = ["game/"]
-        self.start_triple_quote(args, 5)
+        self.start(args,5)
 
     def test_triple_quote_with_nargs(self):
         args = ["game/", FilterTag.NO_CUSTOM_TEXT_TAGS.value, "plw", "blq"]
-        self.start_triple_quote(args, 7)
+        self.start(args, 7, True)

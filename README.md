@@ -5,9 +5,9 @@
 
 ## Idea
 
-A story should unfold *organically*. Let the characters' **actions**,
-the **environment**, and active **scenarios** carry the
-narrative. Players are *encouraged* to draw their own interpretations 
+A story should unfold *organically*. Let the **environment**, characters' **actions**,
+and active **scenarios** carry the narrative. Players are 
+*encouraged* to draw their own interpretations 
 of the events unfolding.
 
 ## Types of Narration
@@ -51,7 +51,7 @@ python -m pip uninstall nonarrate
 
 ## Usage
 
-To use *nonarrate* check out [COMMANDS.md](./COMMANDS.md)!
+See [COMMANDS.md](./COMMANDS.md) for a full list of commands!
 
 ## Project Structure
 

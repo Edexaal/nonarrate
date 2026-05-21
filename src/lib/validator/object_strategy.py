@@ -1,6 +1,7 @@
 import re
 from lib.custom_types import FileInfo
-from ..ivalidator_chain import IValidatorChain
+from lib.validator.rule import Rule
+from .ivalidator_chain import IValidatorChain
 
 
 class ObjectStrategy(IValidatorChain):
@@ -20,18 +21,19 @@ class ObjectStrategy(IValidatorChain):
 
     def __init__(
         self,
-        char_item: str | list[str] | None,
-        next_validator: "IValidatorChain | None" = None,
+            char_items: Rule | list[Rule],
+            next_validator: "IValidatorChain | None" = None,
     ) -> None:
         super().__init__(next_validator)
-        self.__init_char_items(char_item)
+        if type(char_items) is list:
+            self.__init_char_items(char_items)
+        else:
+            self.__init_char_items([char_items])
 
     @classmethod
-    def __init_char_items(cls, char_item):
-        if type(char_item) is list:
-            char_item = "|".join(char_item)
-        if char_item:
-            cls._char_item_pats.append(re.compile(rf"Character\s*\([^)]*(?:{char_item})[^)]*\)"))
+    def __init_char_items(cls, char_items: list[Rule]):
+        for rule in char_items:
+            cls._char_item_pats.append(rule.pattern)
 
     @classmethod
     def reset(cls):

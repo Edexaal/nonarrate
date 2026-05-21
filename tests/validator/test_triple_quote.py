@@ -1,6 +1,7 @@
 import unittest
 
-from lib.validator.triple_quote import *
+from lib.validator.rule import TripleQuoteRules
+from tests.fixture import validate_solo
 
 
 class TestTripleQuote(unittest.TestCase):
@@ -10,7 +11,7 @@ class TestTripleQuote(unittest.TestCase):
         cls.phrase = "Water is very important, Martha!"
 
     def test_parenthesis(self):
-        validator = TQParenthesisStrategy()
+        validator = validate_solo(TripleQuoteRules.PARENTHESIS.value)
         self.assertTrue(validator.is_valid(f"({self.phrase})"), "plain parenthesis")
         self.assertFalse(validator.is_valid(f"(){self.phrase})"), "invalid plain parenthesis")
         self.assertTrue(validator.is_valid(f"{{bzs}}({self.phrase}){{/bzs}}"), "parenthesis surrounded by text tag")
@@ -20,7 +21,7 @@ class TestTripleQuote(unittest.TestCase):
         self.assertFalse(validator.is_valid(f'"""({self.phrase})'), "plain parenthesis w/ triple quote start")
 
     def test_asterisk_cue(self):
-        validator = TQExpressionCueAsteriskStrategy()
+        validator = validate_solo(TripleQuoteRules.EXPRESSION_CUE_ASTERISK.value)
         self.assertTrue(validator.is_valid("*Pop!*"), "single asterisk cue")
         self.assertTrue(validator.is_valid("{gha}*Pop!*{/gha}"), "single asterisk cue surrounded by text tag")
         self.assertTrue(validator.is_valid("**Pop!**"), "double asterisks cue")
@@ -29,14 +30,14 @@ class TestTripleQuote(unittest.TestCase):
         self.assertFalse(validator.is_valid('"""*Pop!*'), "single asterisk cue w/ triple quote start")
 
     def test_tilda_cue(self):
-        validator = TQExpressionCueTildaStrategy()
+        validator = validate_solo(TripleQuoteRules.EXPRESSION_CUE_TILDA.value)
         self.assertTrue(validator.is_valid("~Pop!~"), "single tilda cue")
         self.assertTrue(validator.is_valid("{gha}~Pop!~{/gha}"), "single tilda cue surrounded by text tag")
         self.assertTrue(validator.is_valid("~~Pop!~~"), "double tildas cue")
         self.assertTrue(validator.is_valid("{gha}~~Pop!~~{/gha}"), "double tildas cue surrounded by text tag")
 
     def test_only_punctuation(self):
-        validator = TQOnlyPunctuationStrategy()
+        validator = validate_solo(TripleQuoteRules.ONLY_PUNCTUATION.value)
         self.assertTrue(validator.is_valid("......."), "only periods")
         self.assertTrue(validator.is_valid("{fe}.......{/fe}"), "only periods surrounded by text tag")
         self.assertTrue(validator.is_valid("!!!!!!!"), "only exclamation marks")
@@ -48,7 +49,7 @@ class TestTripleQuote(unittest.TestCase):
         self.assertFalse(validator.is_valid('......."""'), "only periods w/ triple quote end")
 
     def test_italic(self):
-        validator = TQItalicStrategy()
+        validator = validate_solo(TripleQuoteRules.ITALIC.value)
         self.assertTrue(validator.is_valid(f'{{i}}{self.phrase}{{/i}}'), "italic tags")
         self.assertTrue(validator.is_valid(f'{{fe}}{{i}}{self.phrase}{{/i}}{{/fe}}'),
                         "italic tags surrounded by text tag")
@@ -56,7 +57,8 @@ class TestTripleQuote(unittest.TestCase):
         self.assertFalse(validator.is_valid(f'"""{{i}}{self.phrase}{{/i}}'), "italic tags w/ triple quote start")
 
     def test_text_tag(self):
-        validator = TQTextTagStrategy("poi")
+        rule = TripleQuoteRules.TEXT_TAG.value("poi")
+        validator = validate_solo(rule)
         self.assertTrue(validator.is_valid(f'{{poi}}{self.phrase}{{/poi}}'), "text tag")
         self.assertFalse(validator.is_valid(f'"""{{poi}}{self.phrase}{{/poi}}'), "text tag w/ triple quote start")
         self.assertFalse(validator.is_valid(f'{{poi}}{self.phrase}{{/poi}}"""'), "text tag w/ triple quote end")

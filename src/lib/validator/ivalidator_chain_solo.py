@@ -3,14 +3,15 @@ import re
 from typing import override
 
 from .ivalidator_chain import IValidatorChain
+from .rule import Rule
 
 
 class IValidatorChainSolo(IValidatorChain, ABC):
     """Provide an instance-focused abstract interface for processing validation requests through a chain of handlers."""
 
-    def __init__(self, next_validator: "IValidatorChain | None" = None) -> None:
+    def __init__(self,rule: Rule | None, next_validator: "IValidatorChain | None" = None) -> None:
         super().__init__(next_validator)
-        self._validate_pat: "re.Pattern | None" = None
+        self._validate_pat = rule.pattern if rule else None
 
     @override
     def is_valid(self, line: str) -> bool:

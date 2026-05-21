@@ -9,6 +9,7 @@ from lib.file import Writer
 class TestWriter(unittest.TestCase):
     def setUp(self) -> None:
         self._parser = CLIParser()
+        self._path = fixture.get_dummy_path(self._parser)
         self.backup_folder = None
 
     def tearDown(self) -> None:
@@ -22,8 +23,8 @@ class TestWriter(unittest.TestCase):
         return total
 
     def test_backup(self):
-        backup_loc = pathlib.Path(f"{fixture.DUMMY_PATH}/_BACKUP")
-        files_to_backup = [f"{fixture.DUMMY_PATH}/ex_reader.rpy"]
+        backup_loc = pathlib.Path(f"{self._path}/_BACKUP")
+        files_to_backup = [f"{self._path}/ex_reader.rpy"]
         writer = Writer()
         correct_total = len(files_to_backup)
         writer.backup_dir(files_to_backup, backup_loc)

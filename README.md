@@ -33,13 +33,13 @@ There are multiple ways to install/upgrade.
 ### Installing
 
 ```bash
-python -m pip install "nonarrate @ git+https://github.com/ZimCodes/nonarrate.git"
+python -m pip install "nonarrate @ git+https://github.com/Edexaal/nonarrate.git"
 ```
 
 ### Updating
 
 ```bash
-python -m pip install --upgrade "nonarrate @ git+https://github.com/ZimCodes/nonarrate.git"
+python -m pip install --upgrade "nonarrate @ git+https://github.com/Edexaal/nonarrate.git"
 ```
 
 ### Uninstall

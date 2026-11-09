@@ -14,15 +14,15 @@ class ObjectStrategy(IValidatorChain):
         define lily = Character("Lily")
     """
 
-    __obj_name_pat = re.compile(r"^\s*(?:\$|(?:define|default))\s+(\w+)")
+    __obj_name_pat = re.compile(r"^\s*(?:\$|(?:define|default))\s+(?:character\.)?(\w+)")
     _speaker_objects: set[str] = set()
     _char_item_pats: list[re.Pattern] = list()
     _validate_pat: "re.Pattern | None" = None
 
     def __init__(
         self,
-            char_items: Rule | list[Rule],
-            next_validator: "IValidatorChain | None" = None,
+        char_items: Rule | list[Rule],
+        next_validator: "IValidatorChain | None" = None,
     ) -> None:
         super().__init__(next_validator)
         if type(char_items) is list:

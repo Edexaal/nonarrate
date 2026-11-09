@@ -333,6 +333,14 @@ class TestDialogue(unittest.TestCase):
             296: 'mc "{tag}(Thoughts) This apple is pretty...{/tag}"',
             297: 'mc "{tag}(Thoughts) This apple is pretty...{/tag}" (window_background="gui/transparent_textbox.png")',
             298: 'mc "(Grumbles) This apple is pretty..."',
+            # >2 cues
+            299: "mc '***sSsnNNnNoOOOoOrRRrEee!!!***'",
+            # Prefix with cues
+            300: "mc '***sSsnNNnNoOOOoOrRRrEee!!!'",
+            301: "mc '***sSsnNNnNoOOOoOrRRrEee! That was quite boring!'",
+            302: "mc '***sSsnNNnNoOOOoOrRRrEee!*** That was quite boring!'",
+            303: "mc '***sSsnNNnNoOOOoOrRRrEee!*** That was quite boring!",
+            304: "mc '***sSsnNNnNoOOOoOrRRrEee! That was quite boring!",
         }
 
     def validate_lines(self):
@@ -388,7 +396,7 @@ class TestDialogue(unittest.TestCase):
         self.start(
             obj,
             [
-                138, 139, 140, 141, 143, 145, 151, 152, 153, 154, 156, 158, 218, 220, 222, 224, 225, 232, 236, 254, 262, 282,287
+                138, 139, 140, 141, 143, 145, 151, 152, 153, 154, 156, 158, 218, 220, 222, 224, 225, 232, 236, 254, 262, 282,287,299,300,301,304
             ],
         )  # fmt: skip
 

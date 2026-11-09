@@ -7,13 +7,14 @@ Placed here are a list of files and folders _nonarrate_ will ignore by default.
 |           |          |                 |          |
 |:---------:|:--------:|:---------------:|:--------:|
 |    tl     |   menu   |       gui       |  saves   |
-|  images   |  cache   |      fonts      | voice(s) |
+|  images   |  cache   |      font(s)      | voice(s) |
 | functions |  music   |      audio      | gallery  |
 | sound(s)  | video(s) |     shaders     |   font   |
 | movie(s)  | screens  | python-packages | Gallery  |
 |    sfx    |   libs   |       ui        |    UI    |
 | replay(s) |    bg    |       bgm       |   anim   |
 |    vi     |    vo    |       img       |  camera  |
+| animations | director | libraries | utilties |
 
 ## Invalid Files
 
@@ -24,9 +25,9 @@ Placed here are a list of files and folders _nonarrate_ will ignore by default.
 |        gui        |    options    |  extras   |  video(s)  |
 | kinetic_text_tags | chapterselect | credit(s) | disclaimer |
 |   hsceneselect    |  transitions  | y_outline |  00warper  |
-|       music       |     audio     |   wipes   |   scenes   |
+|       wordcounter       |     audio     |   wipes   |   scenes   |
 |      keymap       | background(s) |   movie(s)           | effects            |
-| patchcheck | phonetexting | | |
+| patchcheck | phonetexting | custom_settings | |
 
 ## Invalid Globs
 
@@ -36,4 +37,4 @@ Placed here are a list of files and folders _nonarrate_ will ignore by default.
 |  `*highlight`  | `achievement*` |    `*viewer*`    |       `*image*`       |
 |   `*camera*`   |  `*minigame"`  |    `*screen*`    |     `[Rr]eplay*`      |
 | `*[Ff]unction?` |  `*[Ss]tyle*`  | `*[Tt]ransform*` |   `*[Aa]nimation*`    |
-| `*[Ss]prite*`| | | |
+| `*[Ss]prite*`| `[mM]usic*`| | |

@@ -10,6 +10,9 @@ ahead.
 `.rpa` files usually contain all assets to a game project. Nonarrate will only operate on `.rpy` files,
 which can be found inside an `rpa` file. To get the assets, you will need to extract the `rpa` file(s).
 
+> [!TIP]
+> Nonarrate only needs `rpy` files. So, extract `rpa` files that contain `rpy` files.
+
 There are many extractor tools you can use for this. Happy Hunting!
 
 ## Dialogue searching
@@ -25,10 +28,12 @@ Speaker names are most often saved to a `Character(...)` object.
 **Examples:**
 
 See [Ren'Py Docs Examples](https://www.renpy.org/doc/html/dialogue.html#example-characters)
+See [The `character` Store Examples](https://www.renpy.org/doc/html/dialogue.html#the-character-store)
 
 ```python
 define h = Character("Harold")
 default m = Character("Mikaeil", what_italic=True)
+define character.robby = Character("Robby")
 ```
 
 ### Dialogue
@@ -40,24 +45,31 @@ See ['Say Statement' in Ren'Py's Docs](https://www.renpy.org/doc/html/dialogue.h
 
 ## Using nonarrate
 
-Once you which `.rpy` files contain **character definitions** and **dialogue**, you can now use nonarrate.
+Once you find which `.rpy` files contain **character definitions** and **dialogue**, you can now use nonarrate.
 
 It's recommended to use `--backup` alongside your commands which will create a backup of modified `.rpy` files.
 
 **Example:**
 
 ```bash
-nonarrate --invalid-files minigame opt --keep-empty-quoted-chars --backup ./MYBACKUP
+# Start in game/ directory
+# Nonarrate do not touch files named 'minigame' and 'opt'.
+# Keep dialogue with -> "" "Here is my dialogue"  
+# Backup files before removing narration
+nonarrate game/ --invalid-files minigame opt --keep-empty-quoted-chars --backup
 ```
 
 ### Ignoring files
 
 Take advantage of the following options to tell nonarrate what files/folders to ignore or focus
-on. [FILE COMMANDS](./COMMANDS.md#file-searching). **Be mindful! Nonarrate will ignore certain files/folders by default
-*. See [IGNORED_FILES.md](./IGNORED_FILES.md).
+on. [FILE COMMANDS](./COMMANDS.md#file-searching).
+
+> [!TIP]
+> Nonarrate will ignore certain files/folders by default, so you may not need to tell nonarrate explicitly.
+> See [IGNORED_FILES.md](./IGNORED_FILES.md).
 
 ```bash
-nonarrate game/ --invalid-dirs images sfx --invalid-files red_shaders minigames --backup ./MYBACKUP
+nonarrate game/ --invalid-dirs images sfx --invalid-files red_shaders minigames --backup
 ```
 
 ### Adjusting Narration
@@ -89,5 +101,5 @@ Repeat these steps until the game is launched successfully!
 
 ## Final Thoughts
 
-The key is finding files containing dialogue and adjusting narration to fit the current game's needs.
+The key is finding files containing dialogue and adjusting nonarrate's settings to fit the current game's needs.
 Every game project is different after all!

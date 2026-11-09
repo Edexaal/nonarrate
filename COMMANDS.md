@@ -215,8 +215,12 @@ ___
 
 These filters deal with the **speaker** portion of a dialogue box.
 
-***NOTE:** [`DynamicCharacter()`](https://www.renpy.org/wiki/renpy/doc/reference/functions/DynamicCharacter) is an
-outdated usage of `Character()` and is also supported by nonarrate!
+> [!NOTE]
+> [`DynamicCharacter()`](https://www.renpy.org/wiki/renpy/doc/reference/functions/DynamicCharacter) is an outdated usage of `Character()` and is also supported by nonarrate!
+
+> [!NOTE]
+> `Character()` assignments through [`character` Store](https://www.renpy.org/doc/html/dialogue.html#the-character-store) is now supported.
+> **Example:** `define character.robby = Character(...)`
 
 | Commands                   | Script Example                                                                                                                          | Description                                                                                           |
 |----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|

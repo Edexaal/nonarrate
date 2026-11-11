@@ -341,6 +341,13 @@ class TestDialogue(unittest.TestCase):
             302: "mc '***sSsnNNnNoOOOoOrRRrEee!*** That was quite boring!'",
             303: "mc '***sSsnNNnNoOOOoOrRRrEee!*** That was quite boring!",
             304: "mc '***sSsnNNnNoOOOoOrRRrEee! That was quite boring!",
+            # Image reference
+            305: "'characters/head_mask.png'",
+            306: '"characters/head_mask.png"',
+            307: '"characters/head_mask.jpg"',
+            308: '"characters/head_mask.avif"',
+            309: "'characters/head_mask.gif'",
+            310: "'characters/head_mask.bmp'",
         }
 
     def validate_lines(self):

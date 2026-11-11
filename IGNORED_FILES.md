@@ -26,8 +26,8 @@ Placed here are a list of files and folders _nonarrate_ will ignore by default.
 | kinetic_text_tags | chapterselect | credit(s) | disclaimer |
 |   hsceneselect    |  transitions  | y_outline |  00warper  |
 |       wordcounter       |     audio     |   wipes   |   scenes   |
-|      keymap       | background(s) |   movie(s)           | effects            |
-| patchcheck | phonetexting | custom_settings | |
+|      keymap       | background(s) |   movie(s)           | custom_settings             |
+| patchcheck | phonetexting |  | |
 
 ## Invalid Globs
 
@@ -37,4 +37,5 @@ Placed here are a list of files and folders _nonarrate_ will ignore by default.
 |  `*highlight`  | `achievement*` |    `*viewer*`    |       `*image*`       |
 |   `*camera*`   |  `*minigame"`  |    `*screen*`    |     `[Rr]eplay*`      |
 | `*[Ff]unction?` |  `*[Ss]tyle*`  | `*[Tt]ransform*` |   `*[Aa]nimation*`    |
-| `*[Ss]prite*`| `[mM]usic*`| | |
+| `*[Ss]prite*`| `[mM]usic*`| `*effect*`| `*replay*`|  
+| `gui[ _]*` | `*[ _]gui`| | |

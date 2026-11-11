@@ -20,7 +20,9 @@ from enum import Enum
 class DialogueRules(Enum):
     # "Hey! I'm actually a narrator."
     # centered "Hey! I'm actually a narrator."
-    BASIC = Rule(r'^(?:centered\s)?(["\'])(?:(?!\1|\\).|\\.)+(?:\1\s*(?:with|id) .+|\1\s*\([^)]+)?[^:]$')
+    BASIC = Rule(
+        r'^(?:centered\s)?(["\'])(?![^"\']*\.(?:png|jpe?g|webp|avif|bmp|gif)\1$)(?:(?!\1|\\).|\\.)+(?:\1\s*(?:with|id) .+|\1\s*\([^)]+)?[^:]$'
+    )
     # mc "{i}Maybe there's food left over.{/i}"
     # mc "{tag}{i}Maybe there's food left over.{/i}{/tag}"
     # mc "{i}Maybe there's food{i} left over.{/i}"

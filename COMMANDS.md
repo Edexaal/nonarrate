@@ -88,7 +88,12 @@ Restore `.rpy` files to their original state using `rpybu` files generated with 
 Write resulting stats to a file.
 
 Statistical data featuring code removal will be exported to a file called, `stats.json`.
-This same data is also printed on screen.
+
+**Stats include:**
+
+- total_lines: a sum of all total lines found in every file.
+- total_cleaned_lines: a sum of all total lines found in every file after removal of narration.
+- file_urls: list of files that were modified
 
 ***-e, --regex***
 

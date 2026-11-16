@@ -40,7 +40,7 @@ class TestArgAssembler(unittest.TestCase):
             FilterTag.KEEP_ITALIC.value,
             FilterTag.KEEP_NARRATION.value,
         ]
-        self.start(args, 14)
+        self.start(args, 16)
 
     def test_nargs(self):
         args = [
@@ -143,7 +143,7 @@ class TestArgAssembler(unittest.TestCase):
             FilterTag.KEEP_NVL.value,
             FilterTag.KEEP_COMMON_PARENTHETICALS.value,
         ]
-        self.start(args, 5)
+        self.start(args, 7)
 
     def test_triple_quote_with_nargs(self):
         args = ["game/", FilterTag.TEXT_TAGS.value, "plw", "blq"]

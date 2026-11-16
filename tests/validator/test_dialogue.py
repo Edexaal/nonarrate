@@ -348,6 +348,12 @@ class TestDialogue(unittest.TestCase):
             308: '"characters/head_mask.avif"',
             309: "'characters/head_mask.gif'",
             310: "'characters/head_mask.bmp'",
+            # expression cue + parenthesis
+            311: 'mc "*sigh* (I am very nervous...)"',
+            312: 'mc "~sigh~ (I am very nervous...)"',
+            313: 'mc "{bold}*sigh* (I am very nervous...){/bold}"',
+            314: 'mc "{bold}~sigh~ (I am very nervous...){/bold}"',
+            315: 'mc smile "(He found a leprechaun in his walnut shell.)"',
         }
 
     def validate_lines(self):
@@ -438,3 +444,11 @@ class TestDialogue(unittest.TestCase):
     def test_parenthetical(self):
         obj = validate_solo(DialogueRules.PARENTHETICAL.value("Grumbles"))
         self.start(obj, [298])
+
+    def test_asterisk_parenthesis(self):
+        obj = validate_solo(DialogueRules.CUE_ASTERISK_PARENTHESIS.value)
+        self.start(obj, [311,313])
+
+    def test_tilda_parenthesis(self):
+        obj = validate_solo(DialogueRules.CUE_TILDA_PARENTHESIS.value)
+        self.start(obj, [312,314])

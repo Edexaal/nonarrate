@@ -363,7 +363,7 @@ These filters deal with the **dialogue** portion of dialogue box.
 | --keep-italic       | mc “{i}Maybe there’s food left over.{/i}" <br>mc "{tag}{i}Lesson learned!{/i}{/tag}"<br>mc "{i}No food here?{i} Where did it go?{i}"                                  | Italics. Thinking dialogue.                                                                                  |
 | --keep-parenthesis  | mc “(It’s got to be here somewhere.)” <br>mc "{tag}(Opens the car door){/tag}"                                        | `()`. Thinking/Narrator dialogue                                                                             |
 | --text-tags, --tt   | mc “{fzs}A small bold font tag.{/fzs}” <br>mc "{fzs=10}My text is here{/fzs}"                                         | [Custom text tag.](https://www.renpy.org/doc/html/custom_text_tags.html) Can be used for thoughts/narrative. |
-| --keep-cues         | mc "\**blushes softly*\*" <br>mc "{tag}\~*jumps*\~{/tag}"                                                             | Expression cues. \**smiles*\*, \~yawns\~, \*\**taps foot*\*\*                                                |
+| --keep-cues         | mc "\**blushes softly*\*" <br>mc "{tag}\~*jumps*\~{/tag}"<br>mc "\*sigh\* (Maybe not a great idea...)"                                                            | Expression cues. \**smiles*\*, \~yawns\~, \*\**taps foot*\*\*                                                |
 | --keep-punctuations | mc "......" <br>mc "{tag}....{/tag}" <br>mc "!!!" <br>mc "????"                                                       | Dialogues with only punctuation marks                                                                        |
 | --keep-guillemets   | mc "«I am currently thinking about my situation again.»" <br>mc "‹I am currently thinking about my situation again.›" | Guillements.`›`,`‹`, `«`,`»`                                                                                 |
 | --keep-common-parentheticals | mc "(Thoughts) Was the microwave always this loud?" | Begins with a [common descriptor](/DEFAULT_NARRATORS.md#common-descriptors) wrapped in a parenthesis|
@@ -421,7 +421,7 @@ See [REGEX Examples](#regex-examples) for examples.
 
 Keeps expression cues.
 
-Keeps dialogue that *only* includes an expression cue.
+Keeps dialogue that *only* includes an expression cue or expression cue followed by parenthesis.
 Expression cues are signals indicating emotions and reactions. However,
 this can be achieved *visually*.
 

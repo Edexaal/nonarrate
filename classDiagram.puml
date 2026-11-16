@@ -40,6 +40,7 @@ dataclass VarRule
 dataclass BuiltinRule
 dataclass ParentheticalRule
 dataclass BasicParentheticalRule
+dataclass CueParenthesisRule
 
 'File Descriptors
 class Reader {
@@ -227,11 +228,15 @@ enum DialogueRules {
   ITALIC
   ONLY_PUNCTUATION
   PARENTHESIS
-  TILDA_EXPRESSION_CUE
-  ASTERISK_EXPRESSION_CUE
+  PARENTHETICAL
+  PARENTHETICAL_BASIC
+  EXPRESSION_CUE_TILDA
+  EXPRESSION_CUE_ASTERISK
   TEXT_TAG
   GUILLEMET_SINGLE
   GUILLEMET_DOUBLE
+  CUE_ASTERISK_PARENTHESIS
+  CUE_TILDA_PARENTHESIS
 }
 
 enum SpeakerRules {
@@ -243,6 +248,7 @@ enum SpeakerRules {
   OBJECT_NONE
   OBJECT_VAR
   VAR
+  NVL_BASIC
 }
 
 enum BuiltInSpeakerRules {
@@ -266,6 +272,7 @@ enum FilterTag {
     KEEP_COMMON_OBJ_CHARS
     KEEP_ITALIC
     KEEP_PARENTHESIS
+    KEEP_COMMON_PARENTHETICALS
     KEEP_COMMON_QUOTED_CHARS
     KEEP_EMPTY_QUOTED_CHARS
     KEEP_EMPTY_OBJ_CHARS
@@ -273,7 +280,6 @@ enum FilterTag {
     KEEP_PUNCTUATIONS
     KEEP_GUILLEMETS
     KEEP_NVL
-		KEEP_COMMON_PARENTHETICALS
     TEXT_TAGS
     QUOTED_CHARS
     OBJ_CHARS
@@ -328,6 +334,7 @@ Rule <|-- QuoteTextTagRule
 Rule <|-- QuoteSurroundRule
 Rule <|-- BuiltinRule
 Rule <|-- ParentheticalRule
+Rule <|-- CueParenthesisRule
 CharRule <|-- BasicCharRule
 ObjectRule <|-- BasicObjectRule
 ParentheticalRule <|-- BasicParentheticalRule

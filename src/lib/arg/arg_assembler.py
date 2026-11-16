@@ -116,6 +116,8 @@ class ArgAssembler:
                 return [
                     IValidatorChainSolo(DialogueRules.EXPRESSION_CUE_TILDA.value),
                     IValidatorChainSolo(DialogueRules.EXPRESSION_CUE_ASTERISK.value),
+                    IValidatorChainSolo(DialogueRules.CUE_ASTERISK_PARENTHESIS.value),
+                    IValidatorChainSolo(DialogueRules.CUE_TILDA_PARENTHESIS.value),
                 ]
             case FilterTag.KEEP_PUNCTUATIONS.value:
                 return IValidatorChainSolo(DialogueRules.ONLY_PUNCTUATION.value)

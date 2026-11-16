@@ -1,3 +1,4 @@
+from .cue_parenthesis_rule import CueParenthesisRule
 from .basic_parenthetical_rule import BasicParentheticalRule
 from .parenthetical_rule import ParentheticalRule
 from .builtin_rule import BuiltinRule
@@ -58,6 +59,10 @@ class DialogueRules(Enum):
     # elnor "{fzs}This is a small bold font tag.{/fzs}"
     # gabby "{ba=100}Big bold asterisk text!{/ba}"
     TEXT_TAG = TextTagRule
+    # cap "*gasp* (Maybe this is a bad idea after all...)"
+    # cap "{fzs}*gasp* (Maybe this is a bad idea after all...){/fzs}"
+    CUE_ASTERISK_PARENTHESIS = CueParenthesisRule(r"\*")
+    CUE_TILDA_PARENTHESIS = CueParenthesisRule("~")
 
 
 # NOTE: DynamicCharacter() is an outdated variant of Character()

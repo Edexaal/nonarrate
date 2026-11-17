@@ -1,4 +1,5 @@
 from .rule import Rule
+from . import common_patterns as common
 
 
 class QuoteSurroundRule(Rule):
@@ -6,4 +7,5 @@ class QuoteSurroundRule(Rule):
 
     def __init__(self, open_symbol: str, close_symbol: str):
         super().__init__(
-            rf'^(?:{{\w+(?:=[^}}]+)?}})*\s*{open_symbol}[^{open_symbol}]+{close_symbol}\s*(?:(?:{{/\w+}})*[.?!]?|[.?!]?(?:{{/\w+}})*)$')
+            rf"^{common.OPEN_TEXT_TAG}{open_symbol}[^{open_symbol}]+{close_symbol}\s*(?:(?:{{/\w+}})*[.?!]?|[.?!]?(?:{{/\w+}})*)$"
+        )

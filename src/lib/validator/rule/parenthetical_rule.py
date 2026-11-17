@@ -1,4 +1,5 @@
 from .rule import Rule
+from . import common_patterns as common
 
 
 class ParentheticalRule(Rule):
@@ -13,6 +14,6 @@ class ParentheticalRule(Rule):
 
     def __init__(self, custom_phrases: str):
         super().__init__(
-            rf'^(?:([\'"])(?:(?!\1).)+\1|\w+?)\s?([\'"])(?:{{\w+(?:=[^}}]+)?}})*\s*\\?\(\s*{custom_phrases}\s*\\?\)\s*(?:(?!\\?\2).)+(?:\2|\2\s*(?:with|id) .+|\2\s*\([^)]+\))?$',
+            rf"{common.DIALOGUE_START}\\?\(\s*{custom_phrases}\s*\\?\)\s*(?:(?!\\?\2).)+(?:\2|\2\s*(?:with|id) .+|\2\s*\([^)]+\))?$",
             True,
         )

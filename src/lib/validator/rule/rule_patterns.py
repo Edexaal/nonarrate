@@ -1,3 +1,4 @@
+from . import common_patterns as common
 from .cue_parenthesis_rule import CueParenthesisRule
 from .basic_parenthetical_rule import BasicParentheticalRule
 from .parenthetical_rule import ParentheticalRule
@@ -28,19 +29,17 @@ class DialogueRules(Enum):
     # mc "{tag}{i}Maybe there's food left over.{/i}{/tag}"
     # mc "{i}Maybe there's food{i} left over.{/i}"
     ITALIC = Rule(
-        r'^(?:([\'"])(?:(?!\1).)+\1|\w+?)\s?([\'"])(?:{\w+(?:=[^}]+)?})*\s*\{i\}(?:((?:(?!\{/?i\}).)+)(?:\{/?i\})?|.+?\{/?i\})\s*(?:[.?!]?(?:{/\w+})*|(?:{/\w+})*[/?!]?)\s*(?:\2|\2\s*(?:with|id) .+|\2\s*\([^)]+\))?$'
+        rf"{common.DIALOGUE_START}\{{i\}}(?:((?:(?!\{{/?i\}}).)+)(?:\{{/?i\}})?|.+?\{{/?i\}}){common.CLOSING_CLAUSES}$"
     )
     # mc "............."
     # mc "{tag}........................{/tag}"
     # mc "!!!"
     # mc "????"
-    ONLY_PUNCTUATION = Rule(
-        r'^(?:([\'"])(?:(?!\1).)+\1|\w+?)\s?([\'"])(?:{\w+(?:=[^}]+)?})*\s*[.?!]+\s*(?:{/\w+})*\s*(?:\2|\2\s*(?:with|id) .+|\2\s*\([^)]+\))?$'
-    )
+    ONLY_PUNCTUATION = Rule(rf"{common.DIALOGUE_START}[.?!]+{common.CLOSING_CLAUSES}$")
     # mc "(It's got to be here somewhere.)"
     # mc "{tag}(It's got to be here somewhere.){/tag}"
     PARENTHESIS = Rule(
-        r'^(?:([\'"])(?:(?!\1).)+\1|\w+?)\s?([\'"])(?:{\w+(?:=[^}]+)?})*\s*(?:\\|\\[\'"])?\([^()]+(?:\\?\)(?:\\[\'"])?)?\s*(?:[.?!]?(?:{/\w+})*|(?:{/\w+})*[/?!]?)\s*(?:\2|\2\s*(?:with|id) .+|\2\s*\([^)]+\))?$'
+        rf'{common.DIALOGUE_START}(?:\\|\\[\'"])?\([^()]+(?:\\?\)(?:\\[\'"])?)?{common.CLOSING_CLAUSES}$'
     )
     # mc "(Whispers) At least I'm safe inside my mind."
     PARENTHETICAL = ParentheticalRule
@@ -79,17 +78,17 @@ class SpeakerRules(Enum):
     OBJECT_ITALIC = [
         Rule(r"what_italic\s*=\s*True"),
         Rule(r"what_prefix\s*=\s*([\"'])\{i}\1"),
-        Rule(r"(?:Dynamic)?Character\(\s*(['\"])\s*\{i\}[^\"']+\{/?i\}\s*\1"),
+        Rule(rf"{common.CHARACTER}\s*(['\"])\s*\{{i\}}[^\"']+\{{/?i\}}\s*\1"),
     ]
     # Character(None)
     OBJECT_NONE = [
-        Rule(r"(?:Dynamic)?Character\s*\(\s*(?:name\s*=\s*)?None.*\)"),
-        Rule(r"(?:Dynamic)?Character\s*\(\s*\)"),
-        Rule(r"(?:Dynamic)?Character\s*\(\s*[\"']\s*[\"']\s*(?:,.*)?\)"),
-        Rule(r"(?:Dynamic)?Character\s*\((?!\s*[\"']{2}|\s*name\s?=|\s*None)(?:\s*[\w_]+\s*=\s*.+)+\)"),
+        Rule(rf"{common.CHARACTER}\s*(?:name\s*=\s*)?None.*\)"),
+        Rule(rf"{common.CHARACTER}\s*\)"),
+        Rule(rf"{common.CHARACTER}\s*[\"']\s*[\"']\s*(?:,.*)?\)"),
+        Rule(rf"{common.CHARACTER}(?!\s*[\"']{{2}}|\s*name\s?=|\s*None)(?:\s*[\w_]+\s*=\s*.+)+\)"),
         # Filters empty translation function, '_()' and '_("")'
         # Ref: https://www.renpy.org/doc/html/translation.html#menu-and-string-translations
-        Rule(r"(?:Dynamic)?Character\s*\(\s*_\(\s*(?:[\"']\s*[\"']\s*)?\)"),
+        Rule(rf"{common.CHARACTER}\s*_\(\s*(?:[\"']\s*[\"']\s*)?\)"),
     ]
     # define narrator_variable = Character(...)
     # default narrator_variable = Character(...)
@@ -114,13 +113,9 @@ class BuiltInSpeakerRules(Enum):
 class QuoteRules(Enum):
     EXPRESSION_CUE_TILDA = QuoteCueRule("~")
     EXPRESSION_CUE_ASTERISK = QuoteCueRule(r"\*")
-    ITALIC = Rule(
-        r"^(?:{\w+(?:=[^}]+)?})*\s*\{i\}((?:(?!\{/?i\}).)+)(?:\{/?i\})?\s*(?:[.?!]?(?:{/\w+})*|(?:{/\w+})*[/?!]?)$"
-    )
-    ONLY_PUNCTUATION = Rule(r"^(?:{\w+(?:=[^}]+)?})*\s*[.?!]+\s*(?:{/\w+})*$")
-    PARENTHESIS = Rule(
-        r'^(?:{\w+(?:=[^}]+)?})*\s*(?:\\|\\[\'"])?\([^()]+(?:\\?\)(?:\\[\'"])?)?\s*(?:[.?!]?(?:{/\w+})*|(?:{/\w+})*[/?!]?)$'
-    )
+    ITALIC = Rule(rf"^{common.OPEN_TEXT_TAG}\{{i\}}((?:(?!\{{/?i\}}).)+)(?:\{{/?i\}})?{common.QUOTE_END}")
+    ONLY_PUNCTUATION = Rule(rf"^{common.OPEN_TEXT_TAG}[.?!]+\s*(?:{{/\w+}})*$")
+    PARENTHESIS = Rule(rf'^{common.OPEN_TEXT_TAG}(?:\\|\\[\'"])?\([^()]+(?:\\?\)(?:\\[\'"])?)?{common.QUOTE_END}')
     TEXT_TAG = QuoteTextTagRule
     GUILLEMET_DOUBLE = QuoteSurroundRule("«", "»")
     GUILLEMET_SINGLE = QuoteSurroundRule("‹", "›")

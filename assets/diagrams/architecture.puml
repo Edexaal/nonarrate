@@ -1,0 +1,12 @@
+@startuml
+hide empty members
+package "Application" {
+  [Argument Processing]
+  [Rule Management]
+  [Text Validation]
+  [File Filtering]
+  [File Processing]
+  [State Management]
+  [Error Handling]
+}
+@enduml

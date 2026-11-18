@@ -1,0 +1,44 @@
+@startuml
+hide empty members
+title "File Processing"
+'File Descriptors
+class Reader {
+  +readLines(fileURL: Union[str,Path]): FileInfo
+  +walkFiles(rootDir:str, fileFilter: Union[FileFilter,RenpyFilter]): List<str>
+}
+class Writer {
+  +writeLines(fileInfo:FileInfo)
+  +dumpStats()
+}
+class Deleter {
+	+delete(fileURL: str)
+}
+class Backup {
+  {static}-copyFiles(filePaths:List<str>, fileExt: str)
+  {static}+backupFiles(filePaths:List<str>)
+  {static}+restoreFiles(filePaths:List<str>)
+}
+'ThreadExecutors
+package "Thread Executors" {
+  class  FileExecutor <<Singleton>>{
+    {static}-fixFunc(errors: List<RenpyError>)
+    {static}+fileLines(reader:Reader,arg:Namespace): List<FileInfo>
+    {static}+writeFiles(writer:Writer,fileInfos:List<FileInfo>)
+    {static}+fix_errors(error_txt:Path,reader:Reader)
+  }
+}
+
+FileExecutor ..> Reader : creates/uses
+FileExecutor ..> Writer : creates/uses
+FileExecutor ..> Deleter : creates
+FileExecutor ..> ErrorFixer : creates/uses
+FileExecutor "1" .left.> "many" FileInfo : uses
+FileExecutor ..> ErrorParser : uses
+FileExecutor "1" ..> "many" RenpyError : uses
+FileExecutor ..> Backup: uses
+Reader ..> RenpyFilter: uses
+Reader ..> FileFilter: uses
+Reader .left.> FileInfo : creates
+Writer ..> FileInfo : uses
+Writer .up.> Stat : uses
+@enduml

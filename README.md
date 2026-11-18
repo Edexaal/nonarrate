@@ -56,7 +56,9 @@ See [COMMANDS.md](./COMMANDS.md) for a full list of commands!
 
 ## Project Structure
 
-![Class diagram of project](./classDiagram.png)
+To see more PlantUML diagrams for the project, check out the [assets/diagrams folder](./assets/diagrams)
+
+![Architecture Overview](./assets/diagrams/overview.svg)
 
 ## License
 

@@ -1,0 +1,42 @@
+@startuml
+hide empty members
+title "Rule Management"
+package "Dialogue" {
+  class CueRule
+  class TextTagRule
+  class ParentheticalRule
+  class CueParenthesisRule
+  class BasicParentheticalRule
+  class SurroundRule
+}
+package "Speaker" {
+  class CharRule
+  class ObjectRule
+  class VarObjectRule
+  class BasicObjectRule
+  class BasicCharRule
+  class VarRule
+}
+package "Multi-Quote" {
+  class QuoteCueRule
+  class QuoteSurroundRule
+  class QuoteTextTagRule
+}
+'Rules Relations
+Rule <|-- CharRule
+Rule <|-- ObjectRule
+Rule <|-- VarObjectRule
+Rule <|-- VarRule
+Rule <|-- CueRule
+Rule <|-- TextTagRule
+Rule <|-- QuoteCueRule
+Rule <|-- QuoteTextTagRule
+Rule <|-- QuoteSurroundRule
+Rule <|-- BuiltinRule
+Rule <|-- ParentheticalRule
+Rule <|-- CueParenthesisRule
+Rule <|-- SurroundRule
+CharRule <|-- BasicCharRule
+ObjectRule <|-- BasicObjectRule
+ParentheticalRule <|-- BasicParentheticalRule
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+hide empty members
+title "State Management: \nFile"
+dataclass FileInfo {
+  +url:str
+  +lines: List<str>
+}
+class Stat {
+  +totalLines: int
+  +totalCleanedLines: int
+  +fileURLs: List<str>
+  {static}+resetStats()
+}
+class RenpyError
+@enduml

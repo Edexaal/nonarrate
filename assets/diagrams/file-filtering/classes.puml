@@ -1,0 +1,46 @@
+@startuml
+hide empty members
+title "File Filtering"
+'File Filters
+abstract class FileFilter {
+  {static}+FILEEXT: str
+  #fileFilterSet: Set<str>
+  {abstract}+isValidFile(fileName: str): bool
+}
+abstract class FolderFilter {
+  #folderFilterSet: Set<str>
+  {abstract}+isInvalidFolder(dirPath: str, subDirs: List<str>):bool
+}
+class BackupFilter {
+  {static}+FILEEXT: str
+  +isValidFile(fileName: str): bool
+}
+
+abstract class FSFilter
+abstract class RenpyFilter {
+  {static}+FILEEXT: str
+  #globFilterSet: Set<str>
+  {abstract}#hasPassedFileGlob(fileName:str): bool
+  {abstract}#hasPassedFileLiteral(fileName:str): bool
+  +isValidFile(fileName:str): bool
+}
+class InvalidRenpyFilter {
+  #hasPassedFileGlob(fileName:str): bool
+  #hasPassedFileLiteral(fileName:str): bool
+  +isInvalidFolder(dirPath: str, subDirs: List<str>):bool
+}
+class ValidRenpyFilter {
+   #completedFirstDepth: bool
+   #hasPassedFileGlob(fileName:str): bool
+   #hasPassedFileLiteral(fileName:str): bool
+   +isInvalidFolder(dirPath: str):bool
+}
+
+'File Filters Relations
+FileFilter <|-- FSFilter
+FileFilter <|-- BackupFilter
+FolderFilter <|-- FSFilter
+FSFilter <|-- RenpyFilter
+RenpyFilter <|-- InvalidRenpyFilter
+RenpyFilter <|-- ValidRenpyFilter
+@enduml

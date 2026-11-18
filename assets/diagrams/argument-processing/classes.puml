@@ -1,0 +1,32 @@
+@startuml
+hide empty members
+title "Argument Processing"
+package "Argument Actions" {
+ abstract class UniqueConst {
+  -init_set(namespace: Namespace)
+  -apply_namespace(namespace: Namespace)
+  {abstract}#modify_set(option_string: str | None)
+ }
+ class RemoveUniqueConst {
+   #modify_set(option_string: str | None)
+ }
+ class AppendUnique
+ class AppendUniqueLower
+
+ UniqueConst <|-- RemoveUniqueConst
+ AppendUniqueLower <|-- AppendUnique
+}
+class CLIParser {
+  -parser: ArgumentParser
+  -configureOpts()
+  +getArgs(commands:str)
+}
+class ArgChecker {
+  {static}-validateFolderOrFileArg(folderOrFileArg: Path)
+  {static}+checkArgs(args: Namespace)
+}
+class ArgAssembler {
+  {static}+assemble(args:Namespace)
+}
+CLIParser .left.> "Argument Actions" : uses
+@enduml

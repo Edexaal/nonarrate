@@ -1,0 +1,22 @@
+@startuml
+hide empty members
+title "Text Processing"
+class  NarratorHandler {
+  {static}-closingPat: Regex
+  {static}+PAUSE_STATEMENTS:tuple<str>
+  {static}-isClosing(line:str):bool
+  {static}-correctIndent(fileInfos:List<FileInfo>): List<FileInfo>
+  {static}-pauseFilter(fileInfos:List<FileInfo>): List<FileInfo>
+  {static}+remove(fileInfos:List<FileInfo>,args:Namespace): List<Dictionary<str,List<str>>>
+  {static}+getIdentNum(line:str):int
+}
+'Handler Relations
+NarratorHandler --> PrevIndentState : uses
+NarratorHandler --> PrevMultiState : uses
+NarratorHandler --> AltState : uses
+NarratorHandler --> LineState : uses
+NarratorHandler --> PauseState : uses
+NarratorHandler ..> Stat : uses
+NarratorHandler ..> FileInfo : uses
+NarratorHandler ..> IValidatorChain : uses
+@enduml

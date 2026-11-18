@@ -1,0 +1,33 @@
+@startuml
+hide empty members
+title "Validation"
+'Validators
+abstract class IValidatorChain {
+	#nextValidator: IValidatorChain
+	{abstract}+isValid(line:str): bool
+	+setNextValidator(chain: IValidatorChain)
+}
+abstract class IValidatorChainSolo {
+	#validatePat: Regex
+  +isValid(line:str): bool
+}
+class ObjectStrategy {
+  {static}-objNamePat: Regex
+	{static}#speakerObjects: Set<str>
+  {static}#charItemPats: List<Regex>
+  {static}#validatePat: Regex
+  {static}-initCharItems(charItems: List<Rule>)
+  {static}+reset()
+  +defineSpeakers(fileInfos: List<FileInfo>)
+  +isValid(line:str): bool
+}
+class NullStrategy
+
+'Validator Relations
+IValidatorChain --> IValidatorChain : next
+IValidatorChain <|-- ObjectStrategy
+IValidatorChain <|-- IValidatorChainSolo
+IValidatorChainSolo <|-- NullStrategy
+IValidatorChainSolo .right.> Rule : uses
+ObjectStrategy .left.> Rule: uses
+@enduml

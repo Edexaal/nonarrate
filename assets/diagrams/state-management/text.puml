@@ -1,0 +1,80 @@
+@startuml
+hide empty members
+title "State Management: \nText"
+'Handler State
+class AtlState {
+  -altPat: Regex
+  +isAtl: bool
+  +indentNum: int
+  {static}+isBlock(stripLine:str): bool
+}
+class LineState {
+  {static}-SINGLE_QUOTE:str
+  {static}-DOUBLE_QUOTE: str
+  {static}-SINGLE_TRIPLE_QUOTE: str
+  {static}-DOUBLE_TRIPLE_QUOTE: str
+  {static}-HASH: str
+  #stripLine: str
+  #isComment: bool
+  #isTripleQuote: bool
+  #isTripleQuoteEnd: bool
+  #hasTripleQuote: bool
+  #isMenu: bool
+  {static}-isAComment(stripLine:str): bool
+  {static}-startswitchTripleQuote(stripLine:str): bool
+  {static}-hasTripleQuote(stripLine:str): bool
+  {static}-endswithTripleQuote(stripLine:str): bool
+  {static}-isChoiceMenu(stripLine:str): bool
+  +hasLooseDoubleQuote(): bool
+  +hasMoreTripleQuote(): bool
+  +setup(line:str)
+}
+class MultiLineState {
+  #lines: List<str>
+  +multiType: MultiLineType
+  +isChoiceMenu: bool
+  +clear()
+  +appendLine(line:str)
+  +isEmpty(): bool
+  +reset()
+  +getLine(): List<str>
+}
+abstract class PrevState {
+  +line: str
+  {abstract}#resetState()
+  +reset()
+  
+}
+class PrevMultiState {
+  +multiLine: MultiLineState
+  +isNarr: bool
+  #resetState()
+}
+class PrevIndentState {
+  #indentNum: int
+  #hasReset: bool
+  #resetState()
+}
+class PauseState {
+  -isPause: bool
+  -isPrevPause: bool
+  +setPause(value:bool)
+  +isDuplicate(): bool
+  +snapshotPauseState()
+}
+
+'Enums
+enum MultiLineType {
+  NONE
+  SINGLE_QUOTE
+  TRIPLE_QUOTE 
+  VALID_TRIPLE_QUOTE
+  VALID_SINGLE_QUOTE
+}
+
+'State Relations
+PrevState <|-- PrevIndentState
+PrevState <|-- PrevMultiState
+PrevMultiState *-- MultiLineState: has a
+MultiLineState::multiType *-left- MultiLineType: has a
+@enduml

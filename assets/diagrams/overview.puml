@@ -1,12 +1,13 @@
 @startuml
-hide empty members
+title "Architecture Overview"
 package "Application" {
   [Argument Processing]
   [Rule Management]
-  [Text Validation]
+  [Validation]
   [File Filtering]
   [File Processing]
   [State Management]
+  [Text Processing]
   [Error Handling]
 }
 @enduml

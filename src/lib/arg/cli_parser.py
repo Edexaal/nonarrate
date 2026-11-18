@@ -185,6 +185,7 @@ class CLIParser:
                 "phonetexting",
                 "wordcounter",
                 "custom_settings",
+                "saves",
             },
             metavar="IGNORE_FILES",
             help="Ignore specified [files] when looking for .rpy files. Case-insensitive",

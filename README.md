@@ -56,7 +56,7 @@ See [COMMANDS.md](./COMMANDS.md) for a full list of commands!
 
 ## Project Structure
 
-To see more PlantUML diagrams for the project, check out the [assets/diagrams folder](./assets/diagrams)
+See more PlantUML diagrams for the project in the [assets/diagrams folder](/assets/diagrams/README.md)!
 
 ![Architecture Overview](./assets/diagrams/overview.svg)
 

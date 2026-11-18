@@ -3,8 +3,8 @@ hide empty members
 title "File Filtering"
 'File Filters
 abstract class FileFilter {
-  {static}+FILEEXT: str
   #fileFilterSet: Set<str>
+  {static}+FILEEXT: str
   {abstract}+isValidFile(fileName: str): bool
 }
 abstract class FolderFilter {
@@ -18,8 +18,8 @@ class BackupFilter {
 
 abstract class FSFilter
 abstract class RenpyFilter {
-  {static}+FILEEXT: str
   #globFilterSet: Set<str>
+  {static}+FILEEXT: str
   {abstract}#hasPassedFileGlob(fileName:str): bool
   {abstract}#hasPassedFileLiteral(fileName:str): bool
   +isValidFile(fileName:str): bool
@@ -44,3 +44,4 @@ FSFilter <|-- RenpyFilter
 RenpyFilter <|-- InvalidRenpyFilter
 RenpyFilter <|-- ValidRenpyFilter
 @enduml
+

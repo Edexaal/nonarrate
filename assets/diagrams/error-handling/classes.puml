@@ -8,11 +8,11 @@ class ErrorParser {
   {static}-destPat: Regex
   {static}-typePat: Regex
   {static}-lineNumPat: Regex
-  {static}+getErrors(errors_txt:Path, reader:Reader): Dictionary<str,List<RenpyError>>
   {static}-formatErrorType(): str
   {static}-addError(errors: Dictionary<str,List<RenpyError>>,error: RenpyError)
   {static}-parseError(projectDir:str,line:str): RenpyError
   {static}-regexMatch(pattern:Regex,line:str, transformFunc): str
+  {static}+getErrors(errors_txt:Path, reader:Reader): Dictionary<str,List<RenpyError>>
  } 
 dataclass RenpyError {
   +projectDir:Union[str,None]

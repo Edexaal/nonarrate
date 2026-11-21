@@ -11,7 +11,7 @@ from importlib.metadata import version
 from typing import Any
 
 from lib.arg.actions import *
-from lib.custom_types import FilterTag
+from lib.custom_types import FilterTag, GeneralTag, EnhanceTag, SearchTag
 
 
 class CLIParser:
@@ -36,9 +36,12 @@ class CLIParser:
         )
 
     def __init_parser_groups(self):
-        self.__search_group = self.__parser.add_argument_group("File Search", "Limits the search for .rpy files.")
+        self.__search_group = self.__parser.add_argument_group("File Search", "Limits searching for .rpy files.")
+        self.__enhance_filter_group = self.__parser.add_argument_group(
+            "Filter Enhancements", "Enhances existing filters."
+        )
         self.__disable_filter_group = self.__parser.add_argument_group(
-            "Disable Filters", "Disable filter types nonarrate enables by default."
+            "Disable Filters", "Disables filter types nonarrate enables by default."
         )
         self.__custom_filter_group = self.__parser.add_argument_group(
             "Custom Filters", "User specified narration to remove."
@@ -53,52 +56,46 @@ class CLIParser:
         )
         self.__add_arg(
             "-p",
-            "--pauses",
+            GeneralTag.PAUSES.value,
             action="store_true",
             help="Show removed narrated scenes by pausing.",
         )
         self.__add_arg(
             "-v",
-            "--version",
+            GeneralTag.VERSION.value,
             action="version",
             version="%(prog)s " + self.__version_num,
         )
         self.__add_arg(
             "-b",
-            "--backup",
+            GeneralTag.BACKUP.value,
             action="store_true",
             help="Create backups of .rpy files alongside original files",
         )
         self.__add_arg(
             "-r",
-            "--restore",
+            GeneralTag.RESTORE.value,
             action="store_true",
             help="Restore .rpy files to their original state from backups, .rpybu files",
         )
-        self.__add_arg("-s", "--stats", action="store_true", help="Write stats to a file, 'stats.json'")
-        self.__add_arg(
-            "-e",
-            "--regex",
-            action="store_true",
-            help="Enable regular expressions when specifying filter values.",
-        )
+        self.__add_arg("-s", GeneralTag.STATS.value, action="store_true", help="Write stats to a file, 'stats.json'")
         self.__add_arg(
             "-j",
-            "--jobs",
+            GeneralTag.JOBS.value,
             metavar="NUMBER_OF_WORKERS",
             type=int,
             default=min(32, (os.cpu_count() or 1) * 4),
             help="Maximum number of workers to use for I/O tasks.",
         )
         self.__add_search_arg(
-            "--valid-dirs",
+            SearchTag.VALID_DIRS.value,
             "--vd",
             action=AppendUnique,
             metavar="FOCUS_FOLDERS",
             help="Tell nonarrate the specified folder(s) are valid to look through.",
         )
         self.__add_search_arg(
-            "--invalid-dirs",
+            SearchTag.INVALID_DIRS.value,
             "--ind",
             action=AppendUnique,
             default={
@@ -148,14 +145,14 @@ class CLIParser:
             help="Ignore specified subfolders when looking for .rpy files",
         )
         self.__add_search_arg(
-            "--valid-files",
+            SearchTag.VALID_FILES.value,
             "--vf",
             action=AppendUniqueLower,
             metavar="FOCUS_FILES",
             help="Tell nonarrate to use these specified .rpy files.",
         )
         self.__add_search_arg(
-            "--invalid-files",
+            SearchTag.INVALID_FILES.value,
             "--inf",
             action=AppendUniqueLower,
             default={
@@ -191,14 +188,14 @@ class CLIParser:
             help="Ignore specified [files] when looking for .rpy files. Case-insensitive",
         )
         self.__add_search_arg(
-            "--valid-globs",
+            SearchTag.VALID_GLOBS.value,
             "--vg",
             action=AppendUnique,
             metavar="VALID_FILE_GLOBS",
             help="Use specified [files] using glob syntax.",
         )
         self.__add_search_arg(
-            "--invalid-globs",
+            SearchTag.INVALID_GLOBS.value,
             "--ing",
             action=AppendUnique,
             default={
@@ -227,6 +224,18 @@ class CLIParser:
             },
             metavar="IGNORE_FILE_GLOBS",
             help="Ignore specified [files] using glob syntax.",
+        )
+        self.__add_enhance_arg(
+            "-e",
+            EnhanceTag.REGEX.value,
+            action="store_true",
+            help="Enable regular expressions when specifying filter values.",
+        )
+        self.__add_enhance_arg(
+            EnhanceTag.IMAGE_ATTRIBUTES.value,
+            metavar="IMAGE_ATTRIBUTE_NAMES",
+            nargs="*",
+            help="Allow nonarrate to remove narrated dialogues containing image attributes.",
         )
         no_filters: dict[str, str] = {
             FilterTag.KEEP_NARRATION.value: "Keep dialogues that don't have a speaker",
@@ -320,6 +329,9 @@ class CLIParser:
 
     def __add_search_arg(self, *args, **kwargs: Any):
         self.__search_group.add_argument(*args, **kwargs)
+
+    def __add_enhance_arg(self, *args, **kwargs: Any):
+        self.__enhance_filter_group.add_argument(*args, **kwargs)
 
     def parse_args(self, *args):
         """Parses a set of command arguments.

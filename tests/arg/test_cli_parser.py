@@ -6,14 +6,18 @@ from lib.custom_types import FilterTag
 
 
 class TestCLIParser(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.game_folder = "game/"
+
     def setUp(self):
         self.parser = CLIParser()
 
     def test_positional(self):
-        positional = fixture.get_args(self.parser, "game/")
+        positional = fixture.get_args(self.parser, self.game_folder)
         self.assertEqual(
             positional.folder_or_file,
-            pathlib.Path("game/"),
+            pathlib.Path(self.game_folder),
             msg="Failed accepting a folder",
         )
         positional = fixture.get_args(self.parser, "errors.txt")
@@ -25,7 +29,7 @@ class TestCLIParser(unittest.TestCase):
 
     def test_narg_args(self):
         """Test options with variable arguments."""
-        args = ["game/", "", "t", "scan", "hem phk"]
+        args = [self.game_folder, "", "t", "scan", "hem phk"]
         options = [
             FilterTag.TEXT_TAGS.value,
             FilterTag.QUOTED_CHARS.value,
@@ -38,7 +42,7 @@ class TestCLIParser(unittest.TestCase):
                 self.assertEqual(getattr(arg_namespace, option[2:].replace("-", "_")), ["t", "scan", "hem phk"])
 
     def test_no_args(self):
-        args = ["game/", ""]
+        args = [self.game_folder, ""]
         options = [
             FilterTag.KEEP_PARENTHESIS.value,
             FilterTag.KEEP_COMMON_QUOTED_CHARS.value,

@@ -91,16 +91,10 @@ Statistical data featuring code removal will be exported to a file called, `stat
 
 **Stats include:**
 
-- total_lines: a sum of all total lines found in every file.
-- total_cleaned_lines: a sum of all total lines found in every file after removal of narration.
-- file_urls: list of files that were modified
-
-***-e, --regex***
-
-Enable regular expressions when specifying filter values.
-
-For filters that allow for user input, all values are treated as a regular expression.
-See [REGEX Example](#regex-examples) for more info
+- `removed_lines_total`: Total number of lines removed.
+- `removed_lines_percent`: Total % of lines removed.
+- `remaining_lines_percent`: Total % of lines remaining in all files.
+- `file_urls`: list of files that were modified.
 
 ***-j, --jobs*** `<number-of-threads>`
 
@@ -192,7 +186,7 @@ for list of available globs. **Globs**: `*`, `?`, `[...]`
 ***NOTE:** `--valid-*` options take precedence over `--invalid-*` ones.
 ***NOTE: Do *not* include `.rpy`. nonarrate will automatically assume this file type!**
 
-***--invalid-globs, --ing*** `<file-glob...>`
+***--invalid-globs, --ing*** `<file globs...>`
 
 ```bash
 # ignore files matching: [0-9][0-9][a-zA-Z]*
@@ -206,11 +200,65 @@ nonarrate will ignore files that match any of the specified file globs. Can be u
 with `--invalid-files`.
 
 See [Python's fnmatch library](https://docs.python.org/3/library/fnmatch.html#module-fnmatch)
-for list of available globs. **Globs**: `*`, `?`, `[...]`
+for list of available globs. **Globs**: `*`, `?`, `[...]`, `[!..]`
 
 ***NOTE: Nonarrate uses a set of globs to ignore files by default. See [IGNORED_FILES.md](./IGNORED_FILES.md) for list.
 **
 ***NOTE: Do *not* include `.rpy`. nonarrate will automatically assume this file type!**
+
+___
+
+### Filter Enhancements
+
+***-e, --regex***
+
+Enable regular expressions when specifying filter values.
+
+For filters that allow for user input, all values are treated as a regular expression.
+See [REGEX Example](#regex-examples) for more info
+
+***--img-attrs `<attribute names...>`***
+
+Specify which dialogue with image attribute should be recognized and checked for narration.
+
+```renpy
+# Supported formats
+mc smile "This is a dialogue"
+mc -smile "This is a dialogue"
+mc @ concerned "This is a dialogue"
+mc @ -concerned "This is a dialogue"
+
+# Unsupported formats
+mc happy @ concerned "This is a dialogue"
+mc @ left sad "This is a dialogue"
+mc @ right -concerned "This is a dialogue"
+```
+
+By default, dialogues with image attributes are *ignored*. Use this option to
+specify which dialogues with image attributes nonarrate can check for narration.
+
+**Example:**
+
+The command line below told nonarrate to recognize dialogue with image attributes, `excited` and `sad`, as dialogues.
+Dialogues containing these image attributes will be checked for narration.
+
+As a result, dialogue with image attribute, `sad`, is classified as an inner thought
+and thus removed by nonarrate.
+
+```renpy
+# game/script.rpy
+
+martha sad "(Oh, why can't tomorrow come any sooner.)"
+martha excited "Oh! There you are!"
+```
+
+```bash
+nonarrate game/ --img-attrs excited sad
+```
+
+**References**:
+
+- [Renpy Doc: Say with Image Attributes](https://www.renpy.org/doc/html/dialogue.html#say-with-image-attributes)
 
 ___
 
@@ -225,6 +273,7 @@ These filters deal with the **speaker** portion of a dialogue box.
 
 > [!NOTE]
 > `Character()` assignments through [`character` Store](https://www.renpy.org/doc/html/dialogue.html#the-character-store) is now supported.
+>
 > **Example:** `define character.robby = Character(...)`
 
 | Commands                   | Script Example                                                                                                                          | Description                                                                                           |
@@ -354,6 +403,11 @@ See [REGEX Examples](#regex-examples) for examples.
 - - -
 
 #### Dialogue
+
+> [!NOTE]
+> Support for dialogue with **image attributes** can be enabled using `--img-attrs`.
+>
+> **Example:** `nat shocked "(I should have said something.)"`
 
 These filters deal with the **dialogue** portion of dialogue box.
 

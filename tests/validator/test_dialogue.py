@@ -1,7 +1,7 @@
 import unittest
 from lib.validator import IValidatorChain
-from lib.validator.rule import DialogueRules
-from lib.validator.rule.rule_patterns import BuiltInSpeakerRules
+from lib.validator.rule import DialogueRules, BuiltInSpeakerRules, Rule
+from lib.validator.rule.dialogue_rule import DialogueRule
 from tests.fixture import get_dialogue_list, validate_solo
 
 
@@ -333,7 +333,7 @@ class TestDialogue(unittest.TestCase):
             296: 'mc "{tag}(Thoughts) This apple is pretty...{/tag}"',
             297: 'mc "{tag}(Thoughts) This apple is pretty...{/tag}" (window_background="gui/transparent_textbox.png")',
             298: 'mc "(Grumbles) This apple is pretty..."',
-            # >2 cues
+            # greater than 2 cues
             299: "mc '***sSsnNNnNoOOOoOrRRrEee!!!***'",
             # Prefix with cues
             300: "mc '***sSsnNNnNoOOOoOrRRrEee!!!'",
@@ -353,7 +353,40 @@ class TestDialogue(unittest.TestCase):
             312: 'mc "~sigh~ (I am very nervous...)"',
             313: 'mc "{bold}*sigh* (I am very nervous...){/bold}"',
             314: 'mc "{bold}~sigh~ (I am very nervous...){/bold}"',
-            315: 'mc smile "(He found a leprechaun in his walnut shell.)"',
+            # with image attributes
+            # REF: https://www.renpy.org/doc/html/dialogue.html#say-with-image-attributes
+            315: 'mc smile "(Really looking forward getting to know you.)"',
+            316: 'mc -smile "(Really looking forward getting to know you.)"',
+            317: 'mc @ smile "(Really looking forward getting to know you.)"',
+            318: 'mc @ -smile "(Really looking forward getting to know you.)"',
+            319: 'mc smile "{i}Really looking forward getting to know you.{/i}"',
+            320: 'mc -smile "{i}Really looking forward getting to know you.{/i}"',
+            321: 'mc @ smile "{i}Really looking forward getting to know you.{/i}"',
+            322: 'mc @ -smile "{i}Really looking forward getting to know you.{/i}"',
+            323: 'mc smile "!!!!!!!"',
+            324: 'mc -smile "!!!!!!!"',
+            325: 'mc @ smile "!!!!!!!"',
+            326: 'mc @ -smile "!!!!!!!"',
+            327: 'mc smile "(Whispers) Really looking forward getting to know you."',
+            328: 'mc -smile "(Whispers) Really looking forward getting to know you."',
+            329: 'mc @ smile "(Whispers) Really looking forward getting to know you."',
+            330: 'mc @ -smile "(Whispers) Really looking forward getting to know you."',
+            331: 'mc smile "(Thoughts) Really looking forward getting to know you."',
+            332: 'mc -smile "(Thoughts) Really looking forward getting to know you."',
+            333: 'mc @ smile "(Thoughts) Really looking forward getting to know you."',
+            334: 'mc @ -smile "(Thoughts) Really looking forward getting to know you."',
+            335: 'mc smile "~jumps excitedly~"',
+            336: 'mc -smile "~jumps excitedly~"',
+            337: 'mc @ smile "~jumps excitedly~"',
+            338: 'mc @ -smile "~jumps excitedly~"',
+            339: 'mc smile "«Really looking forward getting to know you.»"',
+            340: 'mc -smile "«Really looking forward getting to know you.»"',
+            341: 'mc @ smile "«Really looking forward getting to know you.»"',
+            342: 'mc @ -smile "«Really looking forward getting to know you.»"',
+            343: 'mc smile "*licks lips* (Really looking forward getting to know you.)"',
+            344: 'mc -smile "*licks lips* (Really looking forward getting to know you.)"',
+            345: 'mc @ smile "*licks lips* (Really looking forward getting to know you.)"',
+            346: 'mc @ -smile "*licks lips* (Really looking forward getting to know you.)"',
         }
 
     def validate_lines(self):
@@ -369,6 +402,11 @@ class TestDialogue(unittest.TestCase):
         self.validator = strategy
         self.valid_indexes = valid_indexes
         self.validate_lines()
+
+    def start_img_attr(self, rule: DialogueRule, valid_indexes: list[int], img_attr_name: str = "smile"):
+        new_rule = rule.with_img_attr(img_attr_name)
+        obj = validate_solo(new_rule)
+        self.start(obj, valid_indexes)
 
     def test_basic(self):
         obj = validate_solo(DialogueRules.BASIC.value)
@@ -447,8 +485,32 @@ class TestDialogue(unittest.TestCase):
 
     def test_asterisk_parenthesis(self):
         obj = validate_solo(DialogueRules.CUE_ASTERISK_PARENTHESIS.value)
-        self.start(obj, [311,313])
+        self.start(obj, [311, 313])
 
     def test_tilda_parenthesis(self):
         obj = validate_solo(DialogueRules.CUE_TILDA_PARENTHESIS.value)
-        self.start(obj, [312,314])
+        self.start(obj, [312, 314])
+
+    def test_parenthesis_img_attr(self):
+        self.start_img_attr(DialogueRules.PARENTHESIS.value, [315, 316, 317, 318])
+
+    def test_italic_img_attr(self):
+        self.start_img_attr(DialogueRules.ITALIC.value, [319, 320, 321, 322])
+
+    def test_only_punctuations_img_attr(self):
+        self.start_img_attr(DialogueRules.ONLY_PUNCTUATION.value, [323, 324, 325, 326])
+
+    def test_parenthetical_img_attr(self):
+        self.start_img_attr(DialogueRules.PARENTHETICAL.value("Whispers"), [327, 328, 329, 330])
+
+    def test_basic_parenthetical_img_attr(self):
+        self.start_img_attr(DialogueRules.PARENTHETICAL_BASIC.value, [331, 332, 333, 334])
+
+    def test_cues_img_attr(self):
+        self.start_img_attr(DialogueRules.EXPRESSION_CUE_TILDA.value, [335, 336, 337, 338])
+
+    def test_guillemet_img_attr(self):
+        self.start_img_attr(DialogueRules.GUILLEMET_DOUBLE.value, [339, 340, 341, 342])
+
+    def test_cues_asterisk_img_attr(self):
+        self.start_img_attr(DialogueRules.CUE_ASTERISK_PARENTHESIS.value, [343, 344, 345, 346])

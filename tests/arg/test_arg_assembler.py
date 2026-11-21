@@ -3,10 +3,28 @@ import unittest
 from lib.arg.arg_assembler import ArgAssembler
 from lib.arg.cli_parser import CLIParser
 from tests import fixture
-from lib.custom_types import FilterTag
+from lib.custom_types import FilterTag, EnhanceTag
 
 
 class TestArgAssembler(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.game_folder = "game/"
+        cls.allBoolOptions = [
+            FilterTag.KEEP_COMMON_QUOTED_CHARS.value,
+            FilterTag.KEEP_ITALIC.value,
+            FilterTag.KEEP_PARENTHESIS.value,
+            FilterTag.KEEP_COMMON_OBJ_CHARS.value,
+            FilterTag.KEEP_NARRATION.value,
+            FilterTag.KEEP_EXPRESSION_CUES.value,
+            FilterTag.KEEP_PUNCTUATIONS.value,
+            FilterTag.KEEP_EMPTY_QUOTED_CHARS.value,
+            FilterTag.KEEP_EMPTY_OBJ_CHARS.value,
+            FilterTag.KEEP_GUILLEMETS.value,
+            FilterTag.KEEP_NVL.value,
+            FilterTag.KEEP_COMMON_PARENTHETICALS.value,
+        ]
+
     def setUp(self) -> None:
         self._parser = CLIParser()
 
@@ -35,7 +53,7 @@ class TestArgAssembler(unittest.TestCase):
 
     def test_no_args(self):
         args = [
-            "game/",
+            self.game_folder,
             FilterTag.KEEP_COMMON_QUOTED_CHARS.value,
             FilterTag.KEEP_ITALIC.value,
             FilterTag.KEEP_NARRATION.value,
@@ -44,19 +62,7 @@ class TestArgAssembler(unittest.TestCase):
 
     def test_nargs(self):
         args = [
-            "game/",
-            FilterTag.KEEP_COMMON_QUOTED_CHARS.value,
-            FilterTag.KEEP_ITALIC.value,
-            FilterTag.KEEP_PARENTHESIS.value,
-            FilterTag.KEEP_COMMON_OBJ_CHARS.value,
-            FilterTag.KEEP_NARRATION.value,
-            FilterTag.KEEP_EXPRESSION_CUES.value,
-            FilterTag.KEEP_PUNCTUATIONS.value,
-            FilterTag.KEEP_EMPTY_QUOTED_CHARS.value,
-            FilterTag.KEEP_EMPTY_OBJ_CHARS.value,
-            FilterTag.KEEP_GUILLEMETS.value,
-            FilterTag.KEEP_NVL.value,
-            FilterTag.KEEP_COMMON_PARENTHETICALS.value,
+            self.game_folder,
             FilterTag.QUOTED_CHARS.value,
             "ten",
             "narrator",
@@ -77,24 +83,13 @@ class TestArgAssembler(unittest.TestCase):
             "Whisper",
             "Grumbles",
         ]
+        args.extend(self.allBoolOptions)
         self.start(args, 14)
 
     def test_regex_chain(self):
         args = [
-            "game/",
-            FilterTag.KEEP_COMMON_QUOTED_CHARS.value,
-            FilterTag.KEEP_ITALIC.value,
-            FilterTag.KEEP_PARENTHESIS.value,
-            FilterTag.KEEP_COMMON_OBJ_CHARS.value,
-            FilterTag.KEEP_NARRATION.value,
-            FilterTag.KEEP_EMPTY_OBJ_CHARS.value,
-            FilterTag.KEEP_EXPRESSION_CUES.value,
-            FilterTag.KEEP_PUNCTUATIONS.value,
-            FilterTag.KEEP_GUILLEMETS.value,
-            FilterTag.KEEP_NVL.value,
-            FilterTag.KEEP_COMMON_PARENTHETICALS.value,
-            FilterTag.KEEP_EMPTY_QUOTED_CHARS.value,
-            "--regex",
+            self.game_folder,
+            EnhanceTag.REGEX.value,
             FilterTag.QUOTED_CHARS.value,
             "ten{3}",
             "seco.+",
@@ -102,23 +97,12 @@ class TestArgAssembler(unittest.TestCase):
             "fzs?",
             "py[Ww]",
         ]
+        args.extend(self.allBoolOptions)
         self.start_escape(args, 3)
 
     def test_escaping_chain(self):
         args = [
-            "game/",
-            FilterTag.KEEP_COMMON_QUOTED_CHARS.value,
-            FilterTag.KEEP_ITALIC.value,
-            FilterTag.KEEP_PARENTHESIS.value,
-            FilterTag.KEEP_COMMON_OBJ_CHARS.value,
-            FilterTag.KEEP_NARRATION.value,
-            FilterTag.KEEP_EMPTY_OBJ_CHARS.value,
-            FilterTag.KEEP_EXPRESSION_CUES.value,
-            FilterTag.KEEP_PUNCTUATIONS.value,
-            FilterTag.KEEP_EMPTY_QUOTED_CHARS.value,
-            FilterTag.KEEP_GUILLEMETS.value,
-            FilterTag.KEEP_NVL.value,
-            FilterTag.KEEP_COMMON_PARENTHETICALS.value,
+            self.game_folder,
             FilterTag.QUOTED_CHARS.value,
             "ten{3}",
             "seco.+",
@@ -126,12 +110,13 @@ class TestArgAssembler(unittest.TestCase):
             "fzs?",
             "py[Ww]",
         ]
+        args.extend(self.allBoolOptions)
         self.start_escape(args, 5)
 
     def test_forced_args(self):
         """Test arguments with forced multiple strategies."""
         args = [
-            "game/",
+            self.game_folder,
             FilterTag.KEEP_COMMON_QUOTED_CHARS.value,
             FilterTag.KEEP_PARENTHESIS.value,
             FilterTag.KEEP_COMMON_OBJ_CHARS.value,
@@ -146,5 +131,18 @@ class TestArgAssembler(unittest.TestCase):
         self.start(args, 7)
 
     def test_triple_quote_with_nargs(self):
-        args = ["game/", FilterTag.TEXT_TAGS.value, "plw", "blq"]
+        args = [self.game_folder, FilterTag.TEXT_TAGS.value, "plw", "blq"]
         self.start(args, 9, True)
+
+    def test_image_attributes(self):
+        args = [
+            self.game_folder,
+            FilterTag.KEEP_COMMON_QUOTED_CHARS.value,
+            FilterTag.KEEP_ITALIC.value,
+            FilterTag.KEEP_NARRATION.value,
+            EnhanceTag.IMAGE_ATTRIBUTES.value,
+            "smiled",
+            "concerned",
+            "crying",
+        ]
+        self.start(args, 16)

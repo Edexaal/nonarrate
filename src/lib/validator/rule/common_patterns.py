@@ -9,7 +9,6 @@ when creating a new rule pattern.
 SPEAKER = r'^(?:([\'"])(?:(?!\1).)+\1|\w+?)\s?'
 OPEN_TEXT_TAG = r"(?:{\w+(?:=[^}]+)?})*\s*"
 CLOSING_CLAUSES = r"\s*(?:[.?!]?(?:{/\w+})*|(?:{/\w+})*[/?!]?)\s*(?:\2|\2\s*(?:with|id) .+|\2\s*\([^)]+\))?"
-DIALOGUE_START = rf'{SPEAKER}([\'"]){OPEN_TEXT_TAG}'
 
 CHARACTER = r"(?:Dynamic)?Character\s*\("
 

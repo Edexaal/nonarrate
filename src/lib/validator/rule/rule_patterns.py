@@ -1,4 +1,5 @@
 from . import common_patterns as common
+from .dialogue_rule import DialogueRule
 from .cue_parenthesis_rule import CueParenthesisRule
 from .basic_parenthetical_rule import BasicParentheticalRule
 from .parenthetical_rule import ParentheticalRule
@@ -28,19 +29,15 @@ class DialogueRules(Enum):
     # mc "{i}Maybe there's food left over.{/i}"
     # mc "{tag}{i}Maybe there's food left over.{/i}{/tag}"
     # mc "{i}Maybe there's food{i} left over.{/i}"
-    ITALIC = Rule(
-        rf"{common.DIALOGUE_START}\{{i\}}(?:((?:(?!\{{/?i\}}).)+)(?:\{{/?i\}})?|.+?\{{/?i\}}){common.CLOSING_CLAUSES}$"
-    )
+    ITALIC = DialogueRule(rf"\{{i\}}(?:((?:(?!\{{/?i\}}).)+)(?:\{{/?i\}})?|.+?\{{/?i\}}){common.CLOSING_CLAUSES}$")
     # mc "............."
     # mc "{tag}........................{/tag}"
     # mc "!!!"
     # mc "????"
-    ONLY_PUNCTUATION = Rule(rf"{common.DIALOGUE_START}[.?!]+{common.CLOSING_CLAUSES}$")
+    ONLY_PUNCTUATION = DialogueRule(rf"[.?!]+{common.CLOSING_CLAUSES}$")
     # mc "(It's got to be here somewhere.)"
     # mc "{tag}(It's got to be here somewhere.){/tag}"
-    PARENTHESIS = Rule(
-        rf'{common.DIALOGUE_START}(?:\\|\\[\'"])?\([^()]+(?:\\?\)(?:\\[\'"])?)?{common.CLOSING_CLAUSES}$'
-    )
+    PARENTHESIS = DialogueRule(rf'(?:\\|\\[\'"])?\([^()]+(?:\\?\)(?:\\[\'"])?)?{common.CLOSING_CLAUSES}$')
     # mc "(Whispers) At least I'm safe inside my mind."
     PARENTHETICAL = ParentheticalRule
     # mc "(Thoughts) I am thinking right now."

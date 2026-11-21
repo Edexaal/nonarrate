@@ -19,9 +19,9 @@ class Writer:
     def dump_stats(self):
         results = {
             "stats": {
-                "code_removed_by_line": Stat.total_lines - Stat.total_cleaned_lines,
-                "code_removed_by_percentage": (Stat.total_lines - Stat.total_cleaned_lines) / Stat.total_lines * 100,
-                "code_remaining_by_percentage": (Stat.total_cleaned_lines / Stat.total_lines) * 100,
+                "removed_lines_total": Stat.total_lines - Stat.total_cleaned_lines,
+                "removed_lines_percent": (Stat.total_lines - Stat.total_cleaned_lines) / Stat.total_lines * 100,
+                "remaining_lines_percent": (Stat.total_cleaned_lines / Stat.total_lines) * 100,
                 "file_urls": Stat.file_urls,
             }
         }

@@ -23,6 +23,29 @@ class FilterTag(Enum):
     PARENTHETICALS = "--parentheticals"
 
 
+class SearchTag(Enum):
+    INVALID_DIRS = "--invalid-dirs"
+    VALID_DIRS = "--valid-dirs"
+    INVALID_FILES = "--invalid-files"
+    VALID_FILES = "--valid-files"
+    INVALID_GLOBS = "--invalid-globs"
+    VALID_GLOBS = "--valid-globs"
+
+
+class EnhanceTag(Enum):
+    IMAGE_ATTRIBUTES = "--img-attrs"
+    REGEX = "--regex"
+
+
+class GeneralTag(Enum):
+    VERSION = "--version"
+    PAUSES = "--pauses"
+    BACKUP = "--backup"
+    RESTORE = "--restore"
+    STATS = "--stats"
+    JOBS = "--jobs"
+
+
 class MultiLineType(Enum):
     NONE = 0
     SINGLE_QUOTE = auto()

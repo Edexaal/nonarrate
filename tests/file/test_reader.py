@@ -3,6 +3,7 @@ from lib.arg.arg_assembler import ArgAssembler
 from lib.arg.cli_parser import CLIParser
 from lib.file.reader import Reader
 import tests.fixture as fixture
+from lib.custom_types import SearchTag
 
 
 class TestReader(unittest.TestCase):
@@ -22,32 +23,36 @@ class TestReader(unittest.TestCase):
         self.assertEqual(len(files), 3, "all .rpy files should be seen by reader")
 
     def test_invalid_files(self):
-        args = self._prepare_args([self._path, "--invalid-files", "oracle", "ex_reader", "hello"])
+        args = self._prepare_args([self._path, SearchTag.INVALID_FILES.value, "oracle", "ex_reader", "hello"])
         files = self._reader.walk_files(args.folder_or_file, args.file_filter)
         self.assertEqual(len(files), 0, "ex_reader.py, oracle.rpy and hello.rpy should not be seen by reader")
 
     def test_invalid_dirs(self):
-        args = self._prepare_args([self._path, "--invalid-dirs", "child_dir"])
+        args = self._prepare_args([self._path, SearchTag.INVALID_DIRS.value, "child_dir"])
         files = self._reader.walk_files(args.folder_or_file, args.file_filter)
         self.assertEqual(len(files), 1, "hello.rpy should not be seen by reader")
 
     def test_invalid_file_globs(self):
-        args = self._prepare_args([self._path, "--invalid-globs", "[hz]*"])
+        args = self._prepare_args([self._path, SearchTag.INVALID_GLOBS.value, "[hz]*"])
         files = self._reader.walk_files(args.folder_or_file, args.file_filter)
         self.assertEqual(len(files), 2, "Glob should not match any .rpy files starting with h or z!")
 
     def test_valid_files(self):
-        args = self._prepare_args([self._path, "--valid-files", "ex_reader"])
+        args = self._prepare_args([self._path, SearchTag.VALID_FILES.value, "ex_reader"])
         files = self._reader.walk_files(args.folder_or_file, args.file_filter)
         self.assertEqual(len(files), 1, "ex_reader.rpy should be the only valid file")
 
     def test_valid_dirs(self):
-        args = self._prepare_args([self._path, "--valid-dirs", "child_dir", "--valid-globs", "*"])
+        args = self._prepare_args(
+            [self._path, SearchTag.VALID_DIRS.value, "child_dir", SearchTag.VALID_GLOBS.value, "*"]
+        )
         files = self._reader.walk_files(args.folder_or_file, args.file_filter)
         self.assertEqual(len(files), 2, "child_dir is the only valid folder to look for rpy files.")
 
     def test_valid_file_globs(self):
-        args = self._prepare_args([self._path, "--valid-dirs", "child_dir", "--valid-globs", "o*"])
+        args = self._prepare_args(
+            [self._path, SearchTag.VALID_DIRS.value, "child_dir", SearchTag.VALID_GLOBS.value, "o*"]
+        )
         files = self._reader.walk_files(args.folder_or_file, args.file_filter)
         self.assertEqual(len(files), 1, "Glob should match any .rpy files starting with o!")
 
@@ -58,7 +63,6 @@ class TestReader(unittest.TestCase):
         do NOT allow any items UNLESS explicitly stated. This test makes sure validation filter does not allow everything
         by default like invalidation does.
         """
-        args = self._prepare_args([self._path, "--valid-globs", "o*"])
+        args = self._prepare_args([self._path, SearchTag.VALID_GLOBS.value, "o*"])
         files = self._reader.walk_files(args.folder_or_file, args.file_filter)
         self.assertEqual(len(files), 0, "Glob should not match anything!")
-

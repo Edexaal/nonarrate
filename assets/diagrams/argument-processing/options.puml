@@ -21,4 +21,27 @@ enum FilterTag {
   PYTHON_VARS
   PARENTHETICALS
 }
+
+enum SearchTag {
+  INVALID_DIRS 
+  VALID_DIRS 
+  INVALID_FILES
+  VALID_FILES 
+  INVALID_GLOBS
+  VALID_GLOBS 
+}
+
+enum EnhanceTag {
+  IMAGE_ATTRIBUTES
+  REGEX
+}
+
+enum GeneralTag {
+  VERSION
+  PAUSES
+  BACKUP
+  RESTORE
+  STATS
+  JOBS
+}
 @enduml

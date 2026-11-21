@@ -5,17 +5,21 @@ from lib.custom_types import FilterTag
 
 
 class TestRemoveUniqueConst(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.game_folder = "game/"
+
     def setUp(self):
         self.parser = CLIParser()
 
     def test_action(self):
         option = FilterTag.KEEP_NARRATION.value
-        args = fixture.get_args(self.parser, f"game/ {option}")
+        args = fixture.get_args(self.parser, f"{self.game_folder} {option}")
         self.assertNotIn(option, args.narr_types)
 
     def test_multiple(self):
         options = [FilterTag.KEEP_NARRATION.value, FilterTag.KEEP_ITALIC.value]
-        args = fixture.get_args(self.parser, f"game/ {options[0]} {options[1]}")
+        args = fixture.get_args(self.parser, f"{self.game_folder} {options[0]} {options[1]}")
         for i in range(len(options)):
             with self.subTest(name=options[i]):
                 self.assertNotIn(options[i], args.narr_types)

@@ -1,8 +1,7 @@
-from .rule import Rule
-from . import common_patterns as common
+from .dialogue_rule import DialogueRule
 
 
-class ParentheticalRule(Rule):
+class ParentheticalRule(DialogueRule):
     """Filter for words/phrases found within parentheses at the beginning of a dialogue.
 
     Some dialogues are written in the form of screenwriting. This is where at the beginning of a dialogue
@@ -14,6 +13,5 @@ class ParentheticalRule(Rule):
 
     def __init__(self, custom_phrases: str):
         super().__init__(
-            rf"{common.DIALOGUE_START}\\?\(\s*{custom_phrases}\s*\\?\)\s*(?:(?!\\?\2).)+(?:\2|\2\s*(?:with|id) .+|\2\s*\([^)]+\))?$",
-            True,
+            rf"\\?\(\s*{custom_phrases}\s*\\?\)\s*(?:(?!\\?\2).)+(?:\2|\2\s*(?:with|id) .+|\2\s*\([^)]+\))?$",
         )

@@ -4,8 +4,8 @@ from typing import final
 from lib.validator import ObjectStrategy, IValidatorChain, IValidatorChainSolo, NullStrategy
 from lib.file.filter import InvalidRenpyFilter, ValidRenpyFilter
 from lib.custom_types import FilterTag
-from lib.validator.rule import SpeakerRules, DialogueRules, QuoteRules, Rule
-from lib.validator.rule.rule_patterns import BuiltInSpeakerRules
+from lib.validator.rule import SpeakerRules, DialogueRules, QuoteRules, Rule, BuiltInSpeakerRules
+from lib.validator.rule.dialogue_rule import DialogueRule
 
 
 @final
@@ -37,6 +37,7 @@ class ArgAssembler:
         Args:
             args: Namespace class containing parsed arguments.
         """
+        args.img_attrs = "|".join(args.img_attrs) if args.img_attrs else None
         cls.__line_filters(args)
         cls.__quote_filters(args)
         cls.__file_filters(args)
@@ -54,8 +55,8 @@ class ArgAssembler:
         current_validator = args.validator
         if args.narr_types:
             for narr_type in args.narr_types:
-                narr_filters = cls.__get_filters(narr_type)
-                if type(narr_filters) == list:
+                narr_filters = cls.__get_filters(narr_type, args.img_attrs)
+                if type(narr_filters) is list:
                     for validator in narr_filters:
                         current_validator.next_validator = validator
                         current_validator = current_validator.next_validator
@@ -91,10 +92,18 @@ class ArgAssembler:
             cls.__escape(args, args.parentheticals),
             FilterTag.PARENTHETICALS.value,
             DialogueRules.PARENTHETICAL.value,
+            args.img_attrs,
         )
 
     @staticmethod
-    def __get_filters(option_name: str) -> list[IValidatorChain] | IValidatorChain:
+    def __dialogue_filter(rule: DialogueRule, img_attrs: str | None) -> IValidatorChainSolo:
+        new_rule = rule
+        if img_attrs:
+            new_rule = rule.with_img_attr(img_attrs)
+        return IValidatorChainSolo(new_rule)
+
+    @classmethod
+    def __get_filters(cls, option_name: str, img_attrs: str | None) -> list[IValidatorChain] | IValidatorChain:
         match option_name:
             case FilterTag.KEEP_COMMON_OBJ_CHARS.value:
                 return [
@@ -103,30 +112,30 @@ class ArgAssembler:
                 ]
             case FilterTag.KEEP_ITALIC.value:
                 return [
-                    IValidatorChainSolo(DialogueRules.ITALIC.value),
+                    cls.__dialogue_filter(DialogueRules.ITALIC.value, img_attrs),
                     ObjectStrategy(SpeakerRules.OBJECT_ITALIC.value),
                 ]
             case FilterTag.KEEP_PARENTHESIS.value:
-                return IValidatorChainSolo(DialogueRules.PARENTHESIS.value)
+                return cls.__dialogue_filter(DialogueRules.PARENTHESIS.value, img_attrs)
             case FilterTag.KEEP_COMMON_QUOTED_CHARS.value:
                 return IValidatorChainSolo(SpeakerRules.CHARACTER_BASIC.value)
             case FilterTag.KEEP_EMPTY_OBJ_CHARS.value:
                 return ObjectStrategy(SpeakerRules.OBJECT_NONE.value)
             case FilterTag.KEEP_EXPRESSION_CUES.value:
                 return [
-                    IValidatorChainSolo(DialogueRules.EXPRESSION_CUE_TILDA.value),
-                    IValidatorChainSolo(DialogueRules.EXPRESSION_CUE_ASTERISK.value),
-                    IValidatorChainSolo(DialogueRules.CUE_ASTERISK_PARENTHESIS.value),
-                    IValidatorChainSolo(DialogueRules.CUE_TILDA_PARENTHESIS.value),
+                    cls.__dialogue_filter(DialogueRules.EXPRESSION_CUE_TILDA.value, img_attrs),
+                    cls.__dialogue_filter(DialogueRules.EXPRESSION_CUE_ASTERISK.value, img_attrs),
+                    cls.__dialogue_filter(DialogueRules.CUE_ASTERISK_PARENTHESIS.value, img_attrs),
+                    cls.__dialogue_filter(DialogueRules.CUE_TILDA_PARENTHESIS.value, img_attrs),
                 ]
             case FilterTag.KEEP_PUNCTUATIONS.value:
-                return IValidatorChainSolo(DialogueRules.ONLY_PUNCTUATION.value)
+                return cls.__dialogue_filter(DialogueRules.ONLY_PUNCTUATION.value, img_attrs)
             case FilterTag.KEEP_EMPTY_QUOTED_CHARS.value:
                 return IValidatorChainSolo(SpeakerRules.CHARACTER_NONE.value)
             case FilterTag.KEEP_GUILLEMETS.value:
                 return [
-                    IValidatorChainSolo(DialogueRules.GUILLEMET_SINGLE.value),
-                    IValidatorChainSolo(DialogueRules.GUILLEMET_DOUBLE.value),
+                    cls.__dialogue_filter(DialogueRules.GUILLEMET_SINGLE.value, img_attrs),
+                    cls.__dialogue_filter(DialogueRules.GUILLEMET_DOUBLE.value, img_attrs),
                 ]
             case FilterTag.KEEP_NVL.value:
                 return [
@@ -134,7 +143,7 @@ class ArgAssembler:
                     IValidatorChainSolo(BuiltInSpeakerRules.NVL.value),
                 ]
             case FilterTag.KEEP_COMMON_PARENTHETICALS.value:
-                return IValidatorChainSolo(DialogueRules.PARENTHETICAL_BASIC.value)
+                return cls.__dialogue_filter(DialogueRules.PARENTHETICAL_BASIC.value, img_attrs)
             case _:
                 return IValidatorChainSolo(DialogueRules.BASIC.value)
 
@@ -151,18 +160,29 @@ class ArgAssembler:
             return "|".join(arg_filter_val)
 
     @classmethod
-    def __narg_filter(cls, validator, arg_filter: str | list[str] | None, filter_name: str, rule_type: type[Rule]):
+    def __narg_filter(
+        cls,
+        validator,
+        arg_filter: str | list[str] | None,
+        filter_name: str,
+        rule_type: type[Rule] | type[DialogueRule],
+        img_attrs: str | None = None,
+    ):
         if not arg_filter:
             return validator
         if type(arg_filter) is str:
             # Regex is On
             rule = rule_type(arg_filter)
+            if img_attrs and isinstance(rule, DialogueRule):
+                rule = rule.with_img_attr(img_attrs)
             validator.next_validator = cls.__narg_validators[filter_name](rule)
         else:
             # Regex is Off
             arg_filter_len = len(arg_filter)
             for i in range(arg_filter_len):
                 rule = rule_type(arg_filter[i])
+                if img_attrs and isinstance(rule, DialogueRule):
+                    rule = rule.with_img_attr(img_attrs)
                 validator.next_validator = cls.__narg_validators[filter_name](rule)
                 if i < arg_filter_len - 1:
                     validator = validator.next_validator

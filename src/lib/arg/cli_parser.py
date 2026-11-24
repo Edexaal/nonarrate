@@ -235,7 +235,7 @@ class CLIParser:
             EnhanceTag.IMAGE_ATTRIBUTES.value,
             metavar="IMAGE_ATTRIBUTE_NAMES",
             nargs="*",
-            help="Allow nonarrate to remove narrated dialogues containing image attributes.",
+            help="Specify which dialogue with image attribute should be recognized and checked for narration.",
         )
         no_filters: dict[str, str] = {
             FilterTag.KEEP_NARRATION.value: "Keep dialogues that don't have a speaker",

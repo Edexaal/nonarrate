@@ -47,6 +47,7 @@ class TestCharacter(unittest.TestCase):
                     "define none2 = Character(name=None)",
                     'define none3 = Character(None,ctc="ctc_animation", ctc_position="fixed", window_top_padding = -60)',
                     'define none4 = Character(name=None, ctc="ctc_animation", ctc_position="fixed", window_top_padding = -60)',
+                    'define none5 = Character( name=" ",ctc="ctc_animation", ctc_position="fixed", window_top_padding = -60)',
                     "default translate = Character(_())",
                     'default translate2 = Character(_(""))',
                     "default translate3 = Character(_(''))",
@@ -183,6 +184,8 @@ class TestCharacter(unittest.TestCase):
             100: 'pop5 "The mystery deepened."',
             # Valid Character object w/ "'
             101: 'st "The mystery deepened."',
+            # More empty characters
+            102: 'none5 "And so the story would move forward."',
         }
 
     def setUp(self) -> None:
@@ -238,7 +241,7 @@ class TestCharacter(unittest.TestCase):
     def test_object_none_char_item(self):
         obj = validate_obj(SpeakerRules.OBJECT_NONE.value)
         self.start_object(
-            obj, [46, 47, 51, 56, 57, 58, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 79, 95, 96]
+            obj, [46, 47, 51, 56, 57, 58, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 79, 95, 96, 102]
         )
 
     def test_chaining(self):

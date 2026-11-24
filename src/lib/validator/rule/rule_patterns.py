@@ -80,6 +80,7 @@ class SpeakerRules(Enum):
     # Character(None)
     OBJECT_NONE = [
         Rule(rf"{common.CHARACTER}\s*(?:name\s*=\s*)?None.*\)"),
+        Rule(rf"{common.CHARACTER}\s*name\s*=\s*([\"'])\s*\1[^)]*\)"),
         Rule(rf"{common.CHARACTER}\s*\)"),
         Rule(rf"{common.CHARACTER}\s*[\"']\s*[\"']\s*(?:,.*)?\)"),
         Rule(rf"{common.CHARACTER}(?!\s*[\"']{{2}}|\s*name\s?=|\s*None)(?:\s*[\w_]+\s*=\s*.+)+\)"),

@@ -68,7 +68,7 @@ To enable this feature, use this option.
 **Side Note:** Since narrated dialogues are replaced by [￼
 `pause`￼ statements](https://www.renpy.org/doc/html/quickstart.html#pause-statement), there
 are some instances where clicking to move forward *feels* like it does nothing.
-In reality, the next sequence is *also* a pause statement.
+In reality, the next sequence is *also* a pause statement, so you would need to click again to advance.
 
 ***-b, --backup***
 
@@ -117,9 +117,12 @@ nonarrate mycoolgame\game --valid-dirs gui gamepad_control_schemes "cache helper
 Tell nonarrate what folders are valid to look through.
 
 When used, nonarrate will ignore all files/folders. Use this option to specify what **folder(s)** to *not* ignore.
-If you want nonarrate to see *.rpy files* within the folder(s) too, you must also use `--valid-files` or/and `--valid-globs`.
 
-***NOTE:** `--valid-*` options take precedence over `--invalid-*` ones.
+> [!NOTE]
+> If you want nonarrate to see the *.rpy files* within these folders too, you must also use `--valid-files` or/and `--valid-globs`.
+
+> [!IMPORTANT]
+> `--valid-*` options take precedence over `--invalid-*` ones.
 
 ***--invalid-dirs, --ind*** `<directory-name...>`
 
@@ -133,7 +136,9 @@ Ignore specified subfolders when looking for *.rpy* files.
 nonarrate will search subdirectories starting from the folder you point it to for
 *.rpy* files. Use this option to prevent certain directories from being searched.
 
-Nonarrate will ignore certain folders by default. See [IGNORED_FILES.md](./IGNORED_FILES.md) for list.
+> [!NOTE]
+> Nonarrate will ignore certain folders by default.
+> See [IGNORED_FILES.md](./IGNORED_FILES.md) for list.
 
 ***--valid-files, --vf*** `<filename...>`
 
@@ -144,13 +149,21 @@ nonarrate mycoolgame\game --valid-files options image keymap
 
 Use .rpy files with these specified names.
 
-When used, nonarrate will ignore all files/folders. Use this option to specify what **.rpy files** to *not* ignore.
+When used, nonarrate will ignore all files/folders. Use this option to specify which **.rpy files** to *not* ignore.
 Recommend using with `--valid-dirs` to allow valid folders. Using this option *without* `--valid-dirs` allows only the current directory
 to be looked at.
 
-\***NOTE: File names are case-insensitive!**. Can be used with `--valid-globs`.
-***NOTE:** `--valid-*` options take precedence over `--invalid-*` ones.
-***NOTE: Do *not* include `.rpy`. nonarrate will automatically assume this file type!**
+> [!IMPORTANT]
+> Do *not* include `.rpy` extension name. nonarrate will automatically assume this file type!
+
+> [!IMPORTANT]
+> `--valid-*` options take precedence over `--invalid-*` ones
+
+> [!NOTE]
+> File names are case-insensitive!
+
+> [!NOTE]
+> Can be used with `--valid-globs`
 
 ***--invalid-files, --inf*** `<filename...>`
 
@@ -161,30 +174,47 @@ nonarrate mycoolgame\game --invalid-files options image keymap
 
 Ignore specified *.rpy* files when looking for *.rpy* files.
 
-nonarrate will ignore the specified files when searching for *.rpy* files. **File names are case-insensitive!**
-This means `--inf credit` will match `Credit`. Can be used with `--invalid-globs`.
+nonarrate will ignore the specified files when searching for *.rpy* files.
 
-Nonarrate will ignore certain files by default. See [IGNORED_FILES.md](./IGNORED_FILES.md) for list
+> [!IMPORTANT]
+> Do *not* include `.rpy` extension name. nonarrate will automatically assume this file type!
 
-***NOTE: Do *not* include `.rpy`. nonarrate will automatically assume this file type!**
+> [!NOTE]
+> **File names are case-insensitive!**
+>
+> This means `--inf credit` will match `Credit`.
+
+> [!NOTE]
+> Nonarrate will ignore certain files by default.
+> See [IGNORED_FILES.md](./IGNORED_FILES.md) for list.
+
+> [!NOTE]
+> Can be used with `--invalid-globs`
 
 ***--valid-globs, --vg*** `<file-glob...>`
 
 ```bash
 # Use files matching: [0-9][0-9][a-zA-Z]*
-# This pattern will match files such as 01animation.rpy, 93decor_tl.rpy, and 25TEST.rpy
+# This pattern will match files such as 01animation.rpy, 93decor_tl.rpy, and 25TEST.rpy in the current directory only
 nonarrate mycoolgame\game --valid-globs '[0-9][0-9][a-zA-Z]*'
 ```
 
 Use *.rpy* files matching globs.
 
-nonarrate will *only* use files matching any of the file globs. Can be used with `--valid-files`.
+nonarrate will *only* use files matching any of the file globs.
+**Globs**: `*`, `?`, `[...]`
 
-See [Python's fnmatch library](https://docs.python.org/3/library/fnmatch.html#module-fnmatch)
-for list of available globs. **Globs**: `*`, `?`, `[...]`
+> [!IMPORTANT]
+> `--valid-*` options take precedence over `--invalid-*` ones.
 
-***NOTE:** `--valid-*` options take precedence over `--invalid-*` ones.
-***NOTE: Do *not* include `.rpy`. nonarrate will automatically assume this file type!**
+> [!IMPORTANT]
+> Do *not* include `.rpy` extension name. nonarrate will automatically assume this file type!
+
+> [!NOTE]
+> Can be used with `--valid-files`.
+
+> [!TIP]
+> For full list of available globs see [Python's fnmatch library](https://docs.python.org/3/library/fnmatch.html#module-fnmatch)
 
 ***--invalid-globs, --ing*** `<file globs...>`
 
@@ -196,15 +226,20 @@ nonarrate mycoolgame\game --invalid-globs '[0-9][0-9][a-zA-Z]*'
 
 Ignore *.rpy* files using globs.
 
-nonarrate will ignore files that match any of the specified file globs. Can be used
-with `--invalid-files`.
+nonarrate will ignore files that match any of the specified file globs.
+**Globs**: `*`, `?`, `[...]`
 
-See [Python's fnmatch library](https://docs.python.org/3/library/fnmatch.html#module-fnmatch)
-for list of available globs. **Globs**: `*`, `?`, `[...]`, `[!..]`
+> [!IMPORTANT]
+> Do *not* include `.rpy` extension name. nonarrate will automatically assume this file type!
 
-***NOTE: Nonarrate uses a set of globs to ignore files by default. See [IGNORED_FILES.md](./IGNORED_FILES.md) for list.
-**
-***NOTE: Do *not* include `.rpy`. nonarrate will automatically assume this file type!**
+> [!NOTE]
+> Nonarrate uses a set of globs to ignore files by default. See [IGNORED_FILES.md](./IGNORED_FILES.md) for list.
+
+> [!NOTE]
+> Can be used with `--invalid-files`
+
+> [!TIP]
+> For full list of available globs see [Python's fnmatch library](https://docs.python.org/3/library/fnmatch.html#module-fnmatch)
 
 ___
 
@@ -312,8 +347,10 @@ Removes speaker(s) saved to a `Character` object by their in-game name.
 Sometimes, a narrator takes on the form of a character in game. Instead of being explicitly named *Narrator*, in-game,
 the narrator can introduce itself as *Emily*, *Dev*, *The Chosen One*, or anything else… in-game.
 
-**Side Note:** This option can use **REGEX**. Use `--regex` to enable this feature.
-See [REGEX Examples](#regex-examples) for examples.
+> [!NOTE]
+> This option can use **REGEX**. Use `--regex` to enable this feature.
+>
+> See [REGEX Examples](#regex-examples) for examples.
 
 ***—renpy-vars***, ***—rv*** `<variable name>...`
 
@@ -331,8 +368,10 @@ To find the variable name, you must look into the `.rpy` files. A variable defin
 - `define <variable-name> =`
 - `default <variable-name> =`
 
-**Side Note:** This option can use **REGEX**. Use `--regex` to enable this feature.
-See [REGEX Examples](#regex-examples) for examples.
+> [!NOTE]
+> This option can use **REGEX**. Use `--regex` to enable this feature.
+>
+> See [REGEX Examples](#regex-examples) for examples.
 
 ***—python-vars***, ***—pv*** `<variable name>...`
 
@@ -346,9 +385,16 @@ Removes speaker(s) saved to a  *variable* name using **Python syntax**.
 To find the variable name, you must look into the `.rpy` files. A variable defined using **Python syntax** are any of the following:
 
 - `$ <variable-name> =`
+**Example**
 
-**Side Note:** This option can use **REGEX**. Use `--regex` to enable this feature.
-See [REGEX Examples](#regex-examples) for examples.
+```renpy
+\$ john = "Jonathon Doe"
+```
+
+> [!NOTE]
+> This option can use **REGEX**. Use `--regex` to enable this feature.
+>
+> See [REGEX Examples](#regex-examples) for examples.
 
 ***—keep-common-quoted-chars***
 
@@ -397,8 +443,10 @@ Removes a speaker introduced in quotes.
 
 Removes a speaker explicitly written in quotes alongside their dialogue and **NOT** saved to a `Character` object.
 
-**Side Note:** This option can use **REGEX**. Use `--regex` to enable this feature.
-See [REGEX Examples](#regex-examples) for examples.
+> [!NOTE]
+> This option can use **REGEX**. Use `--regex` to enable this feature.
+>
+> See [REGEX Examples](#regex-examples) for examples.
 
 - - -
 
@@ -468,8 +516,10 @@ This option also automatically removes the `=` variants of a custom text tag.
 nonarrate mycoolgame\game --text-tags fzs
 ```
 
-**Side Note:** This option can use **REGEX**. Use `--regex` to enable this feature.
-See [REGEX Examples](#regex-examples) for examples.
+> [!NOTE]
+> This option can use **REGEX**. Use `--regex` to enable this feature.
+>
+> See [REGEX Examples](#regex-examples) for examples.
 
 ***--keep-cues***
 

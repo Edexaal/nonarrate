@@ -8,10 +8,10 @@ This section explains how to use nonarrate effectively **step-by-step**.
 ahead.
 
 `.rpa` files usually contain all assets to a game project. Nonarrate will only operate on `.rpy` files,
-which can be found inside an `rpa` file. To get the assets, you will need to extract the `rpa` file(s).
+which may be found inside an `rpa` file. To get the assets, you will need to extract the `rpa` file(s).
 
 > [!TIP]
-> Nonarrate only needs `rpy` files. So, extract `rpa` files that contain `rpy` files.
+> Nonarrate only needs `rpy` files. So, extract `rpa` files that might contain `rpy` files.
 
 There are many extractor tools you can use for this. Happy Hunting!
 
@@ -27,8 +27,8 @@ Speaker names are most often saved to a `Character(...)` object.
 
 **Examples:**
 
-See [Ren'Py Docs Examples](https://www.renpy.org/doc/html/dialogue.html#example-characters)
-See [The `character` Store Examples](https://www.renpy.org/doc/html/dialogue.html#the-character-store)
+- See [Ren'Py Docs Examples](https://www.renpy.org/doc/html/dialogue.html#example-characters)
+- See [The `character` Store Examples](https://www.renpy.org/doc/html/dialogue.html#the-character-store)
 
 ```python
 define h = Character("Harold")
@@ -41,28 +41,40 @@ define character.robby = Character("Robby")
 **Any `.rpy` file containing dialogue is a *must* for nonarrate.**
 
 **Examples:**
-See ['Say Statement' in Ren'Py's Docs](https://www.renpy.org/doc/html/dialogue.html#say-statement)
+
+- See ['Say Statement' in Ren'Py's Docs](https://www.renpy.org/doc/html/dialogue.html#say-statement)
+
+```renpy
+"This is narration."
+
+"Eileen" "This is dialogue, with an explicit character name."
+
+elly "This is dialogue, using a character object instead."
+
+"Bam!!" with vpunch
+```
 
 ## Using nonarrate
 
 Once you find which `.rpy` files contain **character definitions** and **dialogue**, you can now use nonarrate.
 
 It's recommended to use `--backup` alongside your commands which will create a backup of modified `.rpy` files.
+If something goes wrong, you can now use `--restore` to revert back to the files' original state.
 
 **Example:**
 
 ```bash
 # Start in game/ directory
-# Nonarrate do not touch files named 'minigame' and 'opt'.
-# Keep dialogue with -> "" "Here is my dialogue"  
+# Do not touch files named 'minigame' and 'opt'.
+# Keep dialogue that match the following syntax -> "" "Here is my dialogue"
 # Backup files before removing narration
 nonarrate game/ --invalid-files minigame opt --keep-empty-quoted-chars --backup
 ```
 
 ### Ignoring files
 
-Take advantage of the following options to tell nonarrate what files/folders to ignore or focus
-on. [FILE COMMANDS](./COMMANDS.md#file-searching).
+Take advantage of the [FILE COMMANDS](./COMMANDS.md#file-searching) options to tell nonarrate what files/folders to ignore or focus
+on.
 
 > [!TIP]
 > Nonarrate will ignore certain files/folders by default, so you may not need to tell nonarrate explicitly.
@@ -78,7 +90,7 @@ Sometimes, the default settings is not enough or maybe *too* much. Regardless, t
 [Narrator Filter options](./COMMANDS.md#narrator-filters). Most often than not, simply enabling, `--keep-empty-quoted-chars` or
 using `--text-tags <tags..>` to remove dialogue with certain tag names is all you need!
 
-Additionally, pay attention to the tables provided in the [COMMANDS.md](./COMMANDS.md#narrator-filters). They will help you!
+Additionally, pay attention to the tables provided in [COMMANDS.md](./COMMANDS.md#narrator-filters). They will help you!
 
 ### Error Fixing
 
@@ -88,7 +100,7 @@ When launching the game, an error screen will appear showing all the issues caus
 normal behavior. nonarrate comes with error fixing capabilities. Not all types of errors will be fixed. Check
 out [ERROR_TYPES](./ERROR_TYPES.md) for eligible types.
 
-To fix errors, point nonarrate to the auto-generated `errors.txt` file.
+To fix errors, point nonarrate to Ren'Py's auto-generated `errors.txt` file.
 
 **Example:** `nonarrate ./errors.txt`
 

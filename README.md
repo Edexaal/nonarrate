@@ -28,8 +28,6 @@ There are 2 sectors to identify narration in Ren'Py:
 
 ## Installation
 
-There are multiple ways to install/upgrade.
-
 ### Installing
 
 ```bash

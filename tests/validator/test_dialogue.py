@@ -1,6 +1,6 @@
 import unittest
 from lib.validator import IValidatorChain
-from lib.validator.rule import DialogueRules, BuiltInSpeakerRules, Rule
+from lib.validator.rule import DialogueRules, BuiltInSpeakerRules
 from lib.validator.rule.dialogue_rule import DialogueRule
 from tests.fixture import get_dialogue_list, validate_solo
 
@@ -387,6 +387,15 @@ class TestDialogue(unittest.TestCase):
             344: 'mc -smile "*licks lips* (Really looking forward getting to know you.)"',
             345: 'mc @ smile "*licks lips* (Really looking forward getting to know you.)"',
             346: 'mc @ -smile "*licks lips* (Really looking forward getting to know you.)"',
+            347: 'mc smile ".... (Really looking forward getting to know you.)"',
+            348: 'mc -smile ".... (Really looking forward getting to know you.)"',
+            349: 'mc @ smile ".... (Really looking forward getting to know you.)"',
+            350: 'mc @ -smile ".... (Really looking forward getting to know you.)"',
+            # Punctuation + parenthesis
+            351: 'mc ".... (Really looking forward getting to know you.)"',
+            352: 'mc "???? (Really looking forward getting to know you.)"',
+            353: 'mc "!!!! (Really looking forward getting to know you.)"',
+            354: 'mc "!!!! (Really looking forward getting to know you.)" with vpunch',
         }
 
     def validate_lines(self):
@@ -491,6 +500,10 @@ class TestDialogue(unittest.TestCase):
         obj = validate_solo(DialogueRules.CUE_TILDA_PARENTHESIS.value)
         self.start(obj, [312, 314])
 
+    def test_only_punctuations_parenthesis(self):
+        obj = validate_solo(DialogueRules.PUNCTUATION_PARENTHESIS.value)
+        self.start(obj, [351, 352, 353, 354])
+
     def test_parenthesis_img_attr(self):
         self.start_img_attr(DialogueRules.PARENTHESIS.value, [315, 316, 317, 318])
 
@@ -514,3 +527,6 @@ class TestDialogue(unittest.TestCase):
 
     def test_cues_asterisk_img_attr(self):
         self.start_img_attr(DialogueRules.CUE_ASTERISK_PARENTHESIS.value, [343, 344, 345, 346])
+
+    def test_only_punctuations_parenthesis_img_attr(self):
+        self.start_img_attr(DialogueRules.PUNCTUATION_PARENTHESIS.value, [347, 348, 349, 350])

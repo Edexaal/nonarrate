@@ -1,3 +1,4 @@
+from .punctuation_parenthesis import PunctuationParenthesisRule
 from . import common_patterns as common
 from .dialogue_rule import DialogueRule
 from .cue_parenthesis_rule import CueParenthesisRule
@@ -59,6 +60,9 @@ class DialogueRules(Enum):
     # cap "{fzs}*gasp* (Maybe this is a bad idea after all...){/fzs}"
     CUE_ASTERISK_PARENTHESIS = CueParenthesisRule(r"\*")
     CUE_TILDA_PARENTHESIS = CueParenthesisRule("~")
+    # mel "... (This is a decoy.)"
+    # mel "!!! (This is a decoy.)"
+    PUNCTUATION_PARENTHESIS = PunctuationParenthesisRule()
 
 
 # NOTE: DynamicCharacter() is an outdated variant of Character()

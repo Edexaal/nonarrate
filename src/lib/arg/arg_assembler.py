@@ -129,7 +129,10 @@ class ArgAssembler:
                     cls.__dialogue_filter(DialogueRules.CUE_TILDA_PARENTHESIS.value, img_attrs),
                 ]
             case FilterTag.KEEP_PUNCTUATIONS.value:
-                return cls.__dialogue_filter(DialogueRules.ONLY_PUNCTUATION.value, img_attrs)
+                return [
+                    cls.__dialogue_filter(DialogueRules.ONLY_PUNCTUATION.value, img_attrs),
+                    cls.__dialogue_filter(DialogueRules.PUNCTUATION_PARENTHESIS.value, img_attrs),
+                ]
             case FilterTag.KEEP_EMPTY_QUOTED_CHARS.value:
                 return IValidatorChainSolo(SpeakerRules.CHARACTER_NONE.value)
             case FilterTag.KEEP_GUILLEMETS.value:

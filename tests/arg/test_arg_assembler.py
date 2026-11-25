@@ -58,7 +58,7 @@ class TestArgAssembler(unittest.TestCase):
             FilterTag.KEEP_ITALIC.value,
             FilterTag.KEEP_NARRATION.value,
         ]
-        self.start(args, 16)
+        self.start(args, 17)
 
     def test_nargs(self):
         args = [
@@ -145,4 +145,4 @@ class TestArgAssembler(unittest.TestCase):
             "concerned",
             "crying",
         ]
-        self.start(args, 16)
+        self.start(args, 17)

@@ -9,5 +9,5 @@ class BasicParentheticalRule(ParentheticalRule):
     """
 
     def __init__(self):
-        introspection = ["thoughts?", "think(ing)?", "inner voices?", "inner monologue"]
+        introspection = ["thoughts?", "think(?:ing)?", "inner voices?", "inner monologue"]
         super().__init__("|".join(introspection))

@@ -13,5 +13,5 @@ class ParentheticalRule(DialogueRule):
 
     def __init__(self, custom_phrases: str):
         super().__init__(
-            rf"\\?\(\s*{custom_phrases}\s*\\?\)\s*(?:(?!\\?\2).)+(?:\2|\2\s*(?:with|id) .+|\2\s*\([^)]+\))?$",
+            rf"\\?\(\s*(?:{custom_phrases})\s*\\?\)\s*(?:(?!\\?\2).)+(?:\2|\2\s*(?:with|id) .+|\2\s*\([^)]+\))?$",
         )

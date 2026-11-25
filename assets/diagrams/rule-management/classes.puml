@@ -9,6 +9,7 @@ package "Dialogue" {
   class CueParenthesisRule
   class BasicParentheticalRule
   class SurroundRule
+  class PunctuationParenthesisRule
 }
 package "Speaker" {
   class CharRule
@@ -38,6 +39,7 @@ DialogueRule <|-- CueRule
 DialogueRule <|-- ParentheticalRule
 DialogueRule <|-- CueParenthesisRule
 DialogueRule <|-- SurroundRule
+DialogueRule <|-- PunctuationParenthesisRule
 CharRule <|-- BasicCharRule
 ObjectRule <|-- BasicObjectRule
 ParentheticalRule <|-- BasicParentheticalRule

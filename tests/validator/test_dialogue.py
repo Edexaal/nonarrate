@@ -396,6 +396,9 @@ class TestDialogue(unittest.TestCase):
             352: 'mc "???? (Really looking forward getting to know you.)"',
             353: 'mc "!!!! (Really looking forward getting to know you.)"',
             354: 'mc "!!!! (Really looking forward getting to know you.)" with vpunch',
+            # More basic parentheticals
+            355: 'mc "(Thinking) Did he just win the lottery just now?"',
+            356: 'mc "(Inner voice) Did he just win the lottery just now?"',
         }
 
     def validate_lines(self):
@@ -486,7 +489,7 @@ class TestDialogue(unittest.TestCase):
 
     def test_basic_parenthetical(self):
         obj = validate_solo(DialogueRules.PARENTHETICAL_BASIC.value)
-        self.start(obj, [292, 293, 294, 295, 296, 297])
+        self.start(obj, [292, 293, 294, 295, 296, 297, 355, 356])
 
     def test_parenthetical(self):
         obj = validate_solo(DialogueRules.PARENTHETICAL.value("Grumbles"))

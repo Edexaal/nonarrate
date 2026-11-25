@@ -2,7 +2,7 @@
 
 This section explains how to use nonarrate effectively **step-by-step**.
 
-## Extract .rpa files
+## 1.) Extract .rpa files
 
 ***This is an optional step**. If your game project does not have an `*.rpa` file located in the `game/` folder, skip
 ahead.
@@ -15,12 +15,12 @@ which may be found inside an `rpa` file. To get the assets, you will need to ext
 
 There are many extractor tools you can use for this. Happy Hunting!
 
-## Dialogue searching
+## 2.) Dialogue searching
 
 Once you have access to the `.rpy` files in your `game/` folder, the next step is to search for files containing
 **character definitions** and/or **dialogue**. *Keep note of these files!*
 
-### Character Definitions
+### 2a.) Character Definitions
 
 Speaker names are most often saved to a `Character(...)` object.
 **Any `.rpy` file containing character definitions are a *must* for nonarrate.**
@@ -36,7 +36,7 @@ default m = Character("Mikaeil", what_italic=True)
 define character.robby = Character("Robby")
 ```
 
-### Dialogue
+### 2b.) Say Dialogue
 
 **Any `.rpy` file containing dialogue is a *must* for nonarrate.**
 
@@ -54,7 +54,7 @@ elly "This is dialogue, using a character object instead."
 "Bam!!" with vpunch
 ```
 
-## Using nonarrate
+## 3.) Using nonarrate
 
 Once you find which `.rpy` files contain **character definitions** and **dialogue**, you can now use nonarrate.
 
@@ -71,7 +71,7 @@ If something goes wrong, you can now use `--restore` to revert back to the files
 nonarrate game/ --invalid-files minigame opt --keep-empty-quoted-chars --backup
 ```
 
-### Ignoring files
+### 3a.) Ignoring files
 
 Take advantage of the [FILE COMMANDS](./COMMANDS.md#file-searching) options to tell nonarrate what files/folders to ignore or focus
 on.
@@ -84,7 +84,7 @@ on.
 nonarrate game/ --invalid-dirs images sfx --invalid-files red_shaders minigames --backup
 ```
 
-### Adjusting Narration
+### 3b.) Adjusting Narration
 
 Sometimes, the default settings is not enough or maybe *too* much. Regardless, take advantage of
 [Narrator Filter options](./COMMANDS.md#narrator-filters). Most often than not, simply enabling, `--keep-empty-quoted-chars` or
@@ -92,7 +92,7 @@ using `--text-tags <tags..>` to remove dialogue with certain tag names is all yo
 
 Additionally, pay attention to the tables provided in [COMMANDS.md](./COMMANDS.md#narrator-filters). They will help you!
 
-### Error Fixing
+## 4.) Error Fixing
 
 ***This is an optional step**. In your case, the game may run smoothly. If so, you're done! Otherwise, continue reading this section.
 

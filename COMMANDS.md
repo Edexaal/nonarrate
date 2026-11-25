@@ -453,7 +453,7 @@ Removes a speaker explicitly written in quotes alongside their dialogue and **NO
 #### Dialogue
 
 > [!NOTE]
-> Support for dialogue with **image attributes** can be enabled using `--img-attrs`.
+> Support for [dialogue with **image attributes**](https://www.renpy.org/doc/html/dialogue.html#say-with-image-attributes) can be enabled using `--img-attrs`.
 >
 > **Example:** `nat shocked "(I should have said something.)"`
 
@@ -466,7 +466,7 @@ These filters deal with the **dialogue** portion of dialogue box.
 | --keep-parenthesis  | mc “(It’s got to be here somewhere.)” <br>mc "{tag}(Opens the car door){/tag}"                                        | `()`. Thinking/Narrator dialogue                                                                             |
 | --text-tags, --tt   | mc “{fzs}A small bold font tag.{/fzs}” <br>mc "{fzs=10}My text is here{/fzs}"                                         | [Custom text tag.](https://www.renpy.org/doc/html/custom_text_tags.html) Can be used for thoughts/narrative. |
 | --keep-cues         | mc "\**blushes softly*\*" <br>mc "{tag}\~*jumps*\~{/tag}"<br>mc "\*sigh\* (Maybe not a great idea...)"                                                            | Expression cues. \**smiles*\*, \~yawns\~, \*\**taps foot*\*\*                                                |
-| --keep-punctuations | mc "......" <br>mc "{tag}....{/tag}" <br>mc "!!!" <br>mc "????"                                                       | Dialogues with only punctuation marks                                                                        |
+| --keep-punctuations | mc "......" <br>mc "{tag}....{/tag}" <br>mc "!!!" <br>mc "????"<br>mc "... (Who is that?)"                                                       | Dialogues with only punctuation marks                                                                        |
 | --keep-guillemets   | mc "«I am currently thinking about my situation again.»" <br>mc "‹I am currently thinking about my situation again.›" | Guillements.`›`,`‹`, `«`,`»`                                                                                 |
 | --keep-common-parentheticals | mc "(Thoughts) Was the microwave always this loud?" | Begins with a [common descriptor](/DEFAULT_NARRATORS.md#common-descriptors) wrapped in a parenthesis|
 | --parentheticals, --ptc | mc "(Whispers) Who in their right mind would do this?" | Begins with a phrase/word wrapped in a parenthesis |
@@ -542,9 +542,9 @@ Expression cue examples:
 
 **--keep-punctuations**
 
-Keeps dialogue with only punctuation marks.
+Keeps dialogue with punctuation marks.
 
-By default, dialogue consisting of only punctuations are removed. To keep them, use this option.
+By default, dialogue consisting of only punctuations or punctuations and a parenthesis are removed. To keep them, use this option.
 
 ***--keep-common-parentheticals***
 

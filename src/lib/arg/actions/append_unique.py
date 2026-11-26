@@ -17,9 +17,8 @@ class AppendUnique(argparse.Action):
         required: bool = False,
         help=None,
         metavar=None,
-        deprecated: bool = False,
     ) -> None:
-        super().__init__(option_strings, dest, "*", const, default, type, choices, required, help, metavar, deprecated)
+        super().__init__(option_strings, dest, "*", const, default, type, choices, required, help, metavar)
 
     def __call__(
         self,

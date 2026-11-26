@@ -22,9 +22,3 @@ nonarrate = "lib.main:run"
 
 [tool.ruff]
 line-length = 120
-
-[tool.setuptools]
-package-dir = {"" = "src"}
-
-[tool.setuptools.packages.find]
-where = ["src"]

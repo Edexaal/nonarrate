@@ -29,12 +29,11 @@ class UniqueConst(argparse.Action, ABC):
         required=False,
         help=None,
         metavar=None,
-        deprecated=False,
     ):
         self._shared_list = None
         if const is None:
             raise ValueError(f'{self.__class__.__name__} requires "const" to have a value!')
-        super().__init__(option_strings, dest, 0, const, default, type, choices, required, help, metavar, deprecated)
+        super().__init__(option_strings, dest, 0, const, default, type, choices, required, help, metavar)
 
     def __call__(self, parser, namespace, values, option_string=None):
         """Handle new 'const' value introduced by an argument.
